@@ -1,11 +1,22 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  --primary: #373737;
+  --secondary: #eeeae6;
+  --black: #000000;
+
+  --highlight1: #000000;
+  --highlight2: #353535;
+  --highlight3: #aca7a3;
+
+  --main-font: "Caveat", sans-serif;
+  --fancy-font: "Lavishly Yours", sans-serif;
+
+  font-family: var(--main-font);
   line-height: 1.5;
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--secondary);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -13,15 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
 }
