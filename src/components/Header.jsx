@@ -4,6 +4,7 @@ const Title = styled.header`
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 35vh;
     padding: 2rem;
 
     color: white;

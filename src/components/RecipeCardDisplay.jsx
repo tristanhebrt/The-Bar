@@ -69,12 +69,15 @@ const CardBack = ({ content, onMoreClick }) => (
 const Container = styled.div`
     text-align: center;
     background: var(--highlight1);
-    min-height: 100vh;
+    height: auto;
+    padding-bottom: 5rem;
 `;
 
 const Title = styled.h1`
-    font-family: var(--fancy-font);
-    font-size: 4rem;
+    font-family: var(--title-font);
+    font-weight: 400;
+    font-size: 3rem;
+    text-transform: uppercase;
     color: var(--secondary);
     background: var(--highlight2);
 `;
