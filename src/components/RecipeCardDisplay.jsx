@@ -77,7 +77,6 @@ const Title = styled.h1`
     font-size: 4rem;
     color: var(--secondary);
     background: var(--highlight2);
-    margin-bottom: 1rem;
 `;
 
 const CardContainer = styled.div`
@@ -88,22 +87,21 @@ const CardContainer = styled.div`
     overflow-y: hidden;
     gap: 1rem;
     padding: 1rem;
-    scrollbar-width: thin;
-    scrollbar-color: var(--secondary) rgba(255, 255, 255, 0.2);
+    scrollbar-width: thick;
+    scrollbar-color: var(--black) var(--primary);
 
     &::-webkit-scrollbar {
         height: 10px;
     }
 
     &::-webkit-scrollbar-track {
-        background: rgba(255, 255, 255, 0.1);
+        background: var(--primary);
         border-radius: 10px;
     }
 
     &::-webkit-scrollbar-thumb {
         background: var(--secondary);
         border-radius: 10px;
-        border: 2px solid rgba(255, 255, 255, 0.3);
         transition: background 0.3s ease;
     }
 
@@ -114,7 +112,7 @@ const CardContainer = styled.div`
 
 const Card = styled.div`
     width: 250px;
-    height: 500px;
+    height: 400px;
     perspective: 1000px;
     cursor: pointer;
 `;
