@@ -5,9 +5,9 @@ import Alora from './components/Alora'
 function App() {
   return (
     <>
-    <Header />
-    <Classics />
-    <Alora />
+      <Header />
+      <Classics />
+      <Alora />
     </>
   )
 }

@@ -10,7 +10,12 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
                     <RecipeCard 
                         key={index} 
                         title={recipe.title} 
-                        content={recipe.content} 
+                        content={[
+                            ...(recipe.ingredients?.booze || []),
+                            ...(recipe.ingredients?.syrups || []),
+                            ...(recipe.ingredients?.bitters || []),
+                            ...(recipe.ingredients?.garnishes || [])
+                        ]}
                         steps={recipe.steps} 
                     />
                 ))}

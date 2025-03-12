@@ -1,15 +1,16 @@
 import React from "react";
 import RecipeCardDisplay from "./RecipeCardDisplay";
+import Quiz from './Quiz'
 
 const classicCocktails = [
     {
         title: "Old Fashioned",
-        content: [
-            "2 oz Whiskey",
-            "0.25 oz Demerara Syrup",
-            "3 dashes Angostura Bitters",
-            "Orange peel"
-        ],
+        ingredients: {
+            booze: ["2 oz Whiskey"],
+            syrups: ["0.25 oz Demerara Syrup"],
+            bitters: ["3 dashes Angostura Bitters"],
+            garnishes: ["Orange peel"]
+        },
         steps: [
             "Stir all ingredients with ice until well chilled.",
             "Strain into a rocks glass with a large ice cube.",
@@ -19,12 +20,12 @@ const classicCocktails = [
     },
     {
         title: "Manhattan",
-        content: [
-            "2 oz Rye Whiskey",
-            "1 oz Sweet Vermouth",
-            "2 dashes Angostura Bitters",
-            "Cherry"
-        ],
+        ingredients: {
+            booze: ["2 oz Rye Whiskey"],
+            syrups: ["1 oz Sweet Vermouth"],
+            bitters: ["2 dashes Angostura Bitters"],
+            garnishes: ["Cherry"]
+        },
         steps: [
             "Stir all ingredients with ice until well chilled.",
             "Strain into a chilled coupe glass.",
@@ -33,11 +34,11 @@ const classicCocktails = [
     },
     {
         title: "Martini",
-        content: [
-            "2.5 oz Gin",
-            "0.5 oz Dry Vermouth",
-            "Lemon twist or olive"
-        ],
+        ingredients: {
+            booze: ["2.5 oz Gin"],
+            syrups: ["0.5 oz Dry Vermouth"],
+            garnishes: ["Lemon twist or olive"]
+        },
         steps: [
             "Stir gin and vermouth with ice until well chilled.",
             "Strain into a chilled martini glass.",
@@ -46,12 +47,12 @@ const classicCocktails = [
     },
     {
         title: "Negroni",
-        content: [
-            "1 oz Gin",
-            "1 oz Sweet Vermouth",
-            "1 oz Campari",
-            "Orange peel"
-        ],
+        ingredients: {
+            booze: ["1 oz Gin"],
+            syrups: ["1 oz Sweet Vermouth"],
+            bitters: ["1 oz Campari"],
+            garnishes: ["Orange peel"]
+        },
         steps: [
             "Stir all ingredients with ice until well chilled.",
             "Strain into a rocks glass over a large ice cube.",
@@ -60,11 +61,10 @@ const classicCocktails = [
     },
     {
         title: "Daiquiri",
-        content: [
-            "2 oz White Rum",
-            "1 oz Fresh Lime Juice",
-            "0.75 oz Simple Syrup"
-        ],
+        ingredients: {
+            booze: ["2 oz White Rum"],
+            syrups: ["1 oz Fresh Lime Juice", "0.75 oz Simple Syrup"]
+        },
         steps: [
             "Shake all ingredients with ice until well chilled.",
             "Strain into a chilled coupe glass.",
@@ -73,12 +73,12 @@ const classicCocktails = [
     },
     {
         title: "Whiskey Sour",
-        content: [
-            "2 oz Bourbon",
-            "0.75 oz Fresh Lemon Juice",
-            "0.75 oz Simple Syrup",
-            "Egg white"
-        ],
+        ingredients: {
+            booze: ["2 oz Bourbon"],
+            syrups: ["0.75 oz Fresh Lemon Juice", "0.75 oz Simple Syrup"],
+            others: ["Egg white"],
+            garnishes: ["Cherry or orange slice"]
+        },
         steps: [
             "Dry shake all ingredients (without ice) if using egg white.",
             "Add ice and shake again until chilled.",
@@ -88,12 +88,11 @@ const classicCocktails = [
     },
     {
         title: "Margarita",
-        content: [
-            "2 oz Tequila",
-            "1 oz Fresh Lime Juice",
-            "0.75 oz Cointreau or Triple Sec",
-            "Salt rim"
-        ],
+        ingredients: {
+            booze: ["2 oz Tequila"],
+            syrups: ["1 oz Fresh Lime Juice", "0.75 oz Cointreau or Triple Sec"],
+            garnishes: ["Salt rim", "Lime wheel"]
+        },
         steps: [
             "Shake all ingredients with ice until chilled.",
             "Strain into a rocks glass over ice.",
@@ -102,13 +101,12 @@ const classicCocktails = [
     },
     {
         title: "Mojito",
-        content: [
-            "2 oz White Rum",
-            "1 oz Fresh Lime Juice",
-            "0.75 oz Simple Syrup",
-            "6-8 Mint Leaves",
-            "Soda Water"
-        ],
+        ingredients: {
+            booze: ["2 oz White Rum"],
+            syrups: ["1 oz Fresh Lime Juice", "0.75 oz Simple Syrup"],
+            others: ["6-8 Mint Leaves", "Soda Water"],
+            garnishes: ["Mint"]
+        },
         steps: [
             "Muddle mint leaves and simple syrup in a glass.",
             "Add lime juice, rum, and ice, then stir.",
@@ -117,12 +115,12 @@ const classicCocktails = [
     },
     {
         title: "Pina Colada",
-        content: [
-            "2 oz White Rum",
-            "3 oz Pineapple Juice",
-            "1 oz Coconut Cream",
-            "Blended with ice"
-        ],
+        ingredients: {
+            booze: ["2 oz White Rum"],
+            syrups: ["3 oz Pineapple Juice", "1 oz Coconut Cream"],
+            others: ["Blended with ice"],
+            garnishes: ["Cherry", "Pineapple wedge"]
+        },
         steps: [
             "Blend all ingredients with ice until smooth.",
             "Pour into a hurricane glass.",
@@ -131,13 +129,13 @@ const classicCocktails = [
     },
     {
         title: "Sazerac",
-        content: [
-            "2 oz Rye Whiskey",
-            "1 Sugar Cube",
-            "3 dashes Peychaud’s Bitters",
-            "Absinthe rinse",
-            "Lemon twist"
-        ],
+        ingredients: {
+            booze: ["2 oz Rye Whiskey"],
+            syrups: ["1 Sugar Cube"],
+            bitters: ["3 dashes Peychaud’s Bitters"],
+            others: ["Absinthe rinse"],
+            garnishes: ["Lemon twist"]
+        },
         steps: [
             "Rinse a glass with absinthe and discard excess.",
             "Muddle sugar with bitters in a separate glass.",
@@ -147,12 +145,12 @@ const classicCocktails = [
     },
     {
         title: "French 75",
-        content: [
-            "1 oz Gin",
-            "0.5 oz Lemon Juice",
-            "0.5 oz Simple Syrup",
-            "Champagne"
-        ],
+        ingredients: {
+            booze: ["1 oz Gin"],
+            syrups: ["0.5 oz Lemon Juice", "0.5 oz Simple Syrup"],
+            others: ["Champagne"],
+            garnishes: ["Lemon twist"]
+        },
         steps: [
             "Shake gin, lemon juice, and simple syrup with ice.",
             "Strain into a flute glass.",
@@ -161,16 +159,12 @@ const classicCocktails = [
     },
     {
         title: "Bloody Mary",
-        content: [
-            "2 oz Vodka",
-            "4 oz Tomato Juice",
-            "0.5 oz Fresh Lemon Juice",
-            "1 dash Worcestershire Sauce",
-            "1 dash Hot Sauce",
-            "Celery Salt",
-            "Black Pepper",
-            "Celery Stalk"
-        ],
+        ingredients: {
+            booze: ["2 oz Vodka"],
+            syrups: ["4 oz Tomato Juice", "0.5 oz Fresh Lemon Juice"],
+            others: ["1 dash Worcestershire Sauce", "1 dash Hot Sauce", "Celery Salt", "Black Pepper"],
+            garnishes: ["Celery Stalk"]
+        },
         steps: [
             "Combine all ingredients and stir.",
             "Pour into a glass filled with ice.",
@@ -180,7 +174,12 @@ const classicCocktails = [
 ];
 
 const Classics = () => {
-    return <RecipeCardDisplay mainTitle="Classic Cocktails" recipes={classicCocktails} />;
+    return (
+        <>
+            <RecipeCardDisplay mainTitle="Classic Cocktails" recipes={classicCocktails} />
+            <Quiz cocktails={classicCocktails} />
+        </>
+    );
 };
 
 export default Classics;
