@@ -99,9 +99,11 @@ const Container = styled.div`
 
 const TitleContainer = styled.div`
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
     background: var(--highlight2);
+    position: relative; /* Needed for absolute positioning of the button */
+    padding: 1rem; /* Optional spacing */
 `;
 
 const Title = styled.h1`
@@ -110,11 +112,14 @@ const Title = styled.h1`
     font-size: 3rem;
     text-transform: uppercase;
     color: var(--secondary);
+    text-align: center;
 `;
 
 const FlipAllButton = styled.button`
-    margin-right: 1rem;
-    padding: 5px 10px;
+    padding: 5px 0px;
+    width: 100px;
+    position: absolute;
+    right: 1rem; /* Pushes the button to the far right */
     font-size: 1.5rem;
     font-family: var(--main-font);
     border: none;
