@@ -1,10 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 
 const RecipeCardDisplay = ({ mainTitle, recipes }) => {
+    const [allFlipped, setAllFlipped] = useState(false);
+
+    const handleFlipAll = () => {
+        setAllFlipped(!allFlipped);
+    };
+
     return (
         <Container>
-            <Title>{mainTitle}</Title>
+            <TitleContainer>
+                <Title>{mainTitle}</Title>
+                <FlipAllButton onClick={handleFlipAll}>
+                    {allFlipped ? "Unflip All" : "Flip All"}
+                </FlipAllButton>
+            </TitleContainer>
             <CardContainer>
                 {recipes.map((recipe, index) => (
                     <RecipeCard 
@@ -17,6 +28,7 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
                             ...(recipe.ingredients?.garnishes || [])
                         ]}
                         steps={recipe.steps} 
+                        allFlipped={allFlipped}
                     />
                 ))}
             </CardContainer>
@@ -24,20 +36,28 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
     );
 };
 
-const RecipeCard = ({ title, content, steps }) => {
+const RecipeCard = ({ title, content, steps, allFlipped }) => {
     const [flipped, setFlipped] = useState(false);
     const [showOverlay, setShowOverlay] = useState(false);
 
-    const handleCardClick = () => setFlipped(!flipped);
+    useEffect(() => {
+        setFlipped(allFlipped);
+    }, [allFlipped]);
+
+    const handleCardClick = () => {
+        setFlipped(!flipped);
+    };
+
     const handleMoreClick = (e) => {
         e.stopPropagation(); // Prevents flipping when clicking "More"
         setShowOverlay(true);
     };
+
     const handleCloseOverlay = () => setShowOverlay(false);
 
     return (
         <>
-            <Card onClick={handleCardClick} className={flipped ? "flipped" : ""}>
+            <Card className={flipped ? "flipped" : ""} onClick={handleCardClick}>
                 <CardInner className={flipped ? "flipped" : ""}>
                     <CardFront>
                         <h2>{title}</h2>
@@ -75,7 +95,13 @@ const Container = styled.div`
     text-align: center;
     background: var(--highlight1);
     height: auto;
-    padding-bottom: 5rem;
+`;
+
+const TitleContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--highlight2);
 `;
 
 const Title = styled.h1`
@@ -84,7 +110,23 @@ const Title = styled.h1`
     font-size: 3rem;
     text-transform: uppercase;
     color: var(--secondary);
-    background: var(--highlight2);
+`;
+
+const FlipAllButton = styled.button`
+    margin-right: 1rem;
+    padding: 5px 10px;
+    font-size: 1.5rem;
+    font-family: var(--main-font);
+    border: none;
+    background: var(--highlight3);
+    color: var(--black);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+
+    &:hover {
+        background: var(--secondary);
+    }
 `;
 
 const CardContainer = styled.div`

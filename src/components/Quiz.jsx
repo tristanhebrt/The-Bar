@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 const QuizContainer = styled.div`
     text-align: center;
-    margin: 20px;
+    margin: 10vh;
 `;
 
 const QuestionText = styled.p`
