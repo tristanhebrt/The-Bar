@@ -1,42 +1,79 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
 const RecipeCardDisplay = ({ mainTitle, recipes }) => {
     const [allFlipped, setAllFlipped] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const cardRefs = useRef([]);
 
+    // Function to handle the flipping of all cards
     const handleFlipAll = () => {
         setAllFlipped(!allFlipped);
+    };
+
+    // Function to scroll to a recipe card based on the search query
+    const handleSearchChange = (event) => {
+        setSearchQuery(event.target.value);
+    };
+
+    const handleSearchSubmit = () => {
+        const filteredRecipe = recipes.find(recipe => 
+            recipe.title.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+        if (filteredRecipe && cardRefs.current) {
+            const index = recipes.indexOf(filteredRecipe);
+            cardRefs.current[index]?.scrollIntoView({
+                behavior: "smooth",
+                block: "center",
+            });
+        }
     };
 
     return (
         <Container>
             <TitleContainer>
                 <Title>{mainTitle}</Title>
+            </TitleContainer>
+            {/* Search Bar Positioned Between Cards and Scrollbar */}
+            <SearchContainer>
+                <SearchInput
+                    type="text"
+                    placeholder="Find a cocktail..."
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                />
+                <SearchButton onClick={handleSearchSubmit}>Search</SearchButton>
                 <FlipAllButton onClick={handleFlipAll}>
                     {allFlipped ? "Unflip All" : "Flip All"}
                 </FlipAllButton>
-            </TitleContainer>
+            </SearchContainer>
             <CardContainer>
-                {recipes.map((recipe, index) => (
-                    <RecipeCard 
-                        key={index} 
-                        title={recipe.title} 
-                        content={[
-                            ...(recipe.ingredients?.booze || []),
-                            ...(recipe.ingredients?.syrups || []),
-                            ...(recipe.ingredients?.bitters || []),
-                            ...(recipe.ingredients?.garnishes || [])
-                        ]}
-                        steps={recipe.steps} 
-                        allFlipped={allFlipped}
-                    />
-                ))}
+                {recipes
+                    .filter(recipe => 
+                        recipe.title.toLowerCase().includes(searchQuery.toLowerCase())
+                    )
+                    .map((recipe, index) => (
+                        <RecipeCard 
+                            key={index} 
+                            ref={(el) => cardRefs.current[index] = el}  // Reference for scrolling
+                            title={recipe.title} 
+                            content={[ 
+                                ...(recipe.ingredients?.booze || []),
+                                ...(recipe.ingredients?.syrups || []),
+                                ...(recipe.ingredients?.bitters || []),
+                                ...(recipe.ingredients?.garnishes || [])
+                            ]}
+                            steps={recipe.steps} 
+                            allFlipped={allFlipped}
+                        />
+                    ))}
             </CardContainer>
         </Container>
     );
 };
 
-const RecipeCard = ({ title, content, steps, allFlipped }) => {
+const RecipeCard = React.forwardRef(({ title, content, steps, allFlipped }, ref) => {
     const [flipped, setFlipped] = useState(false);
     const [showOverlay, setShowOverlay] = useState(false);
 
@@ -57,7 +94,7 @@ const RecipeCard = ({ title, content, steps, allFlipped }) => {
 
     return (
         <>
-            <Card className={flipped ? "flipped" : ""} onClick={handleCardClick}>
+            <Card ref={ref} className={flipped ? "flipped" : ""} onClick={handleCardClick}>
                 <CardInner className={flipped ? "flipped" : ""}>
                     <CardFront>
                         <h2>{title}</h2>
@@ -79,7 +116,7 @@ const RecipeCard = ({ title, content, steps, allFlipped }) => {
             )}
         </>
     );
-};
+});
 
 const CardBack = ({ content, onMoreClick }) => (
     <CardBackContainer>
@@ -102,8 +139,8 @@ const TitleContainer = styled.div`
     justify-content: center;
     align-items: center;
     background: var(--highlight2);
-    position: relative; /* Needed for absolute positioning of the button */
-    padding: 1rem; /* Optional spacing */
+    position: relative;
+    padding: 1rem;
 `;
 
 const Title = styled.h1`
@@ -115,17 +152,48 @@ const Title = styled.h1`
     text-align: center;
 `;
 
-const FlipAllButton = styled.button`
-    padding: 5px 0px;
-    width: 100px;
-    position: absolute;
-    right: 1rem; /* Pushes the button to the far right */
-    font-size: 1.5rem;
+const SearchContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    background: var(--highlight2);
+`;
+
+const SearchInput = styled.input`
+    padding: 5px;
     font-family: var(--main-font);
-    border: none;
+    font-size: 1.5rem;
+    border-radius: 5px;
+    border: 1px solid var(--primary);
+    width: 250px;
+`;
+
+const SearchButton = styled.button`
+    padding: 5px 10px;
+    font-family: var(--main-font);
+    font-size: 1.5rem;
+    border-radius: 5px;
     background: var(--highlight3);
     color: var(--black);
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+
+    &:hover {
+        background: var(--secondary);
+    }
+`;
+
+const FlipAllButton = styled.button`
+    padding: 5px 10px;
+    font-family: var(--main-font);
+    font-size: 1.5rem;
     border-radius: 5px;
+    background: var(--highlight3);
+    color: var(--black);
+    border: none;
     cursor: pointer;
     transition: background 0.3s ease;
 
