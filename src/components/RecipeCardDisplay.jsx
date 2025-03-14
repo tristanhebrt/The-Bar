@@ -210,9 +210,9 @@ const Title = styled.h1`
 
 const SearchContainer = styled.div`
     display: flex;
+    flex-wrap: wrap; /* Allow wrapping of filter options */
     justify-content: center;
-    gap: 1rem;
-    align-items: center;
+    gap: 1rem; /* Add space between items */
     padding: 1rem;
     background: var(--highlight2);
 `;
