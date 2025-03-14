@@ -198,11 +198,11 @@ const CardBack = ({ content, onMoreClick }) => (
 const Container = styled.div`
     text-align: center;
     height: auto;
-    padding-bottom: 10rem;
-    background: var(--black);
+    padding-top: 10rem;
+    background: var(--white);
 
     @media (max-width: 600px) {
-        padding-bottom: 0;
+        padding-top: 0;
     }
 `;
 
@@ -415,7 +415,7 @@ const CardFront = styled.div`
     background: var(--black);
 
     h2 {
-        font-family: var(--title-font);
+        font-family: var(--main-font);
         font-size: 2.5rem;
         color: var(--white);
     }

@@ -20,6 +20,7 @@
 
   color-scheme: light dark;
   color: var(--secondary);
+  background-color: var(--white);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
