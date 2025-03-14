@@ -4,30 +4,74 @@ import styled from "styled-components";
 const RecipeCardDisplay = ({ mainTitle, recipes }) => {
     const [allFlipped, setAllFlipped] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [selectedFilter, setSelectedFilter] = useState([]);
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
     const cardRefs = useRef([]);
 
-    // Function to handle the flipping of all cards
     const handleFlipAll = () => {
         setAllFlipped(!allFlipped);
     };
 
-    // Function to clear the search input
     const handleClearSearch = () => {
         setSearchQuery("");
+        setSelectedFilter([]); // Clear the selected filters
     };
 
-    // Function to handle the search query change
     const handleSearchChange = (event) => {
         setSearchQuery(event.target.value);
     };
+
+    const toggleFilterMenu = () => {
+        setIsFilterOpen(!isFilterOpen);
+    };
+
+    const handleFilterChange = (event) => {
+        const selectedOption = event.target.value;
+        setSelectedFilter((prevSelected) =>
+            prevSelected.includes(selectedOption)
+                ? prevSelected.filter((item) => item !== selectedOption)
+                : [...prevSelected, selectedOption]
+        );
+    };
+
+    const flattenIngredients = (ingredients) => {
+        const allIngredients = [
+            ...(ingredients?.booze || []),
+            ...(ingredients?.syrups || []),
+            ...(ingredients?.bitters || []),
+            ...(ingredients?.others || []),
+            ...(ingredients?.garnishes || []),
+        ];
+        return allIngredients.map((ingredient) => ingredient.toLowerCase());
+    };
+
+    const filteredRecipes = recipes.filter((recipe) => {
+        const matchesSearchQuery = recipe.title
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase());
+
+        const flattenedIngredients = flattenIngredients(recipe.ingredients);
+
+        const matchesFilters =
+            selectedFilter.length === 0 ||
+            selectedFilter.every((filter) =>
+                flattenedIngredients.some((ingredient) =>
+                    ingredient.includes(filter.toLowerCase())
+                )
+            );
+
+        return matchesSearchQuery && matchesFilters;
+    });
 
     return (
         <Container>
             <TitleContainer>
                 <Title>{mainTitle}</Title>
             </TitleContainer>
-            {/* Search Bar Positioned Between Cards and Scrollbar */}
             <SearchContainer>
+                <FilterButton onClick={toggleFilterMenu} isOpen={isFilterOpen}>
+                    <img src="/assets/filter.png" alt="Filter" />
+                </FilterButton>
                 <SearchInput
                     type="text"
                     placeholder="Find a cocktail..."
@@ -36,29 +80,50 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
                 />
                 <ClearButton onClick={handleClearSearch}>Clear</ClearButton>
                 <FlipAllButton onClick={handleFlipAll}>
-                    {allFlipped ? "Unflip All" : "Flip All"}
+                    {allFlipped ? "Unflip" : "Flip"}
                 </FlipAllButton>
             </SearchContainer>
+
+            {/* Filter Dropdown */}
+            {isFilterOpen && (
+                <FilterMenu>
+                    {["vodka", "gin", "rum", "whiskey", "tequila", "lime", "lemon", "simple", "agave", "demerara"].map(
+                        (item, index) => (
+                            <FilterOption key={index}>
+                                <label>
+                                    <input
+                                        type="checkbox"
+                                        value={item}
+                                        onChange={handleFilterChange}
+                                        checked={selectedFilter.includes(item)}
+                                    />
+                                    {item.charAt(0).toUpperCase() + item.slice(1)}
+                                </label>
+                            </FilterOption>
+                        )
+                    )}
+                </FilterMenu>
+            )}
+
             <CardContainer>
-                {recipes
-                    .filter(recipe =>
-                        recipe.title.toLowerCase().includes(searchQuery.toLowerCase())
-                    )
-                    .map((recipe, index) => (
+                {filteredRecipes.length === 0 ? (
+                    <p>No cocktails match the selected filters.</p>
+                ) : (
+                    filteredRecipes.map((recipe, index) => (
                         <RecipeCard
                             key={index}
-                            ref={(el) => cardRefs.current[index] = el} // Reference for scrolling
+                            ref={(el) => (cardRefs.current[index] = el)} // Reference for scrolling
                             title={recipe.title}
-                            content={[
-                                ...(recipe.ingredients?.booze || []),
-                                ...(recipe.ingredients?.syrups || []),
-                                ...(recipe.ingredients?.bitters || []),
-                                ...(recipe.ingredients?.garnishes || [])
-                            ]}
+                            content={[...(recipe.ingredients?.booze || []),
+                            ...(recipe.ingredients?.syrups || []),
+                            ...(recipe.ingredients?.bitters || []),
+                            ...(recipe.ingredients?.others || []),
+                            ...(recipe.ingredients?.garnishes || []),]}
                             steps={recipe.steps}
                             allFlipped={allFlipped}
                         />
-                    ))}
+                    ))
+                )}
             </CardContainer>
         </Container>
     );
@@ -193,6 +258,67 @@ const FlipAllButton = styled.button`
     }
 `;
 
+const FilterButton = styled.button`
+    padding: 5px 10px;
+    font-family: var(--main-font);
+    font-size: 1.5rem;
+    border-radius: 50px;
+    background: ${(props) =>
+        props.isOpen ? 'var(--secondary)' : 'var(--highlight3)'}; /* Change background based on open state */
+    color: var(--black);
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    display: flex;
+    align-items: center; /* Center the image vertically */
+    justify-content: center; /* Center the image horizontally */
+
+    &:hover {
+        background: var(--secondary);
+    }
+
+    img {
+        width: 1.5rem; /* Adjust image size */
+        height: auto; /* Keep aspect ratio */
+    }
+`;
+
+const FilterMenu = styled.div`
+    position: relative;
+    width: 100%;
+    height: auto;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping of filter options */
+    justify-content: center;
+    gap: 1rem; /* Add space between items */
+    padding: 1rem;
+    z-index: 1000;
+`;
+
+const FilterOption = styled.div`
+    label {
+        font-size: 1.5rem;
+        display: inline-block;
+    }
+
+    input {
+        margin-right: 10px;
+    }
+
+    /* Make filter options take full width on smaller screens */
+    width: calc(% - 1rem); /* Default to 3 items per row */
+    
+    @media (max-width: 768px) {
+        width: calc(50% - 1rem); /* 2 items per row on medium screens */
+    }
+
+    @media (max-width: 480px) {
+        width: 100%; /* 1 item per row on small screens */
+    }
+`;
+
+
 const CardContainer = styled.div`
     display: grid;
     grid-auto-flow: column;
@@ -276,7 +402,6 @@ const CardBackContainer = styled(CardFront)`
     }
 `;
 
-/* More Button */
 const MoreButton = styled.button`
     margin-top: 1rem;
     padding: 5px 10px;
@@ -294,7 +419,6 @@ const MoreButton = styled.button`
     }
 `;
 
-/* Overlay Styles */
 const Overlay = styled.div`
     position: fixed;
     top: 0;
@@ -328,7 +452,6 @@ const OverlayContent = styled.div`
     }
 `;
 
-/* Close Button */
 const CloseButton = styled.button`
     margin-top: 1rem;
     padding: 5px 10px;
@@ -345,5 +468,6 @@ const CloseButton = styled.button`
         background: var(--secondary);
     }
 `;
+
 
 export default RecipeCardDisplay;
