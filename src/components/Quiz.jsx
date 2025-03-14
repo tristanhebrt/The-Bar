@@ -248,6 +248,7 @@ const QuizContainer = styled.div`
     justify-content: center;
     align-items: center;
     text-align: center;
+    gap: 1rem;
     margin: 10vh 10vw 10vh 10vw;
     overflow-x: hidden;
 `;
