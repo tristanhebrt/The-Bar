@@ -11,13 +11,8 @@ const Title = styled.header`
     background: var(--black);
 
     h1 {
-        font-size: 6rem;
+        font-size: 8vw;
         font-family: var(--fancy-font);
-    }
-
-    img {
-        width: 100px;
-        margin-left: 2rem;
     }
 `;
 
@@ -25,7 +20,6 @@ function Header() {
     return (
         <Title>
             <h1>The Bartender's Guide</h1>
-            <img src="../src/assets/cocktail.jpg"></img>
         </Title>
     );
 }

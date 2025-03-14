@@ -17,7 +17,7 @@ const aloraCocktails = [
         ]
     },
     {
-        title: "Secret Rosee",
+        title: "Secret Rose",
         ingredients: {
             booze: ["2 oz Prebatch"],
             syrups: ["0.75 oz Lemon Juice", "0.5 oz Raspberry Syrup"],
@@ -106,19 +106,6 @@ const aloraCocktails = [
             "Shake all ingredients with ice until well chilled.",
             "Strain into a Coupe.",
             "Garnish with a flower."
-        ]
-    },
-    {
-        title: "Espresso Martini",
-        ingredients: {
-            booze: ["1.5 oz Vodka", "0.5 oz Coffee Liqueur"],
-            syrups: ["1.5 oz Espresso", "0.25 oz Demerara Syrup"],
-            garnishes: ["3 Coffee Beans"]
-        },
-        steps: [
-            "Shake all ingredients with ice until well chilled.",
-            "Strain into a Coupe.",
-            "Garnish with the coffee beans."
         ]
     }
 ];
