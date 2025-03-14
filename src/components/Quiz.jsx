@@ -59,16 +59,22 @@ const Quiz = ({ cocktails }) => {
         }
         const randomCocktail = cocktails[Math.floor(Math.random() * cocktails.length)];
         const allIngredients = [
-            ...randomCocktail.ingredients.booze,
-            ...randomCocktail.ingredients.syrups,
+            ...(randomCocktail.ingredients.booze || []),
+            ...(randomCocktail.ingredients.syrups || []),
             ...(randomCocktail.ingredients.others || []),
-            ...randomCocktail.ingredients.garnishes
+            ...(randomCocktail.ingredients.garnishes || []),
+            ...(randomCocktail.ingredients.bitters || [])
         ];
         if (allIngredients.length === 0) {
             generateQuestion(retryCount + 1);
             return;
         }
-        const randomIngredientString = allIngredients[Math.floor(Math.random() * allIngredients.length)];
+        const validIngredients = allIngredients.filter(ingredient => ingredient.split(' ').length > 1);
+        if (validIngredients.length === 0) {
+            generateQuestion(retryCount + 1);
+            return;
+        }
+        const randomIngredientString = validIngredients[Math.floor(Math.random() * validIngredients.length)];
         const [ingredientQuantity, ...ingredientNameParts] = randomIngredientString.split(' ');
         const ingredientName = ingredientNameParts.join(' ');
         const questionType = Math.floor(Math.random() * 3);
@@ -77,21 +83,24 @@ const Quiz = ({ cocktails }) => {
         switch (questionType) {
             case 0:
                 question = {
-                    answer: ingredientName,
                     text: `What is one of the ingredients in a ${randomCocktail.title}?`,
-                    answer: ingredientName
+                    answer: ingredientName,
+                    allAnswers: allIngredients.map(ingredient => ingredient.split(' ').slice(1).join(' '))
                 };
                 break;
             case 1:
-                question = {
-                    answer: ingredientQuantity,
-                    text: `How much ${ingredientName} is in a ${randomCocktail.title}?`,
-                    answer: ingredientQuantity
-                };
+                if (randomCocktail.ingredients.booze.includes(randomIngredientString) || randomCocktail.ingredients.syrups.includes(randomIngredientString)) {
+                    question = {
+                        text: `How much ${ingredientName} is in a ${randomCocktail.title}?`,
+                        answer: ingredientQuantity.replace(/[a-zA-Z]/g, '')
+                    };
+                } else {
+                    generateQuestion(retryCount + 1);
+                    return;
+                }
                 break;
             case 2:
                 question = {
-                    answer: randomCocktail.title,
                     text: `Which cocktail is made with the following ingredients: ${allIngredients.join(', ')}?`,
                     answer: randomCocktail.title
                 };
@@ -105,7 +114,18 @@ const Quiz = ({ cocktails }) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (answer.toLowerCase() === currentQuestion.answer.toLowerCase()) {
+        let submittedAnswer = answer;
+        if (currentQuestion.text.startsWith('How much')) {
+            submittedAnswer = submittedAnswer.replace(/[a-zA-Z]/g, '').trim();
+        }
+        console.log('Submitted Answer:', submittedAnswer);
+        console.log('Correct Answer:', currentQuestion.answer);
+        if (currentQuestion.text.startsWith('What is one of the ingredients')) {
+            if (currentQuestion.allAnswers.some(ans => ans.toLowerCase() === submittedAnswer.toLowerCase()) || 
+                currentQuestion.allAnswers.some(ans => ans.toLowerCase().includes(submittedAnswer.toLowerCase()))) {
+                setScore(score + 1);
+            }
+        } else if (submittedAnswer.toLowerCase() === currentQuestion.answer.toLowerCase()) {
             setScore(score + 1);
         }
         setAnswer('');
@@ -127,7 +147,6 @@ const Quiz = ({ cocktails }) => {
                             />
                             <Button type="submit">Submit</Button>
                         </form>
-                        {console.log('Current Question:', currentQuestion)}
                     </div>
                 ) : (
                     <p>Loading question...</p>

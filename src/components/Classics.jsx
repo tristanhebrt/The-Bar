@@ -8,7 +8,7 @@ const classicCocktails = [
         ingredients: {
             booze: ["2 oz Whiskey"],
             syrups: ["0.25 oz Demerara Syrup"],
-            bitters: ["3 dashes Angostura Bitters"],
+            bitters: ["3 Dashes Angostura Bitters"],
             garnishes: ["Orange peel"]
         },
         steps: [
@@ -35,9 +35,22 @@ const classicCocktails = [
     {
         title: "Martini",
         ingredients: {
-            booze: ["2.5 oz Gin"],
+            booze: ["2 oz Gin"],
             syrups: ["0.5 oz Dry Vermouth"],
-            garnishes: ["Lemon twist or olive"]
+            garnishes: ["Lemon twist"]
+        },
+        steps: [
+            "Stir gin and vermouth with ice until well chilled.",
+            "Strain into a chilled martini glass.",
+            "Garnish with a lemon twist or olive."
+        ]
+    },
+    {
+        title: "Dirty Martini",
+        ingredients: {
+            booze: ["2 oz Gin", "0.25 oz Dry Vermouth"],
+            others: ["1 oz Olive Brine"],
+            garnishes: ["Olive Skewer"]
         },
         steps: [
             "Stir gin and vermouth with ice until well chilled.",
@@ -48,9 +61,7 @@ const classicCocktails = [
     {
         title: "Negroni",
         ingredients: {
-            booze: ["1 oz Gin"],
-            syrups: ["1 oz Sweet Vermouth"],
-            bitters: ["1 oz Campari"],
+            booze: ["1 oz Gin", "1 oz Sweet Vermouth", "1 oz Campari"],
             garnishes: ["Orange peel"]
         },
         steps: [
@@ -63,7 +74,7 @@ const classicCocktails = [
         title: "Daiquiri",
         ingredients: {
             booze: ["2 oz White Rum"],
-            syrups: ["1 oz Fresh Lime Juice", "0.75 oz Simple Syrup"]
+            syrups: ["1 oz Lime Juice", "0.75 oz Simple Syrup"]
         },
         steps: [
             "Shake all ingredients with ice until well chilled.",
@@ -75,9 +86,9 @@ const classicCocktails = [
         title: "Whiskey Sour",
         ingredients: {
             booze: ["2 oz Bourbon"],
-            syrups: ["0.75 oz Fresh Lemon Juice", "0.75 oz Simple Syrup"],
+            syrups: ["0.75 oz Lemon Juice", "0.75 oz Simple Syrup"],
             others: ["Egg white"],
-            garnishes: ["Cherry or orange slice"]
+            garnishes: ["Cherry or Orange Slice"]
         },
         steps: [
             "Dry shake all ingredients (without ice) if using egg white.",
@@ -90,7 +101,7 @@ const classicCocktails = [
         title: "Margarita",
         ingredients: {
             booze: ["2 oz Tequila"],
-            syrups: ["1 oz Fresh Lime Juice", "0.75 oz Cointreau or Triple Sec"],
+            syrups: ["1 oz Lime Juice", "0.5 oz Cointreau"],
             garnishes: ["Salt rim", "Lime wheel"]
         },
         steps: [
@@ -103,7 +114,7 @@ const classicCocktails = [
         title: "Mojito",
         ingredients: {
             booze: ["2 oz White Rum"],
-            syrups: ["1 oz Fresh Lime Juice", "0.75 oz Simple Syrup"],
+            syrups: ["1 oz Lime Juice", "0.75 oz Simple Syrup"],
             others: ["6-8 Mint Leaves", "Soda Water"],
             garnishes: ["Mint"]
         },
@@ -118,7 +129,6 @@ const classicCocktails = [
         ingredients: {
             booze: ["2 oz White Rum"],
             syrups: ["3 oz Pineapple Juice", "1 oz Coconut Cream"],
-            others: ["Blended with ice"],
             garnishes: ["Cherry", "Pineapple wedge"]
         },
         steps: [
@@ -131,8 +141,8 @@ const classicCocktails = [
         title: "Sazerac",
         ingredients: {
             booze: ["2 oz Rye Whiskey"],
-            syrups: ["1 Sugar Cube"],
-            bitters: ["3 dashes Peychaud’s Bitters"],
+            syrups: ["0.25 oz Simple Syrup"],
+            bitters: ["3 Dashes Peychaud’s Bitters"],
             others: ["Absinthe rinse"],
             garnishes: ["Lemon twist"]
         },
@@ -147,7 +157,7 @@ const classicCocktails = [
         title: "French 75",
         ingredients: {
             booze: ["1 oz Gin"],
-            syrups: ["0.5 oz Lemon Juice", "0.5 oz Simple Syrup"],
+            syrups: ["0.5 Lemon Juice", "0.5 oz Simple Syrup"],
             others: ["Champagne"],
             garnishes: ["Lemon twist"]
         },
@@ -158,10 +168,10 @@ const classicCocktails = [
         ]
     },
     {
-        title: "Bloody Mary",
+        title: "Caesar",
         ingredients: {
-            booze: ["2 oz Vodka"],
-            syrups: ["4 oz Tomato Juice", "0.5 oz Fresh Lemon Juice"],
+            booze: ["1.5 oz Vodka"],
+            syrups: ["4 oz Tomato Juice", "1 oz Lime Juice"],
             others: ["1 dash Worcestershire Sauce", "1 dash Hot Sauce", "Celery Salt", "Black Pepper"],
             garnishes: ["Celery Stalk"]
         },
