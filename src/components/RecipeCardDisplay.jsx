@@ -11,23 +11,14 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
         setAllFlipped(!allFlipped);
     };
 
-    // Function to scroll to a recipe card based on the search query
-    const handleSearchChange = (event) => {
-        setSearchQuery(event.target.value);
+    // Function to clear the search input
+    const handleClearSearch = () => {
+        setSearchQuery("");
     };
 
-    const handleSearchSubmit = () => {
-        const filteredRecipe = recipes.find(recipe => 
-            recipe.title.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-
-        if (filteredRecipe && cardRefs.current) {
-            const index = recipes.indexOf(filteredRecipe);
-            cardRefs.current[index]?.scrollIntoView({
-                behavior: "smooth",
-                block: "center",
-            });
-        }
+    // Function to handle the search query change
+    const handleSearchChange = (event) => {
+        setSearchQuery(event.target.value);
     };
 
     return (
@@ -43,28 +34,28 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
                     value={searchQuery}
                     onChange={handleSearchChange}
                 />
-                <SearchButton onClick={handleSearchSubmit}>Search</SearchButton>
+                <ClearButton onClick={handleClearSearch}>Clear</ClearButton>
                 <FlipAllButton onClick={handleFlipAll}>
                     {allFlipped ? "Unflip All" : "Flip All"}
                 </FlipAllButton>
             </SearchContainer>
             <CardContainer>
                 {recipes
-                    .filter(recipe => 
+                    .filter(recipe =>
                         recipe.title.toLowerCase().includes(searchQuery.toLowerCase())
                     )
                     .map((recipe, index) => (
-                        <RecipeCard 
-                            key={index} 
-                            ref={(el) => cardRefs.current[index] = el}  // Reference for scrolling
-                            title={recipe.title} 
-                            content={[ 
+                        <RecipeCard
+                            key={index}
+                            ref={(el) => cardRefs.current[index] = el} // Reference for scrolling
+                            title={recipe.title}
+                            content={[
                                 ...(recipe.ingredients?.booze || []),
                                 ...(recipe.ingredients?.syrups || []),
                                 ...(recipe.ingredients?.bitters || []),
                                 ...(recipe.ingredients?.garnishes || [])
                             ]}
-                            steps={recipe.steps} 
+                            steps={recipe.steps}
                             allFlipped={allFlipped}
                         />
                     ))}
@@ -170,7 +161,7 @@ const SearchInput = styled.input`
     width: 250px;
 `;
 
-const SearchButton = styled.button`
+const ClearButton = styled.button`
     padding: 5px 10px;
     font-family: var(--main-font);
     font-size: 1.5rem;
