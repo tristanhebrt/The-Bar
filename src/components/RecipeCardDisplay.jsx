@@ -167,7 +167,7 @@ const RecipeCard = React.forwardRef(({ title, content, steps, notes, allFlipped 
                 <Overlay>
                     <OverlayContent>
                         <h2>{title}</h2>
-                        <h3>More</h3>
+                        <h3>Steps</h3>
                         {steps.map((step, index) => (
                             <p key={index}>- {step}</p>
                         ))}
@@ -190,7 +190,7 @@ const CardBack = ({ content, onMoreClick }) => (
         {content.map((item, index) => (
             <p key={index}>{item}</p>
         ))}
-        <MoreButton onClick={onMoreClick}>Steps</MoreButton>
+        <MoreButton onClick={onMoreClick}>More</MoreButton>
     </CardBackContainer>
 );
 
