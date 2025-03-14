@@ -6,15 +6,15 @@ const Quiz = ({ cocktails }) => {
     const [answer, setAnswer] = useState('');
     const [score, setScore] = useState(0);
     const [feedback, setFeedback] = useState('');
-    const [isCorrect, setIsCorrect] = useState(false); // State to track if the answer was correct
-    const [animateCorrect, setAnimateCorrect] = useState(false); // State to trigger the animation
-    const [correctAnswer, setCorrectAnswer] = useState(null); // Track the correct answer separately
-    const [totalQuestionsAnswered, setTotalQuestionsAnswered] = useState(0); // State to track the total number of questions answered
+    const [isCorrect, setIsCorrect] = useState(false);
+    const [animateCorrect, setAnimateCorrect] = useState(false);
+    const [correctAnswer, setCorrectAnswer] = useState(null);
+    const [totalQuestionsAnswered, setTotalQuestionsAnswered] = useState(0);
+    const [isOverlayVisible, setIsOverlayVisible] = useState(false); // State to control overlay visibility
 
     useEffect(() => {
         const retryCount = 0;
 
-        // Safeguard: Check if cocktails is available and not empty
         if (!cocktails || cocktails.length === 0) {
             console.log('No cocktails available');
             setCurrentQuestion(null);
@@ -41,7 +41,6 @@ const Quiz = ({ cocktails }) => {
     
         const randomCocktail = cocktails[Math.floor(Math.random() * cocktails.length)];
     
-        // Safeguard: Check if ingredients object exists and has expected properties
         const ingredients = randomCocktail?.ingredients || {};
         const booze = ingredients.booze || [];
         const syrups = ingredients.syrups || [];
@@ -73,13 +72,11 @@ const Quiz = ({ cocktails }) => {
         const [ingredientQuantity, ...ingredientNameParts] = randomIngredientString.split(' ');
     
         const measurementUnits = ["oz", "ml", "cl", "tsp", "tbsp", "dashes"];
-        // Remove the measurement unit if it's the first element
         let filteredIngredientNameParts = measurementUnits.includes(ingredientNameParts[0]?.toLowerCase())
             ? ingredientNameParts.slice(1)
             : ingredientNameParts;
         const ingredientName = filteredIngredientNameParts.join(' ');
     
-        // If filtering produces an empty name, try again
         if (!ingredientName.trim()) {
             generateQuestion(retryCount + 1);
             return;
@@ -128,10 +125,9 @@ const Quiz = ({ cocktails }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Check if currentQuestion is undefined
         if (!currentQuestion) {
             console.error("Current question is undefined.");
-            return; // Exit early if no question is available
+            return;
         }
 
         let submittedAnswer = answer;
@@ -139,27 +135,24 @@ const Quiz = ({ cocktails }) => {
             submittedAnswer = submittedAnswer.replace(/[a-zA-Z]/g, '').trim();
         }
 
-        // Check if the submitted answer is blank. If it is, treat it as incorrect.
         if (submittedAnswer.trim() === '') {
             console.log("Blank answer submitted, treated as incorrect.");
             if (currentQuestion.allAnswers) {
                 setFeedback(`Incorrect.`);
-                // Update correct answer only when incorrect, but avoid updating if it's already displayed in feedback
                 if (!feedback.includes('The correct answer is:')) {
                     setCorrectAnswer(currentQuestion.allAnswers.join(', '));
                 }
             } else {
                 setFeedback(`Incorrect.`);
-                // Update correct answer only when incorrect, but avoid updating if it's already displayed in feedback
                 if (!feedback.includes('The correct answer is:')) {
                     setCorrectAnswer(currentQuestion.answer);
                 }
             }
             setAnswer('');
-            setIsCorrect(false); // Mark as incorrect
-            setAnimateCorrect(false); // Reset animation state
-            setTimeout(() => generateQuestion(), 0); // Automatically generate next question after 2 seconds
-            setTotalQuestionsAnswered(totalQuestionsAnswered + 1); // Increment total questions answered
+            setIsCorrect(false);
+            setAnimateCorrect(false);
+            setTimeout(() => generateQuestion(), 0);
+            setTotalQuestionsAnswered(totalQuestionsAnswered + 1);
             return;
         }
 
@@ -168,10 +161,8 @@ const Quiz = ({ cocktails }) => {
 
         let isAnswerCorrect = false;
         if (currentQuestion.text.startsWith('What is one of the ingredients')) {
-            // Only proceed with word-based match if the submitted answer is a full word.
             const fullWordPattern = new RegExp(`\\b${submittedAnswer.trim()}\\b`, 'i');
 
-            // Check if the submitted answer matches a full word in the list of valid answers.
             if (currentQuestion.allAnswers.some(ans => fullWordPattern.test(ans))) {
                 isAnswerCorrect = true;
             }
@@ -182,67 +173,120 @@ const Quiz = ({ cocktails }) => {
         if (isAnswerCorrect) {
             setScore(score + 1);
             setFeedback("Correct!");
-            setIsCorrect(true); // Mark as correct
-            setAnimateCorrect(true); // Trigger animation
-            setTimeout(() => setAnimateCorrect(false), 500); // Reset animation state after 0.5 seconds
+            setIsCorrect(true);
+            setAnimateCorrect(true);
+            setTimeout(() => setAnimateCorrect(false), 500);
         } else {
             setFeedback(`Incorrect`);
-            // Only update correct answer when the answer is incorrect, and it's not already shown in the feedback
             if (!feedback.includes('The correct answer is:')) {
                 setCorrectAnswer(currentQuestion.answer);
             }
         }
 
         setAnswer('');
-        setTimeout(() => generateQuestion(), 0); // Automatically generate next question after 2 seconds
-        setTotalQuestionsAnswered(totalQuestionsAnswered + 1); // Increment total questions answered
+        setTimeout(() => generateQuestion(), 0);
+        setTotalQuestionsAnswered(totalQuestionsAnswered + 1);
     };
 
     return (
-        <QuizContainer>
-            <h1>Quiz</h1>
-            {cocktails && cocktails.length > 0 ? (
-                currentQuestion ? (
-                    <div>
-                        <QuestionText>{currentQuestion.text}</QuestionText>
-                        <form onSubmit={handleSubmit}>
-                            <Input
-                                type="text"
-                                value={answer}
-                                onChange={(e) => setAnswer(e.target.value)}
-                            />
-                            <Button type="submit">Submit</Button>
-                        </form>
-                        {feedback && (
-                            <FeedbackContainer>
-                                <FeedbackText
-                                    isCorrect={isCorrect}
-                                    animateCorrect={animateCorrect} // Pass animation state to the styled component
-                                >
-                                    {feedback}
-                                    {/* Display the correct answer below "Incorrect" if the answer is wrong */}
-                                    {!isCorrect && correctAnswer && (
-                                        <CorrectAnswerText>
-                                            The correct answer is: {correctAnswer}
-                                        </CorrectAnswerText>
+        <div>
+            <ToggleButton onClick={() => setIsOverlayVisible(!isOverlayVisible)}>
+                {isOverlayVisible ? 'Close Quiz' : 'Open Quiz'}
+            </ToggleButton>
+            {isOverlayVisible && (
+                <Overlay>
+                    <QuizContainer>
+                        <h1>Quiz</h1>
+                        {cocktails && cocktails.length > 0 ? (
+                            currentQuestion ? (
+                                <div>
+                                    <QuestionText>{currentQuestion.text}</QuestionText>
+                                    <form onSubmit={handleSubmit}>
+                                        <Input
+                                            type="text"
+                                            value={answer}
+                                            onChange={(e) => setAnswer(e.target.value)}
+                                        />
+                                        <Button type="submit">Submit</Button>
+                                    </form>
+                                    {feedback && (
+                                        <FeedbackContainer>
+                                            <FeedbackText
+                                                isCorrect={isCorrect}
+                                                animateCorrect={animateCorrect}
+                                            >
+                                                {feedback}
+                                                {!isCorrect && correctAnswer && (
+                                                    <CorrectAnswerText>
+                                                        The correct answer was: {correctAnswer}
+                                                    </CorrectAnswerText>
+                                                )}
+                                            </FeedbackText>
+                                        </FeedbackContainer>
                                     )}
-                                </FeedbackText>
-                            </FeedbackContainer>
+                                </div>
+                            ) : (
+                                <p>Loading question...</p>
+                            )
+                        ) : (
+                            <p>No cocktails available to generate questions.</p>
                         )}
-                    </div>
-                ) : (
-                    <p>Loading question...</p>
-                )
-            ) : (
-                <p>No cocktails available to generate questions.</p>
+                        <ScoreText>Score: {score} / {totalQuestionsAnswered}</ScoreText>
+                        <CloseButton onClick={() => setIsOverlayVisible(false)}>Close Quiz</CloseButton>
+                    </QuizContainer>
+                </Overlay>
             )}
-            <ScoreText>Score: {score} / {totalQuestionsAnswered}</ScoreText>
-        </QuizContainer>
+        </div>
     );
 };
 
 /* Styled Components */
+const ToggleButton = styled.button`
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: var(--main-font);
+    font-size: 1.5em;
+    background-color: var(--highlight3);
+    color: var(--black);
+    transition: background 0.3s ease;
+    &:hover {
+        background-color: var(--secondary);
+    }
+`;
+
+const Overlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+`;
+
+const CloseButton = styled.button`
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: var(--main-font);
+    font-size: 1.5em;
+    background-color: var(--highlight3);
+    color: var(--black);
+    transition: background 0.3s ease;
+    &:hover {
+        background-color: var(--secondary);
+    }
+`;
+
 const QuizContainer = styled.div`
+    width: 70vw;
+    height: 95vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -251,17 +295,26 @@ const QuizContainer = styled.div`
     gap: 1rem;
     margin: 10vh 10vw 10vh 10vw;
     overflow-x: hidden;
+    background: var(--highlight2);
+    padding: 2rem;
+    border-radius: 10px;
+
+    h1 {
+        font-size: 2.5em;
+        font-weight: bold;
+    }
 `;
 
 const QuestionText = styled.p`
     font-size: 2em;
     max-width: 800px;
-    margin-bottom: 10px;
+    margin-bottom: 2rem;
 `;
 
 const ScoreText = styled.p`
     font-size: 2em;
-    margin-top: 20px;
+    font-weight: bold;
+    margin-top: 1rem;
 `;
 
 const Input = styled.input`
@@ -296,26 +349,25 @@ const FeedbackContainer = styled.div`
 const FeedbackText = styled.p`
     font-size: 1.5em;
     margin-bottom: 10px;
-    animation: ${({ animateCorrect }) => (animateCorrect ? 'pop 0.5s ease' : 'none')}; /* Animation triggered when correct */
-    font-size: ${({ isCorrect }) => (isCorrect ? '2.5em' : '1.5em')}; /* Larger size when correct */
+    animation: ${({ animateCorrect }) => (animateCorrect ? 'pop 0.5s ease' : 'none')};
+    font-size: ${({ isCorrect }) => (isCorrect ? '2.5em' : '1.5em')};
     
-    /* Keyframes for the pop-up effect */
     @keyframes pop {
         0% {
             transform: scale(1);
         }
         50% {
-            transform: scale(1.5); /* Grow larger */
+            transform: scale(1.5);
         }
         100% {
-            transform: scale(1); /* Return to normal size */
+            transform: scale(1);
         }
     }
 `;
 
 const CorrectAnswerText = styled.p`
     font-size: 1.2em;
-    color: red; /* You can change the color or style */
+    color: red;
     margin-top: 10px;
 `;
 

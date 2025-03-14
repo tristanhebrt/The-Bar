@@ -1,6 +1,5 @@
 import React from "react";
 import RecipeCardDisplay from "../RecipeCardDisplay";
-import Quiz from '../Quiz'
 
 const classicCocktails = [
     {
@@ -187,7 +186,6 @@ const Classics = () => {
     return (
         <>
             <RecipeCardDisplay mainTitle="Classic Cocktails" recipes={classicCocktails} />
-            <Quiz cocktails={classicCocktails} />
         </>
     );
 };

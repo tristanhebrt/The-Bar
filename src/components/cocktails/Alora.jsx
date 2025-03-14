@@ -1,6 +1,5 @@
 import React from "react";
 import RecipeCardDisplay from "../RecipeCardDisplay";
-import Quiz from "../Quiz";
 
 const aloraCocktails = [
     {
@@ -112,10 +111,7 @@ const aloraCocktails = [
 
 const Alora = () => {
     return (
-        <>
-            <RecipeCardDisplay mainTitle="Alora Cocktails" recipes={aloraCocktails} />
-            <Quiz cocktails={aloraCocktails} />
-        </>
+        <RecipeCardDisplay mainTitle="Alora Cocktails" recipes={aloraCocktails}></RecipeCardDisplay>
     );
 };
 

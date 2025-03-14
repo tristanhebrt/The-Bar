@@ -1,5 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Children } from "react";
 import styled from "styled-components";
+import Quiz from "./Quiz";
 
 const RecipeCardDisplay = ({ mainTitle, recipes }) => {
     const [allFlipped, setAllFlipped] = useState(false);
@@ -82,6 +83,7 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
                 <FlipAllButton onClick={handleFlipAll}>
                     {allFlipped ? "Unflip" : "Flip"}
                 </FlipAllButton>
+                <Quiz cocktails={recipes} />
             </SearchContainer>
 
             {/* Filter Dropdown */}
@@ -188,6 +190,7 @@ const Container = styled.div`
     text-align: center;
     background: var(--highlight1);
     height: auto;
+    margin-bottom: 10rem;
 `;
 
 const TitleContainer = styled.div`
