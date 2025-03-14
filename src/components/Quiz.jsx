@@ -260,8 +260,8 @@ const Overlay = styled.div`
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.8);
     display: flex;
     justify-content: center;
@@ -285,19 +285,17 @@ const CloseButton = styled.button`
 `;
 
 const QuizContainer = styled.div`
-    width: 70vw;
-    height: 95vh;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
     gap: 1rem;
-    margin: 10vh 10vw 10vh 10vw;
-    overflow-x: hidden;
+    overflow: hidden;
     background: var(--highlight2);
     padding: 2rem;
-    border-radius: 10px;
 
     h1 {
         font-size: 2.5em;
@@ -309,17 +307,25 @@ const QuestionText = styled.p`
     font-size: 2em;
     max-width: 800px;
     margin-bottom: 2rem;
+
+    @media (max-width: 600px) {
+        font-size: 1.5em;
+    }
 `;
 
 const ScoreText = styled.p`
     font-size: 2em;
     font-weight: bold;
     margin-top: 1rem;
+
+    @media (max-width: 600px) {
+        font-size: 1.5em;
+    }
 `;
 
 const Input = styled.input`
     padding: 0.5rem 2rem;
-    margin-right: 10px;
+    margin-bottom: 1rem;
     border-radius: 5px;
     font-family: var(--main-font);
     font-size: 1.5em;
@@ -369,6 +375,10 @@ const CorrectAnswerText = styled.p`
     font-size: 1.2em;
     color: red;
     margin-top: 10px;
+    
+    @media (max-width: 600px) {
+        font-size: 1em;
+    }
 `;
 
 export default Quiz;
