@@ -191,6 +191,10 @@ const Container = styled.div`
     background: var(--highlight1);
     height: auto;
     margin-bottom: 10rem;
+
+    @media (max-width: 600px) {
+        margin-bottom: 0;
+    }
 `;
 
 const TitleContainer = styled.div`

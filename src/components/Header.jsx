@@ -10,9 +10,17 @@ const Title = styled.header`
     color: white;
     background: var(--black);
 
+    @media (max-width: 600px) {
+        height: 100vh;
+    }
+
     h1 {
-        font-size: 8vw;
+        font-size: 7rem;
         font-family: var(--fancy-font);
+
+        @media (max-width: 600px) {
+        font-size: 2.5rem;
+    }
     }
 `;
 
