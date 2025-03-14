@@ -1,15 +1,15 @@
 import React from "react";
 import RecipeCardDisplay from "./RecipeCardDisplay";
+import Quiz from "./Quiz";
 
 const aloraCocktails = [
     {
         title: "Into the Fire",
-        content: [
-            "2 oz Prebatch",
-            "1 oz Lime Juice",
-            "0.5 oz Agave Syrup",
-            "Spicy Rim"
-        ],
+        ingredients: {
+            booze: ["2 oz Prebatch"],
+            syrups: ["1 oz Lime Juice", "0.5 oz Agave Syrup"],
+            garnishes: ["Spicy Rim", "Lime Wheel"]
+        },
         steps: [
             "Shake all ingredients with ice until well chilled.",
             "Strain into a Rocks glass with cracked ice.",
@@ -18,94 +18,90 @@ const aloraCocktails = [
     },
     {
         title: "Secret Rosee",
-        content: [
-            "2 oz Prebatch",
-            "0.75 oz Lemon Juice",
-            "0.5 oz Raspberry Syrup",
-            "Basil Leaves",
-            "Rose Lemonade",
-            "1 Flower"
-        ],
+        ingredients: {
+            booze: ["2 oz Prebatch"],
+            syrups: ["0.75 oz Lemon Juice", "0.5 oz Raspberry Syrup"],
+            others: ["Basil Leaves", "Rose Lemonade"],
+            garnishes: ["1 Flower", "Basil Bunch"]
+        },
         steps: [
             "Shake all ingredients with a basil leaf and ice until well chilled.",
             "Strain into a Collins glass.",
+            "Top off with rose lemonade.",
             "Garnish with a basil bunch and a flower."
         ]
     },
     {
         title: "Boat Party",
-        content: [
-            "2.25 oz Prebatch",
-            "1 oz Lime Juice",
-            "1 oz Banana Syrup",
-            "Mint Leaves",
-            "3 Banana Chips",
-            "5 Dashes Angostura Bitters",
-        ],
+        ingredients: {
+            booze: ["2.25 oz Prebatch"],
+            syrups: ["1 oz Lime Juice", "1 oz Banana Syrup"],
+            others: ["Mint Leaves"],
+            bitters: ["5 dashes Angostura Bitters"],
+            garnishes: ["3 Banana Chips"]
+        },
         steps: [
             "Shake all ingredients with ice until well chilled.",
             "Add mint to the bottom of a Collins glass.",
             "Strain into the glass.",
             "Add cracked ice.",
+            "Top off with crushed ice.",
             "Cover with Angostura Bitters.",
             "Garnish with banana chips."
         ]
     },
     {
         title: "Sunset Chaser",
-        content: [
-            "2 oz Prebatch",
-            "0.75 oz Lemon Juice",
-            "0.75 oz Earl Grey Syrup",
-            "1 oz Blood Orange Juice",
-            "2 Dashes Foamer",
-            "5 Dashes Walnut Bitters"
-        ],
+        ingredients: {
+            booze: ["2 oz Prebatch"],
+            syrups: ["0.75 oz Lemon Juice", "0.75 oz Earl Grey Syrup", "1 oz Blood Orange Juice"],
+            others: ["2 dashes Foamer", "Flower"],
+            bitters: ["3-5 dashes Walnut Bitters"]
+        },
         steps: [
             "Shake all ingredients with ice until well chilled.",
             "Strain into a chilled Coupe glass.",
             "Garnish with a half circle of walnut bitters.",
-            "Make a streak in the walnut bitters."
+            "Make a streak in the walnut bitters.",
+            "Add a flower to the center."
         ]
     },
     {
         title: "Prime Thyme",
-        content: [
-            "2 oz Dry Gin",
-            "0.75 oz Fresh Lime Juice",
-            "0.5 oz Thyme Syrup",
-            "Cucumber Tonic Soda",
-            "1 Thyme Sprig"
-        ],
+        ingredients: {
+            booze: ["2 oz Gin"],
+            syrups: ["0.75 oz Lime Juice", "0.5 oz Thyme Syrup"],
+            others: ["Cucumber Tonic Soda"],
+            garnishes: ["3 Thyme Sprigs"]
+        },
         steps: [
             "Shake all ingredients with ice until well chilled.",
             "Strain into a Collins glass.",
             "Top with cucumber tonic soda.",
-            "Garnish with a thyme sprig."
+            "Garnish with a thyme sprig bunch."
         ]
     },
     {
-        title: "Bourbon Tunover",
-        content: [
-            "2.25 oz Prebatch",
-            "0.33 oz Cinnamon Syrup",
-            "1 Apple Wheel"
-        ],
+        title: "Bourbon Turnover",
+        ingredients: {
+            booze: ["2.25 oz Prebatch"],
+            syrups: ["0.33 oz Cinnamon Syrup"],
+            bitters: ["2 dashes Angostura Bitters"],
+            garnishes: ["1 Apple Wheel"]
+        },
         steps: [
             "Stir all ingredients with ice until well chilled.",
             "Strain into a rocks glass with a large ice cube.",
-            "Stir again.",
             "Garnish with an apple wheel."
         ]
     },
     {
         title: "Dreamer",
-        content: [
-            "2 oz Prebatch",
-            "0.75 oz Fresh Lemon Juice",
-            "0.5 oz Crush Syrup",
-            "1 Flower"
-        ],
+        ingredients: {
+            booze: ["2 oz Prebatch"],
+            syrups: ["0.75 oz Lemon Juice", "0.5 oz Crush Syrup"],
+            garnishes: ["1 Flower"]
+        },
         steps: [
             "Shake all ingredients with ice until well chilled.",
             "Strain into a Coupe.",
@@ -114,23 +110,26 @@ const aloraCocktails = [
     },
     {
         title: "Espresso Martini",
-        content: [
-            "1.5 oz Vodka",
-            "0.5 oz Coffee Liquor",
-            "1.5 oz Esspresso",
-            "0.25 oz Demerara Syrup",
-            "3 Coffee Beans"
-        ],
+        ingredients: {
+            booze: ["1.5 oz Vodka", "0.5 oz Coffee Liqueur"],
+            syrups: ["1.5 oz Espresso", "0.25 oz Demerara Syrup"],
+            garnishes: ["3 Coffee Beans"]
+        },
         steps: [
             "Shake all ingredients with ice until well chilled.",
             "Strain into a Coupe.",
             "Garnish with the coffee beans."
         ]
-    },
+    }
 ];
 
 const Alora = () => {
-    return <RecipeCardDisplay mainTitle="Alora Cocktails" recipes={aloraCocktails} />;
+    return (
+        <>
+            <RecipeCardDisplay mainTitle="Alora Cocktails" recipes={aloraCocktails} />
+            <Quiz cocktails={aloraCocktails} />
+        </>
+    );
 };
 
 export default Alora;

@@ -8,7 +8,7 @@ const classicCocktails = [
         ingredients: {
             booze: ["2 oz Whiskey"],
             syrups: ["0.25 oz Demerara Syrup"],
-            bitters: ["3 Dashes Angostura Bitters"],
+            bitters: ["3 dashes Angostura Bitters"],
             garnishes: ["Orange peel"]
         },
         steps: [
