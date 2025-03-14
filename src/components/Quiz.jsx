@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-const Quiz = ({ cocktails }) => { 
+const Quiz = ({ cocktails }) => {
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [answer, setAnswer] = useState('');
     const [score, setScore] = useState(0);
     const [feedback, setFeedback] = useState('');
+    const [isCorrect, setIsCorrect] = useState(false); // State to track if the answer was correct
+    const [animateCorrect, setAnimateCorrect] = useState(false); // State to trigger the animation
+    const [correctAnswer, setCorrectAnswer] = useState(null); // Track the correct answer separately
+    const [totalQuestionsAnswered, setTotalQuestionsAnswered] = useState(0); // State to track the total number of questions answered
 
     useEffect(() => {
         const retryCount = 0;
@@ -29,7 +33,7 @@ const Quiz = ({ cocktails }) => {
             ...(randomCocktail.ingredients.syrups || []),
             ...(randomCocktail.ingredients.others || []),
             ...(randomCocktail.ingredients.garnishes || []),
-            ...(randomCocktail.ingredients.bitters || [])
+            ...(randomCocktail.ingredients.bitters || []),
         ];
         if (allIngredients.length === 0) {
             generateQuestion(retryCount + 1);
@@ -66,14 +70,14 @@ const Quiz = ({ cocktails }) => {
                     answer: ingredientName,
                     allAnswers: allIngredients.map(ingredient =>
                         ingredient.replace(/^\d+(\.\d+)?\s?(oz|ml|dashes|cl|tsp|tbsp)?\s?/i, '')
-                    )
+                    ),
                 };
                 break;
             case 1:
                 if (randomCocktail.ingredients.booze.includes(randomIngredientString) || randomCocktail.ingredients.syrups.includes(randomIngredientString)) {
                     question = {
                         text: `How much ${ingredientName} is in a ${randomCocktail.title}?`,
-                        answer: ingredientQuantity.replace(/[a-zA-Z]/g, '')
+                        answer: ingredientQuantity.replace(/[a-zA-Z]/g, ''),
                     };
                 } else {
                     generateQuestion(retryCount + 1);
@@ -83,7 +87,7 @@ const Quiz = ({ cocktails }) => {
             case 2:
                 question = {
                     text: `Which cocktail is made with the following ingredients: ${allIngredients.join(', ')}?`,
-                    answer: randomCocktail.title
+                    answer: randomCocktail.title,
                 };
                 break;
             default:
@@ -103,37 +107,60 @@ const Quiz = ({ cocktails }) => {
         // Check if the submitted answer is blank. If it is, treat it as incorrect.
         if (submittedAnswer.trim() === '') {
             console.log("Blank answer submitted, treated as incorrect.");
-            setFeedback(`Incorrect. The correct answer is: ${currentQuestion.answer}`);
+            if (currentQuestion.allAnswers) {
+                setFeedback(`Incorrect.`);
+                // Update correct answer only when incorrect, but avoid updating if it's already displayed in feedback
+                if (!feedback.includes('The correct answer is:')) {
+                    setCorrectAnswer(currentQuestion.allAnswers.join(', '));
+                }
+            } else {
+                setFeedback(`Incorrect.`);
+                // Update correct answer only when incorrect, but avoid updating if it's already displayed in feedback
+                if (!feedback.includes('The correct answer is:')) {
+                    setCorrectAnswer(currentQuestion.answer);
+                }
+            }
             setAnswer('');
+            setIsCorrect(false); // Mark as incorrect
+            setAnimateCorrect(false); // Reset animation state
+            setTimeout(() => generateQuestion(), 0); // Automatically generate next question after 2 seconds
+            setTotalQuestionsAnswered(totalQuestionsAnswered + 1); // Increment total questions answered
             return;
         }
         
         console.log('Submitted Answer:', submittedAnswer);
         console.log('Correct Answer:', currentQuestion.answer);
         
-        let isCorrect = false;
+        let isAnswerCorrect = false;
         if (currentQuestion.text.startsWith('What is one of the ingredients')) {
-            if (currentQuestion.allAnswers.some(ans => ans.toLowerCase() === submittedAnswer.toLowerCase()) || 
-                currentQuestion.allAnswers.some(ans => ans.toLowerCase().includes(submittedAnswer.toLowerCase()))) {
-                isCorrect = true;
+            // Only proceed with word-based match if the submitted answer is a full word.
+            const fullWordPattern = new RegExp(`\\b${submittedAnswer.trim()}\\b`, 'i');
+            
+            // Check if the submitted answer matches a full word in the list of valid answers.
+            if (currentQuestion.allAnswers.some(ans => fullWordPattern.test(ans))) {
+                isAnswerCorrect = true;
             }
         } else if (submittedAnswer.toLowerCase() === currentQuestion.answer.toLowerCase()) {
-            isCorrect = true;
+            isAnswerCorrect = true;
         }
         
-        if (isCorrect) {
+        if (isAnswerCorrect) {
             setScore(score + 1);
             setFeedback("Correct!");
+            setIsCorrect(true); // Mark as correct
+            setAnimateCorrect(true); // Trigger animation
+            setTimeout(() => setAnimateCorrect(false), 500); // Reset animation state after 0.5 seconds
         } else {
-            setFeedback(`Incorrect. The correct answer is: ${currentQuestion.answer}`);
+            setFeedback(`Incorrect`);
+            // Only update correct answer when the answer is incorrect, and it's not already shown in the feedback
+            if (!feedback.includes('The correct answer is:')) {
+                setCorrectAnswer(currentQuestion.answer);
+            }
         }
+        
         setAnswer('');
-    };
-
-    // Handler for moving to the next question
-    const handleNextQuestion = () => {
-        setFeedback('');
-        generateQuestion();
+        setTimeout(() => generateQuestion(), 0); // Automatically generate next question after 2 seconds
+        setTotalQuestionsAnswered(totalQuestionsAnswered + 1); // Increment total questions answered
     };
 
     return (
@@ -153,8 +180,18 @@ const Quiz = ({ cocktails }) => {
                         </form>
                         {feedback && (
                             <FeedbackContainer>
-                                <FeedbackText>{feedback}</FeedbackText>
-                                <Button onClick={handleNextQuestion}>Next</Button>
+                                <FeedbackText
+                                    isCorrect={isCorrect}
+                                    animateCorrect={animateCorrect} // Pass animation state to the styled component
+                                >
+                                    {feedback}
+                                    {/* Display the correct answer below "Incorrect" if the answer is wrong */}
+                                    {!isCorrect && correctAnswer && (
+                                        <CorrectAnswerText>
+                                            The correct answer is: {correctAnswer}
+                                        </CorrectAnswerText>
+                                    )}
+                                </FeedbackText>
                             </FeedbackContainer>
                         )}
                     </div>
@@ -164,19 +201,25 @@ const Quiz = ({ cocktails }) => {
             ) : (
                 <p>No cocktails available to generate questions.</p>
             )}
-            <ScoreText>Score: {score}</ScoreText>
+            <ScoreText>Score: {score} / {totalQuestionsAnswered}</ScoreText>
         </QuizContainer>
     );
 };
 
 /* Styled Components */
 const QuizContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     margin: 10vh;
+    overflow-x: hidden;
 `;
 
 const QuestionText = styled.p`
     font-size: 2em;
+    max-width: 800px;
     margin-bottom: 10px;
 `;
 
@@ -217,6 +260,27 @@ const FeedbackContainer = styled.div`
 const FeedbackText = styled.p`
     font-size: 1.5em;
     margin-bottom: 10px;
+    animation: ${({ animateCorrect }) => (animateCorrect ? 'pop 0.5s ease' : 'none')}; /* Animation triggered when correct */
+    font-size: ${({ isCorrect }) => (isCorrect ? '2.5em' : '1.5em')}; /* Larger size when correct */
+    
+    /* Keyframes for the pop-up effect */
+    @keyframes pop {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.5); /* Grow larger */
+        }
+        100% {
+            transform: scale(1); /* Return to normal size */
+        }
+    }
+`;
+
+const CorrectAnswerText = styled.p`
+    font-size: 1.2em;
+    color: red; /* You can change the color or style */
+    margin-top: 10px;
 `;
 
 export default Quiz;
