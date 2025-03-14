@@ -1,8 +1,8 @@
 import React from "react";
-import RecipeCardDisplay from "./RecipeCardDisplay";
-import Quiz from './Quiz';
+import RecipeCardDisplay from "../RecipeCardDisplay";
+import Quiz from '../Quiz';
 
-const classicCocktails = [
+const allCocktails = [
     {
         title: "Aperol Spritz",
         ingredients: {
@@ -1688,8 +1688,8 @@ const classicCocktails = [
 const ModernClassics = () => {
     return (
         <>
-            <RecipeCardDisplay mainTitle="Modern Classics" recipes={classicCocktails} />
-            <Quiz cocktails={classicCocktails} />
+            <RecipeCardDisplay mainTitle="All Cocktails" recipes={allCocktails} />
+            <Quiz cocktails={allCocktails} />
         </>
     );
 };

@@ -1,6 +1,6 @@
 import React from "react";
-import RecipeCardDisplay from "./RecipeCardDisplay";
-import Quiz from './Quiz'
+import RecipeCardDisplay from "../RecipeCardDisplay";
+import Quiz from '../Quiz'
 
 const classicCocktails = [
     {
