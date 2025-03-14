@@ -57,7 +57,7 @@ const classicCocktails = [
         steps: [
             "Stir gin and vermouth with ice until well chilled.",
             "Strain into a chilled martini glass.",
-            "Garnish with a lemon twist or olive."
+            "Garnish with an olive skewer."
         ],
         notes: "A savory twist on the classic martini with a briny flavor from the olive brine."
     },
