@@ -167,7 +167,7 @@ const classicCocktails = [
         title: "French 75",
         ingredients: {
             booze: ["1 oz Gin"],
-            syrups: ["0.5 Lemon Juice", "0.5 oz Simple Syrup"],
+            syrups: ["0.5 oz Lemon Juice", "0.5 oz Simple Syrup"],
             others: ["Champagne"],
             garnishes: ["Lemon twist"]
         },
