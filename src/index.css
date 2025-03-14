@@ -3,6 +3,7 @@
   --primary: #373737;
   --secondary: #eeeae6;
   --black: #000000;
+  --white: #ffffff;
 
   --highlight1: #000000;
   --highlight2: #353535;
@@ -10,6 +11,7 @@
 
   --main-font: "Caveat", sans-serif;
   --title-font: "Crimson Text", sans-serif;
+  --text-font: "Manuale", sans-serif;
   --fancy-font: "Lavishly Yours", sans-serif;
 
   font-family: var(--main-font);

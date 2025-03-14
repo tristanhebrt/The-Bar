@@ -190,9 +190,9 @@ const Quiz = ({ cocktails }) => {
 
     return (
         <div>
-            <ToggleButton onClick={() => setIsOverlayVisible(!isOverlayVisible)}>
+            <OpenQuizButton onClick={() => setIsOverlayVisible(!isOverlayVisible)}>
                 {isOverlayVisible ? 'Close Quiz' : 'Open Quiz'}
-            </ToggleButton>
+            </OpenQuizButton>
             {isOverlayVisible && (
                 <Overlay>
                     <QuizContainer>
@@ -204,6 +204,7 @@ const Quiz = ({ cocktails }) => {
                                     <form onSubmit={handleSubmit}>
                                         <Input
                                             type="text"
+                                            placeholder="Your answer..."
                                             value={answer}
                                             onChange={(e) => setAnswer(e.target.value)}
                                         />
@@ -232,7 +233,7 @@ const Quiz = ({ cocktails }) => {
                             <p>No cocktails available to generate questions.</p>
                         )}
                         <ScoreText>Score: {score} / {totalQuestionsAnswered}</ScoreText>
-                        <CloseButton onClick={() => setIsOverlayVisible(false)}>Close Quiz</CloseButton>
+                        <CloseQuizButton onClick={() => setIsOverlayVisible(false)}>Close Quiz</CloseQuizButton>
                     </QuizContainer>
                 </Overlay>
             )}
@@ -241,18 +242,22 @@ const Quiz = ({ cocktails }) => {
 };
 
 /* Styled Components */
-const ToggleButton = styled.button`
+const OpenQuizButton = styled.button`
     padding: 10px 20px;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    font-family: var(--main-font);
-    font-size: 1.5em;
-    background-color: var(--highlight3);
-    color: var(--black);
+    font-family: var(--text-font);
+    font-size: 1.2rem;
+    background-color: var(--black);
+    color: var(--white);
     transition: background 0.3s ease;
+
     &:hover {
-        background-color: var(--secondary);
+        background-color: var(--highlight3);
+    }
+
+    &:active {
+        transform: scale(0.95);
     }
 `;
 
@@ -267,20 +272,32 @@ const Overlay = styled.div`
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    opacity: 0;
+    animation: fadeIn 0.2s forwards;
+
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+        }
+    }
 `;
 
-const CloseButton = styled.button`
+const CloseQuizButton = styled.button`
     padding: 10px 20px;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    font-family: var(--main-font);
+    font-family: var(--text-font);
     font-size: 1.5em;
     background-color: var(--highlight3);
     color: var(--black);
     transition: background 0.3s ease;
+
     &:hover {
         background-color: var(--secondary);
+    }
+
+    &:active {
+        transform: scale(0.95);
     }
 `;
 
@@ -298,6 +315,7 @@ const QuizContainer = styled.div`
     padding: 2rem;
 
     h1 {
+        font-family: var(--text-font);
         font-size: 2.5em;
         font-weight: bold;
     }
@@ -325,8 +343,8 @@ const ScoreText = styled.p`
 
 const Input = styled.input`
     padding: 0.5rem 2rem;
-    margin-bottom: 1rem;
-    border-radius: 5px;
+    margin: 0.5rem;
+    border: none;
     font-family: var(--main-font);
     font-size: 1.5em;
     background-color: var(--highlight3);
@@ -336,15 +354,19 @@ const Input = styled.input`
 const Button = styled.button`
     padding: 10px 20px;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
     font-family: var(--main-font);
     font-size: 1.5em;
     background-color: var(--highlight3);
     color: var(--black);
     transition: background 0.3s ease;
+
     &:hover {
         background-color: var(--secondary);
+    }
+
+    &:active {
+        transform: scale(0.95);
     }
 `;
 

@@ -13,7 +13,8 @@ const aloraCocktails = [
             "Shake all ingredients with ice until well chilled.",
             "Strain into a Rocks glass with cracked ice.",
             "Garnish with a lime wheel."
-        ]
+        ],
+        notes: "A spicy and tangy cocktail with a refreshing lime finish."
     },
     {
         title: "Secret Rose",
@@ -28,7 +29,8 @@ const aloraCocktails = [
             "Strain into a Collins glass.",
             "Top off with rose lemonade.",
             "Garnish with a basil bunch and a flower."
-        ]
+        ],
+        notes: "A floral and fruity cocktail with a hint of basil."
     },
     {
         title: "Boat Party",
@@ -47,7 +49,8 @@ const aloraCocktails = [
             "Top off with crushed ice.",
             "Cover with Angostura Bitters.",
             "Garnish with banana chips."
-        ]
+        ],
+        notes: "A tropical cocktail with a refreshing mint and banana flavor."
     },
     {
         title: "Sunset Chaser",
@@ -63,7 +66,8 @@ const aloraCocktails = [
             "Garnish with a half circle of walnut bitters.",
             "Make a streak in the walnut bitters.",
             "Add a flower to the center."
-        ]
+        ],
+        notes: "A sophisticated cocktail with a blend of citrus and tea flavors."
     },
     {
         title: "Prime Thyme",
@@ -78,7 +82,8 @@ const aloraCocktails = [
             "Strain into a Collins glass.",
             "Top with cucumber tonic soda.",
             "Garnish with a thyme sprig bunch."
-        ]
+        ],
+        notes: "A refreshing cocktail with herbal thyme and cucumber notes."
     },
     {
         title: "Bourbon Turnover",
@@ -92,7 +97,8 @@ const aloraCocktails = [
             "Stir all ingredients with ice until well chilled.",
             "Strain into a rocks glass with a large ice cube.",
             "Garnish with an apple wheel."
-        ]
+        ],
+        notes: "A warm and spicy cocktail with a hint of apple and cinnamon."
     },
     {
         title: "Dreamer",
@@ -105,7 +111,8 @@ const aloraCocktails = [
             "Shake all ingredients with ice until well chilled.",
             "Strain into a Coupe.",
             "Garnish with a flower."
-        ]
+        ],
+        notes: "A light and floral cocktail with a citrusy finish."
     }
 ];
 

@@ -13,7 +13,8 @@ const modernCocktails = [
             "Shake all ingredients with ice until well chilled.",
             "Strain into a chilled coupe glass.",
             "Garnish with a lime wheel."
-        ]
+        ],
+        notes: "A tart and tangy cocktail with a hint of sweetness from the cranberry juice."
     },
     {
         title: "Espresso Martini",
@@ -26,7 +27,8 @@ const modernCocktails = [
             "Shake all ingredients with ice until well chilled.",
             "Strain into a chilled coupe.",
             "Garnish with coffee beans."
-        ]
+        ],
+        notes: "A rich and smooth cocktail with a strong coffee flavor."
     },
     {
         title: "Paper Plane",
@@ -39,7 +41,8 @@ const modernCocktails = [
             "Shake all ingredients with ice until well chilled.",
             "Strain into a chilled coupe glass.",
             "Garnish with a lemon twist."
-        ]
+        ],
+        notes: "A balanced cocktail with a mix of bitter, sweet, and sour flavors."
     },
     {
         title: "Naked and Famous",
@@ -52,7 +55,8 @@ const modernCocktails = [
             "Shake all ingredients with ice until well chilled.",
             "Strain into a chilled coupe glass.",
             "No garnish needed."
-        ]
+        ],
+        notes: "A smoky and herbal cocktail with a citrusy finish."
     },
     {
         title: "Aviation",
@@ -65,7 +69,8 @@ const modernCocktails = [
             "Shake all ingredients with ice until well chilled.",
             "Strain into a chilled coupe glass.",
             "Garnish with a cherry."
-        ]
+        ],
+        notes: "A floral and slightly sweet cocktail with a hint of cherry."
     },
     {
         title: "Aperol Spritz",
@@ -79,7 +84,8 @@ const modernCocktails = [
             "Add Aperol and Prosecco.",
             "Top with soda water.",
             "Garnish with an orange slice."
-        ]
+        ],
+        notes: "A refreshing and slightly bitter cocktail with a bubbly finish."
     },
     {
         title: "Amaretto Sour",
@@ -92,7 +98,8 @@ const modernCocktails = [
             "Shake amaretto, lemon juice, and simple syrup with ice.",
             "Strain into a rocks glass over ice.",
             "Garnish with a lemon wheel."
-        ]
+        ],
+        notes: "A sweet and tangy cocktail with a nutty almond flavor."
     },
     {
         title: "Lemon Drop",
@@ -106,7 +113,8 @@ const modernCocktails = [
             "Shake vodka, lemon juice, triple sec, and simple syrup with ice.",
             "Strain into a chilled martini glass.",
             "Garnish with a lemon twist."
-        ]
+        ],
+        notes: "A tart and sweet cocktail with a strong lemon flavor."
     },
 ];
 

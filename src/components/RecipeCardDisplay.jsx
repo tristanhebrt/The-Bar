@@ -116,7 +116,6 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
                     filteredRecipes.map((recipe, index) => (
                         <RecipeCard
                             key={index}
-                            ref={(el) => (cardRefs.current[index] = el)} // Reference for scrolling
                             title={recipe.title}
                             content={[...(recipe.ingredients?.booze || []),
                             ...(recipe.ingredients?.syrups || []),
@@ -124,6 +123,7 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
                             ...(recipe.ingredients?.others || []),
                             ...(recipe.ingredients?.garnishes || []),]}
                             steps={recipe.steps}
+                            notes={recipe.notes}
                             allFlipped={allFlipped}
                         />
                     ))
@@ -133,7 +133,7 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
     );
 };
 
-const RecipeCard = React.forwardRef(({ title, content, steps, allFlipped }, ref) => {
+const RecipeCard = React.forwardRef(({ title, content, steps, notes, allFlipped }, ref) => {
     const [flipped, setFlipped] = useState(false);
     const [showOverlay, setShowOverlay] = useState(false);
 
@@ -166,10 +166,17 @@ const RecipeCard = React.forwardRef(({ title, content, steps, allFlipped }, ref)
             {showOverlay && (
                 <Overlay>
                     <OverlayContent>
-                        <h2>{title} - Steps</h2>
+                        <h2>{title}</h2>
+                        <h3>More</h3>
                         {steps.map((step, index) => (
-                            <p key={index}>{step}</p>
+                            <p key={index}>- {step}</p>
                         ))}
+                        {notes && (
+                            <>
+                                <h3>Notes</h3>
+                                <p>{notes}</p>
+                            </>
+                        )}
                         <CloseButton onClick={handleCloseOverlay}>Close</CloseButton>
                     </OverlayContent>
                 </Overlay>
@@ -183,19 +190,19 @@ const CardBack = ({ content, onMoreClick }) => (
         {content.map((item, index) => (
             <p key={index}>{item}</p>
         ))}
-        <MoreButton onClick={onMoreClick}>More</MoreButton>
+        <MoreButton onClick={onMoreClick}>Steps</MoreButton>
     </CardBackContainer>
 );
 
 /* Styled Components */
 const Container = styled.div`
     text-align: center;
-    background: var(--highlight1);
     height: auto;
-    margin-bottom: 10rem;
+    padding-bottom: 10rem;
+    background: var(--black);
 
     @media (max-width: 600px) {
-        margin-bottom: 0;
+        padding-bottom: 0;
     }
 `;
 
@@ -203,77 +210,83 @@ const TitleContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background: var(--highlight2);
+    background: var(--white);
     position: relative;
     padding: 1rem;
 `;
 
 const Title = styled.h1`
     font-family: var(--title-font);
-    font-weight: 400;
+    font-weight: 600;
     font-size: 3rem;
     text-transform: uppercase;
-    color: var(--secondary);
+    color: var(--black);
     text-align: center;
 `;
 
 const SearchContainer = styled.div`
     display: flex;
-    flex-wrap: wrap; /* Allow wrapping of filter options */
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 1rem; /* Add space between items */
+    gap: 1rem;
     padding: 1rem;
-    background: var(--highlight2);
+    background: var(--white);
 `;
 
 const SearchInput = styled.input`
     padding: 5px;
     font-family: var(--main-font);
     font-size: 1.5rem;
-    border-radius: 5px;
+    background: var(--black);
     border: 1px solid var(--primary);
     width: 250px;
 `;
 
 const ClearButton = styled.button`
     padding: 5px 10px;
-    font-family: var(--main-font);
-    font-size: 1.5rem;
-    border-radius: 5px;
-    background: var(--highlight3);
-    color: var(--black);
+    font-family: var(--text-font);
+    font-size: 1.2rem;
+    background: var(--black);
+    color: var(--white);
     border: none;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background 0.3s ease, transform 0.1s ease;
 
     &:hover {
-        background: var(--secondary);
+        background: var(--highlight3);
+    }
+
+    &:active {
+        transform: scale(0.95);
     }
 `;
 
 const FlipAllButton = styled.button`
     padding: 5px 10px;
-    font-family: var(--main-font);
-    font-size: 1.5rem;
-    border-radius: 5px;
-    background: var(--highlight3);
-    color: var(--black);
+    width: 80px;
+    font-family: var(--text-font);
+    font-size: 1.2rem;
+    background: var(--black);
+    color: var(--white);
     border: none;
     cursor: pointer;
     transition: background 0.3s ease;
 
     &:hover {
-        background: var(--secondary);
+        background: var(--highlight3);
+    }
+
+    &:active {
+        transform: scale(0.95);
     }
 `;
 
 const FilterButton = styled.button`
     padding: 5px 10px;
     font-family: var(--main-font);
-    font-size: 1.5rem;
-    border-radius: 50px;
+    font-size: 1.2rem;
     background: ${(props) =>
-        props.isOpen ? 'var(--secondary)' : 'var(--highlight3)'}; /* Change background based on open state */
+        props.isOpen ? 'var(--highlight3)' : 'var(--black)'}; /* Change background based on open state */
     color: var(--black);
     border: none;
     cursor: pointer;
@@ -283,11 +296,15 @@ const FilterButton = styled.button`
     justify-content: center; /* Center the image horizontally */
 
     &:hover {
-        background: var(--secondary);
+        background: var(--highlight3);
+    }
+
+    &:active {
+        transform: scale(0.95);
     }
 
     img {
-        width: 1.5rem; /* Adjust image size */
+        width: 1.2rem; /* Adjust image size */
         height: auto; /* Keep aspect ratio */
     }
 `;
@@ -296,7 +313,8 @@ const FilterMenu = styled.div`
     position: relative;
     width: 100%;
     height: auto;
-    background: rgba(0, 0, 0, 0.7);
+    background: var(--white);
+    color: var(--black);
     display: flex;
     flex-wrap: wrap; /* Allow wrapping of filter options */
     justify-content: center;
@@ -319,11 +337,11 @@ const FilterOption = styled.div`
     width: calc(% - 1rem); /* Default to 3 items per row */
     
     @media (max-width: 768px) {
-        width: calc(50% - 1rem); /* 2 items per row on medium screens */
+        width: calc(% - 1rem); /* 2 items per row on medium screens */
     }
 
     @media (max-width: 480px) {
-        width: 100%; /* 1 item per row on small screens */
+        width: %; /* 1 item per row on small screens */
     }
 `;
 
@@ -335,27 +353,34 @@ const CardContainer = styled.div`
     overflow-x: auto;
     overflow-y: hidden;
     gap: 1rem;
-    padding: 1rem;
+    padding: 1rem 1rem 2rem 1rem;
+    background: var(--white);
     scrollbar-width: thick;
-    scrollbar-color: var(--black) var(--primary);
+    scrollbar-color: var(--black) var(--white);
+
+    p {
+        font-size: 1.5rem;
+        color: var(--black);
+        margin-left: 10vw;
+    }
 
     &::-webkit-scrollbar {
         height: 10px;
     }
 
     &::-webkit-scrollbar-track {
-        background: var(--primary);
+        background: var(--white);
         border-radius: 10px;
     }
 
     &::-webkit-scrollbar-thumb {
-        background: var(--secondary);
+        background: var(--white);
         border-radius: 10px;
         transition: background 0.3s ease;
     }
 
     &::-webkit-scrollbar-thumb:hover {
-        background: var(--primary);
+        background: var(--white);
     }
 `;
 
@@ -387,39 +412,43 @@ const CardFront = styled.div`
     justify-content: center;
     position: absolute;
     backface-visibility: hidden;
-    background: var(--highlight3);
-    border-radius: 0.5rem;
+    background: var(--black);
 
     h2 {
+        font-family: var(--title-font);
         font-size: 2.5rem;
-        color: var(--primary);
+        color: var(--white);
     }
 `;
 
 const CardBackContainer = styled(CardFront)`
     background: var(--highlight2);
     transform: rotateY(180deg);
+    font-family: var(--main-font);
     font-size: 1.5rem;
-    padding: 0.5rem;
+    padding: 1rem 0 1rem 0.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative; /* Add this line */
 
     p {
-        margin: 0.25rem 0;
+        margin: 0.1rem 0;
+        align-self: flex-start;
+        color: var(--white);
     }
 `;
 
 const MoreButton = styled.button`
-    margin-top: 1rem;
+    position: absolute;
+    bottom: 0.5rem;
     padding: 5px 10px;
-    font-size: 1.5rem;
-    font-family: var(--main-font);
+    font-size: 1.2rem;
+    font-family: var(--text-font);
     border: none;
     background: var(--highlight3);
     color: var(--black);
-    border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s ease;
 
@@ -434,42 +463,87 @@ const Overlay = styled.div`
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
+    opacity: 0;
+    animation: fadeIn 0.2s forwards;
+    
+    @keyframes fadeIn {
+        to {
+            opacity: 1;
+        }
+    }
 `;
 
 const OverlayContent = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
     background: var(--primary);
-    padding: 20px;
+    padding: 2rem;
     width: auto;
     height: auto;
-    border-radius: 10px;
     text-align: center;
+    opacity: 0;
+    animation: contentFadeIn 0.5s forwards; /* Delay to sync with overlay fade-in */
+    
+    @keyframes contentFadeIn {
+        to {
+            opacity: 1;
+        }
+    }
     
     h2 {
+        font-family: var(--title-font);
         font-size: 3rem;
-        margin-bottom: 10px;
+        margin-bottom: 20px;
+
+        @media (max-width: 600px) {
+            font-size: 2rem;
+        }
+    }
+
+    h3 {
+        font-family: var(--title-font);
+        font-size: 3rem;
+        color: var(--white);
+
+        @media (max-width: 600px) {
+            font-size: 2rem;
+        }
     }
 
     p {
+        font-family: var(--main-font);
         font-size: 2rem;
         text-align: left;
+        color: var(--white);
         margin-bottom: 1rem;
+        margin-left: 0; /* Remove left margin */
+
+        @media (max-width: 600px) {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+    }
+
+    button {
+        align-self: center; /* Center the button */
     }
 `;
 
 const CloseButton = styled.button`
     margin-top: 1rem;
     padding: 5px 10px;
-    font-size: 1.5rem;
-    font-family: var(--main-font);
+    font-size: 1.2rem;
+    font-family: var(--text-font);
     border: none;
     background: var(--highlight3);
     color: var(--black);
-    border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s ease;
 

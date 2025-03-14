@@ -15,7 +15,8 @@ const classicCocktails = [
             "Strain into a rocks glass with a large ice cube.",
             "Stir again.",
             "Garnish with an orange peel."
-        ]
+        ],
+        notes: "A strong, slightly sweet, and aromatic cocktail with a hint of citrus."
     },
     {
         title: "Manhattan",
@@ -29,7 +30,8 @@ const classicCocktails = [
             "Stir all ingredients with ice until well chilled.",
             "Strain into a chilled coupe glass.",
             "Garnish with a cherry."
-        ]
+        ],
+        notes: "A rich and robust cocktail with a balance of sweetness and bitterness."
     },
     {
         title: "Martini",
@@ -42,7 +44,8 @@ const classicCocktails = [
             "Stir gin and vermouth with ice until well chilled.",
             "Strain into a chilled martini glass.",
             "Garnish with a lemon twist or olive."
-        ]
+        ],
+        notes: "A crisp and clean cocktail with a botanical flavor from the gin."
     },
     {
         title: "Dirty Martini",
@@ -55,7 +58,8 @@ const classicCocktails = [
             "Stir gin and vermouth with ice until well chilled.",
             "Strain into a chilled martini glass.",
             "Garnish with a lemon twist or olive."
-        ]
+        ],
+        notes: "A savory twist on the classic martini with a briny flavor from the olive brine."
     },
     {
         title: "Negroni",
@@ -67,7 +71,8 @@ const classicCocktails = [
             "Stir all ingredients with ice until well chilled.",
             "Strain into a rocks glass over a large ice cube.",
             "Garnish with an orange peel."
-        ]
+        ],
+        notes: "A bitter and sweet cocktail with a complex flavor profile."
     },
     {
         title: "Daiquiri",
@@ -79,7 +84,8 @@ const classicCocktails = [
             "Shake all ingredients with ice until well chilled.",
             "Strain into a chilled coupe glass.",
             "No garnish."
-        ]
+        ],
+        notes: "A refreshing and tart cocktail with a perfect balance of sweetness and acidity."
     },
     {
         title: "Whiskey Sour",
@@ -94,7 +100,8 @@ const classicCocktails = [
             "Add ice and shake again until chilled.",
             "Strain into a rocks glass over ice.",
             "Garnish with a cherry or orange slice."
-        ]
+        ],
+        notes: "A smooth and frothy cocktail with a balance of sweet and sour flavors."
     },
     {
         title: "Margarita",
@@ -107,7 +114,8 @@ const classicCocktails = [
             "Shake all ingredients with ice until chilled.",
             "Strain into a rocks glass over ice.",
             "Garnish with a lime wheel."
-        ]
+        ],
+        notes: "A tangy and refreshing cocktail with a hint of sweetness and a salty finish."
     },
     {
         title: "Mojito",
@@ -121,7 +129,8 @@ const classicCocktails = [
             "Muddle mint leaves and simple syrup in a glass.",
             "Add lime juice, rum, and ice, then stir.",
             "Top with soda water and garnish with mint."
-        ]
+        ],
+        notes: "A light and refreshing cocktail with a minty and citrusy flavor."
     },
     {
         title: "Pina Colada",
@@ -134,7 +143,8 @@ const classicCocktails = [
             "Blend all ingredients with ice until smooth.",
             "Pour into a hurricane glass.",
             "Garnish with a cherry and pineapple wedge."
-        ]
+        ],
+        notes: "A creamy and tropical cocktail with a sweet and fruity flavor."
     },
     {
         title: "Sazerac",
@@ -150,7 +160,8 @@ const classicCocktails = [
             "Muddle sugar with bitters in a separate glass.",
             "Add whiskey, stir, then strain into the prepared glass.",
             "Garnish with a lemon twist."
-        ]
+        ],
+        notes: "A strong and aromatic cocktail with a hint of anise from the absinthe."
     },
     {
         title: "French 75",
@@ -164,7 +175,8 @@ const classicCocktails = [
             "Shake gin, lemon juice, and simple syrup with ice.",
             "Strain into a flute glass.",
             "Top with Champagne and garnish with a lemon twist."
-        ]
+        ],
+        notes: "A light and bubbly cocktail with a citrusy and slightly sweet flavor."
     },
     {
         title: "Caesar",
@@ -178,7 +190,8 @@ const classicCocktails = [
             "Combine all ingredients and stir.",
             "Pour into a glass filled with ice.",
             "Garnish with a celery stalk."
-        ]
+        ],
+        notes: "A savory and spicy cocktail with a rich and tangy flavor."
     }
 ];
 
