@@ -42,12 +42,10 @@ const aloraCocktails = [
             garnishes: ["3 Banana Chips"]
         },
         steps: [
-            "Shake all ingredients with ice until well chilled.",
+            "Shake the prebatch, lime juice & banana syrup with ice until well chilled.",
             "Add mint to the bottom of a Collins glass.",
-            "Strain into the glass.",
-            "Add cracked ice.",
-            "Top off with crushed ice.",
-            "Cover with Angostura Bitters.",
+            "Strain into the glass, fill with cracked ice.",
+            "Top off with crushed ice, cover with Angostura Bitters. ",
             "Garnish with banana chips."
         ],
         notes: "A tropical cocktail with a refreshing mint and banana flavor."
@@ -55,16 +53,15 @@ const aloraCocktails = [
     {
         title: "Sunset Chaser",
         ingredients: {
-            booze: ["2 oz Prebatch"],
+            booze: ["1.5 oz Tequila", "0.5 oz Grand Marnier"],
             syrups: ["0.75 oz Lemon Juice", "0.75 oz Earl Grey Syrup", "1 oz Blood Orange Juice"],
             others: ["2 dashes Foamer", "Flower"],
             bitters: ["3-5 dashes Walnut Bitters"]
         },
         steps: [
-            "Shake all ingredients with ice until well chilled.",
+            "Shake the prebatch, lemon juice, earl grey syrup, blood orange juice and foamer with ice until well chilled.",
             "Strain into a chilled Coupe glass.",
-            "Garnish with a half circle of walnut bitters.",
-            "Make a streak in the walnut bitters.",
+            "Garnish with walnut bitters and make a streak",
             "Add a flower to the center."
         ],
         notes: "A sophisticated cocktail with a blend of citrus and tea flavors."
@@ -88,7 +85,7 @@ const aloraCocktails = [
     {
         title: "Bourbon Turnover",
         ingredients: {
-            booze: ["2.25 oz Prebatch"],
+            booze: ["1.5 oz Bourbon", "0.75 oz Calvados"],
             syrups: ["0.33 oz Cinnamon Syrup"],
             bitters: ["2 dashes Angostura Bitters"],
             garnishes: ["1 Apple Wheel"]
@@ -103,12 +100,12 @@ const aloraCocktails = [
     {
         title: "Dreamer",
         ingredients: {
-            booze: ["2 oz Prebatch"],
+            booze: ["1.5 oz Pisco", "0.5 oz Vanilla Liqueur"],
             syrups: ["0.75 oz Lemon Juice", "0.5 oz Crush Syrup"],
             garnishes: ["1 Flower"]
         },
         steps: [
-            "Shake all ingredients with ice until well chilled.",
+            "Shake the prebatch, lemon juice and crush syrup with ice until well chilled.",
             "Strain into a Coupe.",
             "Garnish with a flower."
         ],
