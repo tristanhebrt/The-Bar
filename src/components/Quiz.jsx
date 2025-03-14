@@ -13,54 +13,78 @@ const Quiz = ({ cocktails }) => {
 
     useEffect(() => {
         const retryCount = 0;
+
+        // Safeguard: Check if cocktails is available and not empty
+        if (!cocktails || cocktails.length === 0) {
+            console.log('No cocktails available');
+            setCurrentQuestion(null);
+            return;
+        }
+        
         console.log('Cocktails:', cocktails);
         generateQuestion(retryCount + 1);
     }, [cocktails]);
 
     const generateQuestion = (retryCount = 0) => {
         const MAX_RETRIES = 10;
+    
         if (retryCount >= MAX_RETRIES) {
             setCurrentQuestion(null);
             return;
         }
+    
         if (!cocktails || cocktails.length === 0) {
+            console.log("Cocktails array is empty or undefined.");
             setCurrentQuestion(null);
             return;
         }
+    
         const randomCocktail = cocktails[Math.floor(Math.random() * cocktails.length)];
+    
+        // Safeguard: Check if ingredients object exists and has expected properties
+        const ingredients = randomCocktail?.ingredients || {};
+        const booze = ingredients.booze || [];
+        const syrups = ingredients.syrups || [];
+        const others = ingredients.others || [];
+        const garnishes = ingredients.garnishes || [];
+        const bitters = ingredients.bitters || [];
+    
         const allIngredients = [
-            ...(randomCocktail.ingredients.booze || []),
-            ...(randomCocktail.ingredients.syrups || []),
-            ...(randomCocktail.ingredients.others || []),
-            ...(randomCocktail.ingredients.garnishes || []),
-            ...(randomCocktail.ingredients.bitters || []),
+            ...booze,
+            ...syrups,
+            ...others,
+            ...garnishes,
+            ...bitters,
         ];
+    
         if (allIngredients.length === 0) {
             generateQuestion(retryCount + 1);
             return;
         }
+    
         const validIngredients = allIngredients.filter(ingredient => ingredient.split(' ').length > 1);
+    
         if (validIngredients.length === 0) {
             generateQuestion(retryCount + 1);
             return;
         }
-
+    
         const randomIngredientString = validIngredients[Math.floor(Math.random() * validIngredients.length)];
         const [ingredientQuantity, ...ingredientNameParts] = randomIngredientString.split(' ');
-
+    
         const measurementUnits = ["oz", "ml", "cl", "tsp", "tbsp", "dashes"];
         // Remove the measurement unit if it's the first element
         let filteredIngredientNameParts = measurementUnits.includes(ingredientNameParts[0]?.toLowerCase())
             ? ingredientNameParts.slice(1)
             : ingredientNameParts;
         const ingredientName = filteredIngredientNameParts.join(' ');
-
+    
         // If filtering produces an empty name, try again
         if (!ingredientName.trim()) {
             generateQuestion(retryCount + 1);
             return;
         }
-
+    
         const questionType = Math.floor(Math.random() * 3);
         let question;
         switch (questionType) {
@@ -74,7 +98,9 @@ const Quiz = ({ cocktails }) => {
                 };
                 break;
             case 1:
-                if (randomCocktail.ingredients.booze.includes(randomIngredientString) || randomCocktail.ingredients.syrups.includes(randomIngredientString)) {
+                if (
+                    (booze.includes(randomIngredientString) || syrups.includes(randomIngredientString))
+                ) {
                     question = {
                         text: `How much ${ingredientName} is in a ${randomCocktail.title}?`,
                         answer: ingredientQuantity.replace(/[a-zA-Z]/g, ''),
@@ -93,17 +119,26 @@ const Quiz = ({ cocktails }) => {
             default:
                 break;
         }
+    
         console.log('Generated Question:', question);
         setCurrentQuestion(question);
     };
+    
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // Check if currentQuestion is undefined
+        if (!currentQuestion) {
+            console.error("Current question is undefined.");
+            return; // Exit early if no question is available
+        }
+
         let submittedAnswer = answer;
         if (currentQuestion.text.startsWith('How much')) {
             submittedAnswer = submittedAnswer.replace(/[a-zA-Z]/g, '').trim();
         }
-        
+
         // Check if the submitted answer is blank. If it is, treat it as incorrect.
         if (submittedAnswer.trim() === '') {
             console.log("Blank answer submitted, treated as incorrect.");
@@ -127,15 +162,15 @@ const Quiz = ({ cocktails }) => {
             setTotalQuestionsAnswered(totalQuestionsAnswered + 1); // Increment total questions answered
             return;
         }
-        
+
         console.log('Submitted Answer:', submittedAnswer);
         console.log('Correct Answer:', currentQuestion.answer);
-        
+
         let isAnswerCorrect = false;
         if (currentQuestion.text.startsWith('What is one of the ingredients')) {
             // Only proceed with word-based match if the submitted answer is a full word.
             const fullWordPattern = new RegExp(`\\b${submittedAnswer.trim()}\\b`, 'i');
-            
+
             // Check if the submitted answer matches a full word in the list of valid answers.
             if (currentQuestion.allAnswers.some(ans => fullWordPattern.test(ans))) {
                 isAnswerCorrect = true;
@@ -143,7 +178,7 @@ const Quiz = ({ cocktails }) => {
         } else if (submittedAnswer.toLowerCase() === currentQuestion.answer.toLowerCase()) {
             isAnswerCorrect = true;
         }
-        
+
         if (isAnswerCorrect) {
             setScore(score + 1);
             setFeedback("Correct!");
@@ -157,7 +192,7 @@ const Quiz = ({ cocktails }) => {
                 setCorrectAnswer(currentQuestion.answer);
             }
         }
-        
+
         setAnswer('');
         setTimeout(() => generateQuestion(), 0); // Automatically generate next question after 2 seconds
         setTotalQuestionsAnswered(totalQuestionsAnswered + 1); // Increment total questions answered
