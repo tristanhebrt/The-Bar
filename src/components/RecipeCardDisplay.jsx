@@ -46,7 +46,8 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
         return allIngredients.map((ingredient) => ingredient.toLowerCase());
     };
 
-    const filteredRecipes = recipes.filter((recipe) => {
+    const filteredRecipes = recipes
+    .filter((recipe) => {
         const matchesSearchQuery = recipe.title
             .toLowerCase()
             .includes(searchQuery.toLowerCase());
@@ -62,7 +63,8 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
             );
 
         return matchesSearchQuery && matchesFilters;
-    });
+    })
+    .sort((a, b) => a.title.localeCompare(b.title)); // Sort alphabetically
 
     return (
         <Container>
