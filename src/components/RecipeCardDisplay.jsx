@@ -565,7 +565,7 @@ const OverlayContent = styled.div`
     overflow: hidden;
     background: var(--white);
     color: var(--black);
-    padding: 2rem;
+    padding: 1rem;
     
     text-align: center;
     opacity: 0;
@@ -581,7 +581,7 @@ const OverlayContent = styled.div`
         align-self: center;
         font-family: var(--title-font);
         font-size: 3rem;
-        margin: 0 1rem 2rem 1rem;
+        margin: 0 1rem 0rem 1rem;
 
         @media (max-width: 600px) {
             font-size: 2rem;
@@ -598,10 +598,10 @@ const OverlayContent = styled.div`
     }
         
     h4 {
-        margin-top: 2rem;
         align-self: center;
         font-family: var(--title-font);
         font-size: 3rem;
+        margin-top: 1rem;
 
         @media (max-width: 600px) {
             font-size: 2rem;
@@ -611,7 +611,6 @@ const OverlayContent = styled.div`
     p {
         font-family: var(--main-font);
         font-size: 2rem;
-        margin-bottom: 1rem;
         margin-left: 0;
 
         @media (max-width: 600px) {
@@ -627,7 +626,7 @@ const OverlayContent = styled.div`
 
 const StepsContainer = styled.div`
     margin-bottom: 2rem;
-    padding: 1rem;
+    padding: 0.5rem;
 `;
 
 const CloseButton = styled.button`
