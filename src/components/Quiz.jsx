@@ -312,7 +312,7 @@ const CloseQuizButton = styled.button`
     transition: background 0.3s ease;
 
     &:hover {
-        background-color: var(--secondary);
+        background-color: var(--highlight3);
     }
 
     &:active {
@@ -383,7 +383,7 @@ const Button = styled.button`
     transition: background 0.3s ease;
 
     &:hover {
-        background-color: var(--secondary);
+        background-color: var(--highlight3);
     }
 
     &:active {
