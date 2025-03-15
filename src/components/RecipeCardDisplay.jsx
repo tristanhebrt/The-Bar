@@ -135,6 +135,7 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
                 <BottomLeftOrnament src="/assets/corner-ornament.png" alt="Ornament" />
                 <BottomRightOrnament src="/assets/corner-ornament.png" alt="Ornament" />
             </TitleContainer>
+            <BlackLine />
         </Container>
     );
 };
@@ -208,8 +209,16 @@ const Container = styled.div`
     background: var(--white);
 
     @media (max-width: 600px) {
-        padding-top: 5rem;
+        padding-top: 3rem;
     }
+`;
+
+const BlackLine = styled.div`
+    width: 60%;
+    height: 3px;
+    justify-self: center;
+    margin-top: 3rem;
+    background: var(--black);
 `;
 
 const TitleContainer = styled.div`
