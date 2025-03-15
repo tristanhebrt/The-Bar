@@ -30,7 +30,7 @@ const Footer = styled.footer`
 function Header() {
     return (
         <Footer>
-            <p>Currated by Tristan</p>
+            <p>Curated by Tristan</p>
         </Footer>
     );
 }

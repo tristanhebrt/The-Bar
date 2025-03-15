@@ -18,6 +18,8 @@ const Title = styled.header`
     h1 {
         font-size: 7rem;
         font-family: var(--fancy-font);
+        padding: 0.5rem 1rem 0.5rem 1rem;
+        background: rgba(0, 0, 0, 0.6);
 
         @media (max-width: 600px) {
             font-size: 2.5rem;
