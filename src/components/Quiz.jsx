@@ -262,17 +262,18 @@ const Quiz = ({ cocktails }) => {
 
 /* Styled Components */
 const OpenQuizButton = styled.button`
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
+    padding: 5px 10px;
+    width: auto;
     font-family: var(--text-font);
     font-size: 1.2rem;
-    background-color: var(--black);
+    background: var(--black);
     color: var(--white);
+    border: none;
+    cursor: pointer;
     transition: background 0.3s ease;
 
     &:hover {
-        background-color: var(--highlight3);
+        background: var(--highlight3);
     }
 
     &:active {

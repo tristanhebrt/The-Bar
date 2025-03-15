@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useRef, Children } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Quiz from "./Quiz";
 
 const RecipeCardDisplay = ({ mainTitle, recipes }) => {
     const [allFlipped, setAllFlipped] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
+    const [ingredientSearch, setIngredientSearch] = useState(""); // New state for ingredient search
     const [selectedFilter, setSelectedFilter] = useState([]);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const cardRefs = useRef([]);
@@ -15,6 +16,7 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
 
     const handleClearSearch = () => {
         setSearchQuery("");
+        setIngredientSearch(""); // Clear the ingredient search as well
         setSelectedFilter([]); // Clear the selected filters
     };
 
@@ -35,6 +37,7 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
         );
     };
 
+    // Flatten ingredients to a simple array of lowercase strings
     const flattenIngredients = (ingredients) => {
         const allIngredients = [
             ...(ingredients?.booze || []),
@@ -46,25 +49,40 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
         return allIngredients.map((ingredient) => ingredient.toLowerCase());
     };
 
+    // Update filtering logic:
+    // - "searchQuery" only looks at cocktail titles.
+    // - "ingredientSearch" filters cocktails by their ingredient list.
+    // - "selectedFilter" continues to work as before.
     const filteredRecipes = recipes
-    .filter((recipe) => {
-        const matchesSearchQuery = recipe.title
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase());
+        .filter((recipe) => {
+            const titleMatches = recipe.title
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase());
 
-        const flattenedIngredients = flattenIngredients(recipe.ingredients);
+            const ingredientsList = flattenIngredients(recipe.ingredients);
+            const ingredientMatches =
+                ingredientSearch.trim() === "" ||
+                ingredientsList.some((ingredient) =>
+                    ingredient.includes(ingredientSearch.toLowerCase())
+                );
 
-        const matchesFilters =
-            selectedFilter.length === 0 ||
-            selectedFilter.every((filter) =>
-                flattenedIngredients.some((ingredient) =>
-                    ingredient.includes(filter.toLowerCase())
-                )
-            );
+            const filtersMatch =
+                selectedFilter.length === 0 ||
+                selectedFilter.every((filter) =>
+                    ingredientsList.some((ingredient) =>
+                        ingredient.includes(filter.toLowerCase())
+                    )
+                );
 
-        return matchesSearchQuery && matchesFilters;
-    })
-    .sort((a, b) => a.title.localeCompare(b.title)); // Sort alphabetically
+            return titleMatches && ingredientMatches && filtersMatch;
+        })
+        .sort((a, b) => a.title.localeCompare(b.title)); // Sort alphabetically
+
+    // List of ingredient filters (checkboxes) remains unchanged
+    const ingredientFilters = [
+        "vodka", "gin", "rum", "whiskey", "bourbon", "tequila", "liqueur",
+        "lime", "lemon", "simple", "agave", "demerara"
+    ];
 
     return (
         <Container>
@@ -74,40 +92,41 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
                 <TopRightOrnament src="/assets/corner-ornament.png" alt="Ornament" />
             </TitleContainer>
             <SearchContainer>
-                <FilterButton onClick={toggleFilterMenu} isOpen={isFilterOpen}>
-                    <img src="/assets/filter.png" alt="Filter" />
-                </FilterButton>
                 <SearchInput
                     type="text"
                     placeholder="Find a cocktail..."
                     value={searchQuery}
                     onChange={handleSearchChange}
                 />
+                <FilterButton onClick={toggleFilterMenu} isOpen={isFilterOpen}>
+                    <img src="/assets/filter.png" alt="Filter" />
+                </FilterButton>
                 <ClearButton onClick={handleClearSearch}>Clear</ClearButton>
-                <FlipAllButton onClick={handleFlipAll}>
-                    {allFlipped ? "Unflip" : "Flip"}
-                </FlipAllButton>
-                <Quiz cocktails={recipes} />
             </SearchContainer>
 
             {/* Filter Dropdown */}
             {isFilterOpen && (
                 <FilterMenu>
-                    {["vodka", "gin", "rum", "whiskey", "bourbon", "tequila", "liqueur", "lime", "lemon", "simple", "agave", "demerara"].map(
-                        (item, index) => (
-                            <FilterOption key={index}>
-                                <label>
-                                    <input
-                                        type="checkbox"
-                                        value={item}
-                                        onChange={handleFilterChange}
-                                        checked={selectedFilter.includes(item)}
-                                    />
-                                    {item.charAt(0).toUpperCase() + item.slice(1)}
-                                </label>
-                            </FilterOption>
-                        )
-                    )}
+                    {/* New search bar to filter cocktails by ingredient */}
+                    <IngredientSearchInput
+                        type="text"
+                        placeholder="Search by ingredient..."
+                        value={ingredientSearch}
+                        onChange={(e) => setIngredientSearch(e.target.value)}
+                    />
+                    {ingredientFilters.map((item, index) => (
+                        <FilterOption key={index}>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    value={item}
+                                    onChange={handleFilterChange}
+                                    checked={selectedFilter.includes(item)}
+                                />
+                                {item.charAt(0).toUpperCase() + item.slice(1)}
+                            </label>
+                        </FilterOption>
+                    ))}
                 </FilterMenu>
             )}
 
@@ -119,11 +138,13 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
                         <RecipeCard
                             key={index}
                             title={recipe.title}
-                            content={[...(recipe.ingredients?.booze || []),
-                            ...(recipe.ingredients?.syrups || []),
-                            ...(recipe.ingredients?.bitters || []),
-                            ...(recipe.ingredients?.others || []),
-                            ...(recipe.ingredients?.garnishes || []),]}
+                            content={[
+                                ...(recipe.ingredients?.booze || []),
+                                ...(recipe.ingredients?.syrups || []),
+                                ...(recipe.ingredients?.bitters || []),
+                                ...(recipe.ingredients?.others || []),
+                                ...(recipe.ingredients?.garnishes || []),
+                            ]}
                             steps={recipe.steps}
                             notes={recipe.notes}
                             allFlipped={allFlipped}
@@ -133,6 +154,13 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
             </CardContainer>
             <TitleContainer>
                 <BottomLeftOrnament src="/assets/corner-ornament.png" alt="Ornament" />
+                <ButtonsContainer>
+                    <FlipAllButton onClick={handleFlipAll}>
+                        {allFlipped ? "Unflip" : "Flip"}
+                    </FlipAllButton>
+                    <Quiz cocktails={recipes} />
+                </ButtonsContainer>
+                
                 <BottomRightOrnament src="/assets/corner-ornament.png" alt="Ornament" />
             </TitleContainer>
             <BlackLine />
@@ -153,7 +181,7 @@ const RecipeCard = React.forwardRef(({ title, content, steps, notes, allFlipped 
     };
 
     const handleMoreClick = (e) => {
-        e.stopPropagation(); // Prevents flipping when clicking "More"
+        e.stopPropagation(); // Prevent flipping when clicking "More"
         setShowOverlay(true);
     };
 
@@ -297,6 +325,12 @@ const SearchContainer = styled.div`
     gap: 1rem;
     padding: 1rem;
     background: var(--white);
+
+    @media (max-width: 600px) {
+        gap: 0.5rem;
+        padding: 0.5rem;
+        
+    }
 `;
 
 const SearchInput = styled.input`
@@ -327,6 +361,13 @@ const ClearButton = styled.button`
     }
 `;
 
+const ButtonsContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+`;
+
 const FlipAllButton = styled.button`
     padding: 5px 10px;
     width: 80px;
@@ -352,14 +393,14 @@ const FilterButton = styled.button`
     font-family: var(--main-font);
     font-size: 1.2rem;
     background: ${(props) =>
-        props.isOpen ? 'var(--highlight3)' : 'var(--black)'}; /* Change background based on open state */
+        props.isOpen ? 'var(--highlight3)' : 'var(--black)'};
     color: var(--black);
     border: none;
     cursor: pointer;
     transition: background 0.3s ease;
     display: flex;
-    align-items: center; /* Center the image vertically */
-    justify-content: center; /* Center the image horizontally */
+    align-items: center;
+    justify-content: center;
 
     &:hover {
         background: var(--highlight3);
@@ -370,8 +411,8 @@ const FilterButton = styled.button`
     }
 
     img {
-        width: 1.2rem; /* Adjust image size */
-        height: auto; /* Keep aspect ratio */
+        width: 1.2rem;
+        height: auto;
     }
 `;
 
@@ -382,11 +423,20 @@ const FilterMenu = styled.div`
     background: var(--white);
     color: var(--black);
     display: flex;
-    flex-wrap: wrap; /* Allow wrapping of filter options */
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 1rem; /* Add space between items */
+    gap: 1rem;
     padding: 1rem;
     z-index: 1000;
+`;
+
+const IngredientSearchInput = styled.input`
+    padding: 5px;
+    font-family: var(--main-font);
+    font-size: 1.5rem;
+    border: 1px solid var(--primary);
+    width: 250px;
+    margin-bottom: 1rem;
 `;
 
 const FilterOption = styled.div`
@@ -398,19 +448,7 @@ const FilterOption = styled.div`
     input {
         margin-right: 10px;
     }
-
-    /* Make filter options take full width on smaller screens */
-    width: calc(% - 1rem); /* Default to 3 items per row */
-    
-    @media (max-width: 768px) {
-        width: calc(% - 1rem); /* 2 items per row on medium screens */
-    }
-
-    @media (max-width: 480px) {
-        width: %; /* 1 item per row on small screens */
-    }
 `;
-
 
 const CardContainer = styled.div`
     display: grid;
@@ -497,7 +535,7 @@ const CardBackContainer = styled(CardFront)`
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: relative; /* Add this line */
+    position: relative;
 
     p {
         margin: 0.1rem 0;
@@ -555,7 +593,7 @@ const OverlayContent = styled.div`
     height: auto;
     text-align: center;
     opacity: 0;
-    animation: contentFadeIn 0.5s forwards; /* Delay to sync with overlay fade-in */
+    animation: contentFadeIn 0.5s forwards;
     
     @keyframes contentFadeIn {
         to {
@@ -589,7 +627,7 @@ const OverlayContent = styled.div`
         text-align: left;
         color: var(--white);
         margin-bottom: 1rem;
-        margin-left: 0; /* Remove left margin */
+        margin-left: 0;
 
         @media (max-width: 600px) {
             font-size: 1.5rem;
@@ -598,7 +636,7 @@ const OverlayContent = styled.div`
     }
 
     button {
-        align-self: center; /* Center the button */
+        align-self: center;
     }
 `;
 
@@ -617,6 +655,5 @@ const CloseButton = styled.button`
         background: var(--secondary);
     }
 `;
-
 
 export default RecipeCardDisplay;
