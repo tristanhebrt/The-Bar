@@ -14,7 +14,8 @@ const modernCocktails = [
             "Strain into a chilled coupe glass.",
             "Garnish with a lemon twist."
         ],
-        notes: "A balanced cocktail with a mix of bitter, sweet, and sour flavors."
+        notes: "A balanced cocktail with a mix of bitter, sweet, and sour flavors.",
+        flavor: "Bitter, Citrus, Herbal"
     },
     {
         title: "Naked and Famous",
@@ -28,7 +29,8 @@ const modernCocktails = [
             "Strain into a chilled coupe glass.",
             "No garnish needed."
         ],
-        notes: "A smoky and herbal cocktail with a citrusy finish."
+        notes: "A smoky and herbal cocktail with a citrusy finish.",
+        flavor: "Smoky, Herbal, Citrus"
     },
     {
         title: "Aviation",
@@ -42,7 +44,8 @@ const modernCocktails = [
             "Strain into a chilled coupe glass.",
             "Garnish with a cherry."
         ],
-        notes: "A floral and slightly sweet cocktail with a hint of cherry."
+        notes: "A floral and slightly sweet cocktail with a hint of cherry.",
+        flavor: "Floral, Cherry, Citrus"
     },
     {
         title: "Amaretto Sour",
@@ -56,7 +59,8 @@ const modernCocktails = [
             "Strain into a rocks glass over ice.",
             "Garnish with a lemon wheel."
         ],
-        notes: "A sweet and tangy cocktail with a nutty almond flavor."
+        notes: "A sweet and tangy cocktail with a nutty almond flavor.",
+        flavor: "Nutty, Tangy, Sweet"
     },
     {
         title: "Lemon Drop",
@@ -71,8 +75,9 @@ const modernCocktails = [
             "Strain into a chilled martini glass.",
             "Garnish with a lemon twist."
         ],
-        notes: "A tart and sweet cocktail with a strong lemon flavor."
-    },
+        notes: "A tart and sweet cocktail with a strong lemon flavor.",
+        flavor: "Tart, Sweet, Citrus"
+    }
 ];
 
 const ModernCocktails = () => {

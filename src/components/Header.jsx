@@ -4,14 +4,15 @@ const Title = styled.header`
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 35vh;
+    height: 50vh;
     padding: 2rem;
 
     color: white;
-    background: var(--black);
-
+    background: url("/assets/alora-bar-2.jpg") center/cover no-repeat;
+    
     @media (max-width: 600px) {
         height: 100vh;
+        background: url("/assets/alora-bar-6.jpg") center/cover no-repeat;
     }
 
     h1 {
@@ -19,10 +20,13 @@ const Title = styled.header`
         font-family: var(--fancy-font);
 
         @media (max-width: 600px) {
-        font-size: 2.5rem;
-    }
+            font-size: 2.5rem;
+            padding: 0.5rem 1rem 0.5rem 1rem;
+            background: rgba(0, 0, 0, 0.8);
+        }
     }
 `;
+
 
 function Header() {
     return (

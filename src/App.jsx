@@ -1,4 +1,6 @@
 import Header from './components/Header'
+import Footer from './components/Footer'
+
 import Classics from './components/cocktails/Classics'
 import Modern from './components/cocktails/Modern'
 import Alora from './components/cocktails/Alora'
@@ -12,6 +14,7 @@ function App() {
       <Classics />
       <Modern />
       <Alora />
+      <Footer />
     </>
   )
 }

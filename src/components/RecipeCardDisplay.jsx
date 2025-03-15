@@ -69,7 +69,9 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
     return (
         <Container>
             <TitleContainer>
+                <TopLeftOrnament src="/assets/corner-ornament.png" alt="Ornament" />
                 <Title>{mainTitle}</Title>
+                <TopRightOrnament src="/assets/corner-ornament.png" alt="Ornament" />
             </TitleContainer>
             <SearchContainer>
                 <FilterButton onClick={toggleFilterMenu} isOpen={isFilterOpen}>
@@ -129,6 +131,10 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
                     ))
                 )}
             </CardContainer>
+            <TitleContainer>
+                <BottomLeftOrnament src="/assets/corner-ornament.png" alt="Ornament" />
+                <BottomRightOrnament src="/assets/corner-ornament.png" alt="Ornament" />
+            </TitleContainer>
         </Container>
     );
 };
@@ -202,17 +208,18 @@ const Container = styled.div`
     background: var(--white);
 
     @media (max-width: 600px) {
-        padding-top: 0;
+        padding-top: 5rem;
     }
 `;
 
 const TitleContainer = styled.div`
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: space-between;
+    align-items: flex-start;
     background: var(--white);
     position: relative;
     padding: 1rem;
+    width: 100%;
 `;
 
 const Title = styled.h1`
@@ -222,6 +229,53 @@ const Title = styled.h1`
     text-transform: uppercase;
     color: var(--black);
     text-align: center;
+
+    @media (max-width: 600px) {
+        font-size: 2rem;
+    }
+`;
+
+const TopLeftOrnament = styled.img`
+    position: relative;
+    width: 100px;
+    height: auto;
+    rotate: 90deg;
+
+    @media (max-width: 600px) {
+        width: 50px;
+    }
+`;
+
+const TopRightOrnament = styled.img`
+    position: relative;
+    width: 100px;
+    height: auto;
+    rotate: 180deg;
+
+    @media (max-width: 600px) {
+        width: 50px;
+    }
+`;
+
+const BottomLeftOrnament = styled.img`
+    position: relative;
+    width: 100px;
+    height: auto;
+
+    @media (max-width: 600px) {
+        width: 50px;
+    }
+`;
+
+const BottomRightOrnament = styled.img`
+    position: relative;
+    width: 100px;
+    height: auto;
+    rotate: 270deg;
+
+    @media (max-width: 600px) {
+        width: 50px;
+    }
 `;
 
 const SearchContainer = styled.div`
