@@ -328,7 +328,7 @@ const SearchContainer = styled.div`
 
     @media (max-width: 600px) {
         gap: 0.5rem;
-        padding: 0.5rem;
+        padding: 1rem;
         
     }
 `;
