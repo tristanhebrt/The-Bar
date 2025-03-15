@@ -80,7 +80,7 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
 
     // List of ingredient filters (checkboxes) remains unchanged
     const ingredientFilters = [
-        "vodka", "gin", "rum", "tequila", "bourbon", "lime", "lemon", "agave", "demerara"
+        "vodka", "gin", "rum", "tequila", "bourbon"
     ];
 
     return (
