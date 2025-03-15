@@ -207,7 +207,11 @@ const Quiz = ({ cocktails }) => {
             {isOverlayVisible && (
                 <Overlay>
                     <QuizContainer>
-                        <h1>Quiz</h1>
+                        <OrnamentContainer>
+                            <TopLeftOrnament />
+                            <h1>Quiz</h1>
+                            <TopRightOrnament />
+                        </OrnamentContainer>
                         {cocktails && cocktails.length > 0 ? (
                             currentQuestion ? (
                                 <div>
@@ -244,7 +248,11 @@ const Quiz = ({ cocktails }) => {
                             <p>No cocktails available to generate questions.</p>
                         )}
                         <ScoreText>Score: {score} / {totalQuestionsAnswered}</ScoreText>
-                        <CloseQuizButton onClick={() => setIsOverlayVisible(false)}>Close Quiz</CloseQuizButton>
+                        <OrnamentContainer>
+                            <BottomLeftOrnament />
+                            <CloseQuizButton onClick={() => setIsOverlayVisible(false)}>Close Quiz</CloseQuizButton>
+                            <BottomRightOrnament />
+                        </OrnamentContainer>
                     </QuizContainer>
                 </Overlay>
             )}
@@ -278,7 +286,7 @@ const Overlay = styled.div`
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--white);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -299,8 +307,8 @@ const CloseQuizButton = styled.button`
     cursor: pointer;
     font-family: var(--text-font);
     font-size: 1.5em;
-    background-color: var(--highlight3);
-    color: var(--black);
+    background-color: var(--black);
+    color: var(--white);
     transition: background 0.3s ease;
 
     &:hover {
@@ -320,22 +328,23 @@ const QuizContainer = styled.div`
     justify-content: center;
     align-items: center;
     text-align: center;
-    gap: 1rem;
     overflow: hidden;
-    background: var(--highlight2);
+    background: var(--white);
     padding: 2rem;
 
     h1 {
         font-family: var(--text-font);
         font-size: 2.5em;
         font-weight: bold;
+        color: var(--black);
     }
 `;
 
 const QuestionText = styled.p`
     font-size: 2em;
     max-width: 800px;
-    margin-bottom: 2rem;
+    margin: 1rem;
+    color: var(--black);
 
     @media (max-width: 600px) {
         font-size: 1.5em;
@@ -346,6 +355,7 @@ const ScoreText = styled.p`
     font-size: 2em;
     font-weight: bold;
     margin-top: 1rem;
+    color: var(--black);
 
     @media (max-width: 600px) {
         font-size: 1.5em;
@@ -358,18 +368,18 @@ const Input = styled.input`
     border: none;
     font-family: var(--main-font);
     font-size: 1.5em;
-    background-color: var(--highlight3);
-    color: var(--black);
+    background-color: var(--black);
+    color: var(--white);
 `;
 
 const Button = styled.button`
     padding: 10px 20px;
     border: none;
     cursor: pointer;
-    font-family: var(--main-font);
-    font-size: 1.5em;
-    background-color: var(--highlight3);
-    color: var(--black);
+    font-family: var(--text-font);
+    font-size: 1.2em;
+    background-color: var(--black);
+    color: var(--white);
     transition: background 0.3s ease;
 
     &:hover {
@@ -387,6 +397,7 @@ const FeedbackContainer = styled.div`
 
 const FeedbackText = styled.p`
     font-size: 1.5em;
+    color: var(--black);
     margin-bottom: 10px;
     animation: ${({ animateCorrect }) => (animateCorrect ? 'pop 0.5s ease' : 'none')};
     font-size: ${({ isCorrect }) => (isCorrect ? '2.5em' : '1.5em')};
@@ -412,6 +423,35 @@ const CorrectAnswerText = styled.p`
     @media (max-width: 600px) {
         font-size: 1em;
     }
+`;
+
+const Ornament = styled.img`
+    position: relative;
+    width: 100px;
+    height: auto;
+    
+    @media (max-width: 600px) {
+        width: 50px;
+    }
+
+    ${({ rotate }) => rotate && `rotate: ${rotate};`}
+`;
+
+const OrnamentComponent = ({ rotate, alt }) => (
+    <Ornament src="/assets/corner-ornament.png" alt={alt} rotate={rotate} />
+);
+
+const TopLeftOrnament = () => <OrnamentComponent rotate="90deg" alt="Top Left Ornament" />;
+const TopRightOrnament = () => <OrnamentComponent rotate="180deg" alt="Top Right Ornament" />;
+const BottomLeftOrnament = () => <OrnamentComponent alt="Bottom Left Ornament" />;
+const BottomRightOrnament = () => <OrnamentComponent rotate="270deg" alt="Bottom Right Ornament" />;
+
+const OrnamentContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    background: var(--white);
+    position: relative;
+    width: 100%;
 `;
 
 export default Quiz;
