@@ -3,34 +3,6 @@ import RecipeCardDisplay from "../RecipeCardDisplay";
 
 const modernCocktails = [
     {
-        title: "Cosmopolitan",
-        ingredients: {
-            booze: ["1.5 oz Vodka", "0.5 oz Triple Sec"],
-            syrups: ["1 oz Cranberry Juice", "0.5 oz Lime Juice"],
-            garnishes: ["Lime Wheel"]
-        },
-        steps: [
-            "Shake all ingredients with ice until well chilled.",
-            "Strain into a chilled coupe glass.",
-            "Garnish with a lime wheel."
-        ],
-        notes: "A tart and tangy cocktail with a hint of sweetness from the cranberry juice."
-    },
-    {
-        title: "Espresso Martini",
-        ingredients: {
-            booze: ["1.5 oz Vodka", "0.5 oz Coffee Liqueur"],
-            syrups: ["1.5 oz Espresso", "0.25 oz Demerara Syrup"],
-            garnishes: ["3 Coffee Beans"]
-        },
-        steps: [
-            "Shake all ingredients with ice until well chilled.",
-            "Strain into a chilled coupe.",
-            "Garnish with coffee beans."
-        ],
-        notes: "A rich and smooth cocktail with a strong coffee flavor."
-    },
-    {
         title: "Paper Plane",
         ingredients: {
             booze: ["0.75 oz Bourbon", "0.75 oz Aperol", "0.75 oz Amaro Nonino"],
@@ -71,21 +43,6 @@ const modernCocktails = [
             "Garnish with a cherry."
         ],
         notes: "A floral and slightly sweet cocktail with a hint of cherry."
-    },
-    {
-        title: "Aperol Spritz",
-        ingredients: {
-            booze: ["3 oz Prosecco", "2 oz Aperol"],
-            others: ["Splash of Soda Water"],
-            garnishes: ["Orange Slice"]
-        },
-        steps: [
-            "Fill a wine glass with ice.",
-            "Add Aperol and Prosecco.",
-            "Top with soda water.",
-            "Garnish with an orange slice."
-        ],
-        notes: "A refreshing and slightly bitter cocktail with a bubbly finish."
     },
     {
         title: "Amaretto Sour",

@@ -82,7 +82,7 @@ const Quiz = ({ cocktails }) => {
             return;
         }
     
-        const questionType = Math.floor(Math.random() * 3);
+        const questionType = Math.floor(Math.random() * 4);
         let question;
         switch (questionType) {
             case 0:
@@ -115,6 +115,13 @@ const Quiz = ({ cocktails }) => {
                 break;
             default:
                 break;
+            case 3:
+                const missingIngredient = allIngredients[Math.floor(Math.random() * allIngredients.length)];
+                question = {
+                    text: `Which ingredient is missing from this ${randomCocktail.title} recipe? ${allIngredients.filter(i => i !== missingIngredient).join(', ')}`,
+                    answer: missingIngredient.replace(/^\d+(\.\d+)?\s?(oz|ml|dashes|cl|tsp|tbsp)?\s?/i, ''),
+                };
+                break;
         }
     
         console.log('Generated Question:', question);
@@ -133,6 +140,10 @@ const Quiz = ({ cocktails }) => {
         let submittedAnswer = answer;
         if (currentQuestion.text.startsWith('How much')) {
             submittedAnswer = submittedAnswer.replace(/[a-zA-Z]/g, '').trim();
+        }
+
+        if (currentQuestion.text.startsWith('Which ingredient is missing from this')) {
+            submittedAnswer = submittedAnswer.replace(/^\d+(\.\d+)?\s?(oz|ml|dashes|cl|tsp|tbsp)?\s?/i, '').trim();
         }
 
         if (submittedAnswer.trim() === '') {
