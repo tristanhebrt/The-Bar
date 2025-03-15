@@ -93,7 +93,7 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
             {/* Filter Dropdown */}
             {isFilterOpen && (
                 <FilterMenu>
-                    {["vodka", "gin", "rum", "whiskey", "tequila", "liqueur", "lime", "lemon", "simple", "agave", "demerara"].map(
+                    {["vodka", "gin", "rum", "whiskey", "bourbon", "tequila", "liqueur", "lime", "lemon", "simple", "agave", "demerara"].map(
                         (item, index) => (
                             <FilterOption key={index}>
                                 <label>
