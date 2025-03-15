@@ -36,7 +36,7 @@ const classicCocktails = [
     {
         title: "Boulevardier",
         ingredients: {
-            booze: ["1 oz Bourbon", "1 oz Campari", "1 oz Dolin Sweet Vermouth"],
+            booze: ["1 oz Bourbon Whiskey", "1 oz Campari", "1 oz Dolin Sweet Vermouth"],
             garnishes: ["Orange Zest"]
         },
         steps: [
@@ -50,7 +50,7 @@ const classicCocktails = [
     {
         title: "Brooklyn",
         ingredients: {
-            booze: ["2 oz Overproof Rye", "0.38 oz Dry Vermouth", "0.38 oz Sweet Vermouth"],
+            booze: ["2 oz Rye Whiskey", "0.38 oz Dry Vermouth", "0.38 oz Sweet Vermouth"],
             syrups: ["0.25 oz Luxardo Maraschino"],
             bitters: ["1 dash Angostura"],
             garnishes: ["Lemon Twist"]
@@ -279,7 +279,7 @@ const classicCocktails = [
     {
         title: "Old Fashioned",
         ingredients: {
-            booze: ["2 oz Bourbon"],
+            booze: ["2 oz Bourbon Whiskey"],
             syrups: ["0.25 oz Demerara Syrup"],
             bitters: ["3 dashes Angostura"],
             garnishes: ["Orange Twist"]
@@ -295,7 +295,7 @@ const classicCocktails = [
     {
         title: "Penicillin",
         ingredients: {
-            booze: ["2 oz Blended Scotch"],
+            booze: ["2 oz Blended Scotch Whiskey"],
             syrups: ["0.75 oz Lemon Juice", "0.33 oz Honey Syrup", "0.33 oz Ginger Syrup"],
             others: ["0.25 oz Islay Scotch Float"],
             garnishes: ["Candied Ginger"]
@@ -312,7 +312,7 @@ const classicCocktails = [
     {
         title: "Whiskey Sour",
         ingredients: {
-            booze: ["2 oz Bourbon"],
+            booze: ["2 oz Bourbon Whiskey"],
             syrups: ["0.75 oz Lemon Juice", "0.75 oz Simple Syrup"],
             others: ["1 Egg White"],
             garnishes: ["Angostura Bitters"]
@@ -375,7 +375,7 @@ const classicCocktails = [
     {
         title: "Manhattan",
         ingredients: {
-            booze: ["2 oz Overproof Rye", "1 oz Dolin Sweet Vermouth"],
+            booze: ["2 oz Rye Whiskey", "1 oz Dolin Sweet Vermouth"],
             bitters: ["1 dash Angostura"],
             garnishes: ["Cherry"]
         },
@@ -435,7 +435,7 @@ const classicCocktails = [
     {
         title: "Mint Julep",
         ingredients: {
-            booze: ["2 oz Bourbon"],
+            booze: ["2 oz Bourbon Whiskey"],
             syrups: ["0.25 oz Simple Syrup"],
             others: ["Mint"],
             garnishes: ["Mint Bouquet"]
@@ -500,7 +500,7 @@ const classicCocktails = [
     {
         title: "Rob Roy",
         ingredients: {
-            booze: ["2 oz Scotch"],
+            booze: ["2 oz Scotch Whiskey"],
             syrups: ["0.75 oz Sweet Vermouth"],
             bitters: ["1 dash Angostura"],
             garnishes: ["Cherry"]
@@ -516,7 +516,7 @@ const classicCocktails = [
     {
         title: "Rusty Nail",
         ingredients: {
-            booze: ["2 oz Scotch", "0.5 oz Drambuie"],
+            booze: ["2 oz Scotch Whiskey", "0.5 oz Drambuie"],
             garnishes: ["Lemon Twist"]
         },
         steps: [
@@ -530,7 +530,7 @@ const classicCocktails = [
     {
         title: "Sazerac",
         ingredients: {
-            booze: ["1.5 oz Overproof Rye", "0.5 oz Cognac"],
+            booze: ["1.5 oz Rye Whiskey", "0.5 oz Cognac"],
             syrups: ["0.25 oz Demerara Syrup"],
             bitters: ["4 dashes Peychaud's", "1 dash Angostura"],
             others: ["Absinthe Rinse"],
@@ -610,7 +610,7 @@ const classicCocktails = [
     {
         title: "Vieux Carré",
         ingredients: {
-            booze: ["1 oz Overproof Rye", "1 oz Cognac", "1 oz Sweet Vermouth"],
+            booze: ["1 oz Rye Whiskey", "1 oz Cognac", "1 oz Sweet Vermouth"],
             syrups: ["1 tsp Benedictine"],
             bitters: ["1 dash Angostura", "1 dash Peychaud's"],
             garnishes: ["Lemon Zest", "Cherry"]

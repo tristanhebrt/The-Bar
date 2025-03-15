@@ -90,7 +90,7 @@ const aloraCocktails = [
     {
         title: "Bourbon Turnover",
         ingredients: {
-            booze: ["1.5 oz Bourbon", "0.75 oz Calvados"],
+            booze: ["1.5 oz Bourbon Whiskey", "0.75 oz Calvados"],
             syrups: ["0.33 oz Cinnamon Syrup"],
             bitters: ["2 dashes Angostura Bitters"],
             garnishes: ["1 Apple Wheel"]
@@ -167,7 +167,7 @@ const aloraCocktails = [
     {
         title: "Sundown Showdown",
         ingredients: {
-            booze: ["1.5 oz Bourbon"],
+            booze: ["1.5 oz Bourbon Whiskey"],
             syrups: ["0.75 oz Pineapple Juice", "0.25 oz Ginger Syrup", "0.25 oz Cinnamon Syrup", "0.5 oz Lemon Juice"],
             bitters: ["1 dash Angostura"],
             others: ["IPA"],
@@ -199,7 +199,7 @@ const aloraCocktails = [
     {
         title: "Alora OF",
         ingredients: {
-            booze: ["2 oz Woodford Bourbon"],
+            booze: ["2 oz Bourbon Whiskey"],
             syrups: ["0.25 oz Demerara Syrup"],
             bitters: ["4 dashes Angostura"],
             garnishes: []

@@ -5,7 +5,7 @@ const modernCocktails = [
     {
         title: "Paper Plane",
         ingredients: {
-            booze: ["0.75 oz Bourbon", "0.75 oz Aperol", "0.75 oz Amaro Nonino"],
+            booze: ["0.75 oz Bourbon Whiskey", "0.75 oz Aperol", "0.75 oz Amaro Nonino"],
             syrups: ["0.75 oz Lemon Juice"],
             garnishes: ["Lemon Twist"]
         },

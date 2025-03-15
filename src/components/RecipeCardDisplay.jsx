@@ -51,8 +51,7 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
 
     // Update filtering logic:
     // - "searchQuery" only looks at cocktail titles.
-    // - "ingredientSearch" filters cocktails by their ingredient list.
-    // - "selectedFilter" continues to work as before.
+    // - "ingredientSearch" now supports multiple ingredients separated by space.
     const filteredRecipes = recipes
         .filter((recipe) => {
             const titleMatches = recipe.title
@@ -60,10 +59,18 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
                 .includes(searchQuery.toLowerCase());
 
             const ingredientsList = flattenIngredients(recipe.ingredients);
+
+            // Split ingredientSearch into terms (if any)
+            const searchTerms = ingredientSearch.trim() === ""
+                ? []
+                : ingredientSearch.trim().split(/\s+/);
+
             const ingredientMatches =
-                ingredientSearch.trim() === "" ||
-                ingredientsList.some((ingredient) =>
-                    ingredient.includes(ingredientSearch.toLowerCase())
+                searchTerms.length === 0 ||
+                searchTerms.every((term) =>
+                    ingredientsList.some((ingredient) =>
+                        ingredient.includes(term.toLowerCase())
+                    )
                 );
 
             const filtersMatch =
@@ -78,9 +85,9 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
         })
         .sort((a, b) => a.title.localeCompare(b.title)); // Sort alphabetically
 
-    // List of ingredient filters (checkboxes) remains unchanged
+    // Define ingredientFilters so that it is available in the render
     const ingredientFilters = [
-        "vodka", "gin", "rum", "tequila", "bourbon"
+        "vodka", "gin", "rum", "tequila", "whiskey"
     ];
 
     return (
@@ -159,7 +166,6 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
                     </FlipAllButton>
                     <Quiz cocktails={recipes} />
                 </ButtonsContainer>
-                
                 <BottomRightOrnament/>
             </TitleContainer>
             <BlackLine />
