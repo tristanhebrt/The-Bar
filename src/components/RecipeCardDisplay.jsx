@@ -203,6 +203,9 @@ const CardBack = ({ content, onMoreClick }) => (
 
 /* Styled Components */
 const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     text-align: center;
     height: auto;
     padding-top: 10rem;
@@ -216,7 +219,7 @@ const Container = styled.div`
 const BlackLine = styled.div`
     width: 60%;
     height: 3px;
-    justify-self: center;
+    align-self: center;
     margin-top: 3rem;
     background: var(--black);
 `;
