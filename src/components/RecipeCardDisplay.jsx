@@ -80,16 +80,15 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
 
     // List of ingredient filters (checkboxes) remains unchanged
     const ingredientFilters = [
-        "vodka", "gin", "rum", "whiskey", "bourbon", "tequila", "liqueur",
-        "lime", "lemon", "simple", "agave", "demerara"
+        "vodka", "gin", "rum", "tequila", "bourbon", "lime", "lemon", "agave", "demerara"
     ];
 
     return (
         <Container>
             <TitleContainer>
-                <TopLeftOrnament src="/assets/corner-ornament.png" alt="Ornament" />
+                <TopLeftOrnament/>
                 <Title>{mainTitle}</Title>
-                <TopRightOrnament src="/assets/corner-ornament.png" alt="Ornament" />
+                <TopRightOrnament/>
             </TitleContainer>
             <SearchContainer>
                 <SearchInput
@@ -153,7 +152,7 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
                 )}
             </CardContainer>
             <TitleContainer>
-                <BottomLeftOrnament src="/assets/corner-ornament.png" alt="Ornament" />
+                <BottomLeftOrnament/>
                 <ButtonsContainer>
                     <FlipAllButton onClick={handleFlipAll}>
                         {allFlipped ? "Unflip" : "Flip"}
@@ -161,7 +160,7 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
                     <Quiz cocktails={recipes} />
                 </ButtonsContainer>
                 
-                <BottomRightOrnament src="/assets/corner-ornament.png" alt="Ornament" />
+                <BottomRightOrnament/>
             </TitleContainer>
             <BlackLine />
         </Container>
@@ -201,18 +200,28 @@ const RecipeCard = React.forwardRef(({ title, content, steps, notes, allFlipped 
             {showOverlay && (
                 <Overlay>
                     <OverlayContent>
-                        <h2>{title}</h2>
-                        <h3>Steps</h3>
-                        {steps.map((step, index) => (
-                            <p key={index}>- {step}</p>
-                        ))}
-                        {notes && (
-                            <>
-                                <h3>Notes</h3>
-                                <p>{notes}</p>
-                            </>
-                        )}
-                        <CloseButton onClick={handleCloseOverlay}>Close</CloseButton>
+                        <OrnamentContainer>
+                            <TopLeftOrnament />
+                            <h2>{title}</h2>
+                            <TopRightOrnament />
+                        </OrnamentContainer>
+                        <StepsContainer>
+                            <h3>Steps</h3>
+                            {steps.map((step, index) => (
+                                <p key={index}>- {step}</p>
+                            ))}
+                            {notes && (
+                                <>
+                                    <h4>Notes</h4>
+                                    <p>{notes}</p>
+                                </>
+                            )}
+                        </StepsContainer>
+                        <OrnamentContainer>
+                            <BottomLeftOrnament />
+                            <CloseButton onClick={handleCloseOverlay}>Close</CloseButton>
+                            <BottomRightOrnament />
+                        </OrnamentContainer>
                     </OverlayContent>
                 </Overlay>
             )}
@@ -272,49 +281,6 @@ const Title = styled.h1`
 
     @media (max-width: 600px) {
         font-size: 2rem;
-    }
-`;
-
-const TopLeftOrnament = styled.img`
-    position: relative;
-    width: 100px;
-    height: auto;
-    rotate: 90deg;
-
-    @media (max-width: 600px) {
-        width: 50px;
-    }
-`;
-
-const TopRightOrnament = styled.img`
-    position: relative;
-    width: 100px;
-    height: auto;
-    rotate: 180deg;
-
-    @media (max-width: 600px) {
-        width: 50px;
-    }
-`;
-
-const BottomLeftOrnament = styled.img`
-    position: relative;
-    width: 100px;
-    height: auto;
-
-    @media (max-width: 600px) {
-        width: 50px;
-    }
-`;
-
-const BottomRightOrnament = styled.img`
-    position: relative;
-    width: 100px;
-    height: auto;
-    rotate: 270deg;
-
-    @media (max-width: 600px) {
-        width: 50px;
     }
 `;
 
@@ -526,7 +492,7 @@ const CardFront = styled.div`
 `;
 
 const CardBackContainer = styled(CardFront)`
-    background: var(--highlight2);
+    background: var(--offwhite);
     transform: rotateY(180deg);
     font-family: var(--main-font);
     font-size: 1.5rem;
@@ -540,7 +506,7 @@ const CardBackContainer = styled(CardFront)`
     p {
         margin: 0.1rem 0;
         align-self: flex-start;
-        color: var(--white);
+        color: var(--black);
     }
 `;
 
@@ -551,8 +517,8 @@ const MoreButton = styled.button`
     font-size: 1.2rem;
     font-family: var(--text-font);
     border: none;
-    background: var(--highlight3);
-    color: var(--black);
+    background: var(--white);
+    color: var(--offwhite);
     cursor: pointer;
     transition: background 0.3s ease;
 
@@ -565,8 +531,8 @@ const Overlay = styled.div`
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background: rgba(0, 0, 0, 0.8);
     display: flex;
     align-items: center;
@@ -574,6 +540,12 @@ const Overlay = styled.div`
     z-index: 1000;
     opacity: 0;
     animation: fadeIn 0.2s forwards;
+
+    @media (max-width: 600px) {
+        width: 100vw;
+        height: 100vh;
+        background: var(--white);
+    }
     
     @keyframes fadeIn {
         to {
@@ -583,14 +555,18 @@ const Overlay = styled.div`
 `;
 
 const OverlayContent = styled.div`
+    width: 100vw;
+    height: 100vh;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    flex-direction: column;
-    background: var(--primary);
+    text-align: center;
+    overflow: hidden;
+    background: var(--white);
+    color: var(--black);
     padding: 2rem;
-    width: auto;
-    height: auto;
+    
     text-align: center;
     opacity: 0;
     animation: contentFadeIn 0.5s forwards;
@@ -602,9 +578,10 @@ const OverlayContent = styled.div`
     }
     
     h2 {
+        align-self: center;
         font-family: var(--title-font);
         font-size: 3rem;
-        margin-bottom: 20px;
+        margin: 0 1rem 2rem 1rem;
 
         @media (max-width: 600px) {
             font-size: 2rem;
@@ -614,7 +591,17 @@ const OverlayContent = styled.div`
     h3 {
         font-family: var(--title-font);
         font-size: 3rem;
-        color: var(--white);
+
+        @media (max-width: 600px) {
+            font-size: 2rem;
+        }
+    }
+        
+    h4 {
+        margin-top: 2rem;
+        align-self: center;
+        font-family: var(--title-font);
+        font-size: 3rem;
 
         @media (max-width: 600px) {
             font-size: 2rem;
@@ -624,8 +611,6 @@ const OverlayContent = styled.div`
     p {
         font-family: var(--main-font);
         font-size: 2rem;
-        text-align: left;
-        color: var(--white);
         margin-bottom: 1rem;
         margin-left: 0;
 
@@ -640,20 +625,54 @@ const OverlayContent = styled.div`
     }
 `;
 
+const StepsContainer = styled.div`
+    margin-bottom: 2rem;
+    padding: 1rem;
+`;
+
 const CloseButton = styled.button`
-    margin-top: 1rem;
     padding: 5px 10px;
     font-size: 1.2rem;
     font-family: var(--text-font);
     border: none;
-    background: var(--highlight3);
-    color: var(--black);
+    background: var(--black);
+    color: var(--white);
     cursor: pointer;
     transition: background 0.3s ease;
 
     &:hover {
         background: var(--secondary);
     }
+`;
+
+const Ornament = styled.img`
+    position: relative;
+    width: 100px;
+    height: 100px;
+    
+    @media (max-width: 600px) {
+        width: 50px;
+        height: 50px;
+    }
+
+    ${({ rotate }) => rotate && `rotate: ${rotate};`}
+`;
+
+const OrnamentComponent = ({ rotate, alt }) => (
+    <Ornament src="/assets/corner-ornament.png" alt={alt} rotate={rotate} />
+);
+
+const TopLeftOrnament = () => <OrnamentComponent rotate="90deg" alt="Top Left Ornament" />;
+const TopRightOrnament = () => <OrnamentComponent rotate="180deg" alt="Top Right Ornament" />;
+const BottomLeftOrnament = () => <OrnamentComponent alt="Bottom Left Ornament" />;
+const BottomRightOrnament = () => <OrnamentComponent rotate="270deg" alt="Bottom Right Ornament" />;
+
+const OrnamentContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    background: var(--white);
+    position: relative;
+    width: 100%;
 `;
 
 export default RecipeCardDisplay;

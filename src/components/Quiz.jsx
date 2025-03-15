@@ -332,12 +332,12 @@ const QuizContainer = styled.div`
     overflow: hidden;
     background: var(--white);
     padding: 2rem;
+    color: var(--black);
 
     h1 {
         font-family: var(--text-font);
         font-size: 2.5em;
         font-weight: bold;
-        color: var(--black);
     }
 `;
 
@@ -345,7 +345,6 @@ const QuestionText = styled.p`
     font-size: 2em;
     max-width: 800px;
     margin: 1rem;
-    color: var(--black);
 
     @media (max-width: 600px) {
         font-size: 1.5em;
@@ -356,7 +355,6 @@ const ScoreText = styled.p`
     font-size: 2em;
     font-weight: bold;
     margin-top: 1rem;
-    color: var(--black);
 
     @media (max-width: 600px) {
         font-size: 1.5em;
@@ -429,10 +427,11 @@ const CorrectAnswerText = styled.p`
 const Ornament = styled.img`
     position: relative;
     width: 100px;
-    height: auto;
+    height: 100px;
     
     @media (max-width: 600px) {
         width: 50px;
+        height: 50px;
     }
 
     ${({ rotate }) => rotate && `rotate: ${rotate};`}
