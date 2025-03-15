@@ -1563,6 +1563,21 @@ const aloraCocktails = [
         flavor: "Light, Floral, Citrusy"
     },
     {
+        title: "Love Note",
+        ingredients: {
+            booze: ["1.75 oz Gin", "0.5 oz Aperol"],
+            syrups: ["1 oz Lemon Juice", "0.5 oz Simple Syrup", "0.5 oz Juice Blend"],
+            garnishes: ["Love Note"]
+        },
+        steps: [
+            "Shake all ingredients with ice.",
+            "Strain into a Coupe.",
+            "Garnish with a love note."
+        ],
+        notes: "A light and floral cocktail with a citrusy finish.",
+        flavor: "Bittersweet, Floral, Citrusy"
+    },
+    {
         title: "Orchard Dream",
         ingredients: {
             booze: ["2 oz Gin"],
