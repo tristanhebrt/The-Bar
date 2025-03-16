@@ -1,13 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import Quiz from "./Quiz";
 
-const RecipeCardDisplay = ({ mainTitle, recipes }) => {
+const WineCardDisplay = ({ mainTitle, recipes }) => {
     const [allFlipped, setAllFlipped] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
-    const [ingredientSearch, setIngredientSearch] = useState(""); // New state for ingredient search
-    const [selectedFilter, setSelectedFilter] = useState([]);
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
     const cardRefs = useRef([]);
 
     const handleFlipAll = () => {
@@ -16,79 +12,18 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
 
     const handleClearSearch = () => {
         setSearchQuery("");
-        setIngredientSearch(""); // Clear the ingredient search as well
-        setSelectedFilter([]); // Clear the selected filters
     };
 
-    const handleSearchChange = (event) => {
-        setSearchQuery(event.target.value);
-    };
-
-    const toggleFilterMenu = () => {
-        setIsFilterOpen(!isFilterOpen);
-    };
-
-    const handleFilterChange = (event) => {
-        const selectedOption = event.target.value;
-        setSelectedFilter((prevSelected) =>
-            prevSelected.includes(selectedOption)
-                ? prevSelected.filter((item) => item !== selectedOption)
-                : [...prevSelected, selectedOption]
-        );
-    };
-
-    // Flatten ingredients to a simple array of lowercase strings
-    const flattenIngredients = (ingredients) => {
-        const allIngredients = [
-            ...(ingredients?.booze || []),
-            ...(ingredients?.syrups || []),
-            ...(ingredients?.bitters || []),
-            ...(ingredients?.others || []),
-            ...(ingredients?.garnishes || []),
-        ];
-        return allIngredients.map((ingredient) => ingredient.toLowerCase());
-    };
-
-    // Update filtering logic:
-    // - "searchQuery" only looks at cocktail titles.
-    // - "ingredientSearch" now supports multiple ingredients separated by space.
-    const filteredRecipes = recipes
-        .filter((recipe) => {
-            const titleMatches = recipe.title
-                .toLowerCase()
-                .includes(searchQuery.toLowerCase());
-
-            const ingredientsList = flattenIngredients(recipe.ingredients);
-
-            // Split ingredientSearch into terms (if any)
-            const searchTerms = ingredientSearch.trim() === ""
-                ? []
-                : ingredientSearch.trim().split(/\s+/);
-
-            const ingredientMatches =
-                searchTerms.length === 0 ||
-                searchTerms.every((term) =>
-                    ingredientsList.some((ingredient) =>
-                        ingredient.includes(term.toLowerCase())
-                    )
-                );
-
-            const filtersMatch =
-                selectedFilter.length === 0 ||
-                selectedFilter.every((filter) =>
-                    ingredientsList.some((ingredient) =>
-                        ingredient.includes(filter.toLowerCase())
-                    )
-                );
-
-            return titleMatches && ingredientMatches && filtersMatch;
+    const filteredWines = recipes
+        .filter((wine) => {
+            const searchLower = searchQuery.toLowerCase();
+            return (
+                wine.title.toLowerCase().includes(searchLower) ||
+                wine.tastingNotes.toLowerCase().includes(searchLower) ||
+                wine.foodPairings.toLowerCase().includes(searchLower)
+            );
         })
-        .sort((a, b) => a.title.localeCompare(b.title)); // Sort alphabetically
-
-    // Define ingredientFilters so that it is available in the render
-    const ingredientFilters = [
-        "vodka", "gin", "rum", "tequila", "whiskey"
-    ];
+        .sort((a, b) => a.title.localeCompare(b.title));
 
     return (
         <Container>
@@ -100,59 +35,21 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
             <SearchContainer>
                 <SearchInput
                     type="text"
-                    placeholder="Find a cocktail..."
+                    placeholder="Find a wine..."
                     value={searchQuery}
-                    onChange={handleSearchChange}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <FilterButton onClick={toggleFilterMenu} isOpen={isFilterOpen}>
-                    <img src="/assets/filter.png" alt="Filter" />
-                </FilterButton>
                 <ClearButton onClick={handleClearSearch}>Clear</ClearButton>
             </SearchContainer>
 
-            {/* Filter Dropdown */}
-            {isFilterOpen && (
-                <FilterMenu>
-                    {/* New search bar to filter cocktails by ingredient */}
-                    <IngredientSearchInput
-                        type="text"
-                        placeholder="Search by ingredient..."
-                        value={ingredientSearch}
-                        onChange={(e) => setIngredientSearch(e.target.value)}
-                    />
-                    {ingredientFilters.map((item, index) => (
-                        <FilterOption key={index}>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    value={item}
-                                    onChange={handleFilterChange}
-                                    checked={selectedFilter.includes(item)}
-                                />
-                                {item.charAt(0).toUpperCase() + item.slice(1)}
-                            </label>
-                        </FilterOption>
-                    ))}
-                </FilterMenu>
-            )}
-
             <CardContainer>
-                {filteredRecipes.length === 0 ? (
-                    <p>No cocktails match the selected filters.</p>
+                {filteredWines.length === 0 ? (
+                    <p>No wines match your search.</p>
                 ) : (
-                    filteredRecipes.map((recipe, index) => (
-                        <RecipeCard
+                    filteredWines.map((wine, index) => (
+                        <WineCard
                             key={index}
-                            title={recipe.title}
-                            content={[
-                                ...(recipe.ingredients?.booze || []),
-                                ...(recipe.ingredients?.syrups || []),
-                                ...(recipe.ingredients?.bitters || []),
-                                ...(recipe.ingredients?.others || []),
-                                ...(recipe.ingredients?.garnishes || []),
-                            ]}
-                            steps={recipe.steps}
-                            notes={recipe.notes}
+                            wine={wine}
                             allFlipped={allFlipped}
                         />
                     ))
@@ -160,12 +57,9 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
             </CardContainer>
             <TitleContainer>
                 <BottomLeftOrnament/>
-                <ButtonsContainer>
-                    <FlipAllButton onClick={handleFlipAll}>
-                        {allFlipped ? "Unflip" : "Flip"}
-                    </FlipAllButton>
-                    <Quiz cocktails={recipes} />
-                </ButtonsContainer>
+                <FlipAllButton onClick={handleFlipAll}>
+                    {allFlipped ? "Unflip" : "Flip"}
+                </FlipAllButton>
                 <BottomRightOrnament/>
             </TitleContainer>
             <BlackLine />
@@ -173,7 +67,7 @@ const RecipeCardDisplay = ({ mainTitle, recipes }) => {
     );
 };
 
-const RecipeCard = React.forwardRef(({ title, content, steps, notes, allFlipped }, ref) => {
+const WineCard = React.forwardRef(({ wine, allFlipped }, ref) => {
     const [flipped, setFlipped] = useState(false);
     const [showOverlay, setShowOverlay] = useState(false);
 
@@ -181,25 +75,25 @@ const RecipeCard = React.forwardRef(({ title, content, steps, notes, allFlipped 
         setFlipped(allFlipped);
     }, [allFlipped]);
 
-    const handleCardClick = () => {
-        setFlipped(!flipped);
-    };
-
-    const handleMoreClick = (e) => {
-        e.stopPropagation(); // Prevent flipping when clicking "More"
-        setShowOverlay(true);
-    };
-
-    const handleCloseOverlay = () => setShowOverlay(false);
-
     return (
         <>
-            <Card ref={ref} className={flipped ? "flipped" : ""} onClick={handleCardClick}>
+            <Card ref={ref} className={flipped ? "flipped" : ""} onClick={() => setFlipped(!flipped)}>
                 <CardInner className={flipped ? "flipped" : ""}>
                     <CardFront>
-                        <h2>{title}</h2>
+                        <h2>{wine.title}</h2>
                     </CardFront>
-                    <CardBack content={content} onMoreClick={handleMoreClick} />
+                    <CardBackContainer>
+                        <CardBack>
+                            <TastingNotes>
+                                <h3>Tasting Notes</h3>
+                                <p>{wine.tastingNotes}</p>
+                            </TastingNotes>
+                            <MoreButton onClick={(e) => {
+                                e.stopPropagation();
+                                setShowOverlay(true);
+                            }}>Details</MoreButton>
+                        </CardBack>
+                    </CardBackContainer>
                 </CardInner>
             </Card>
 
@@ -208,24 +102,38 @@ const RecipeCard = React.forwardRef(({ title, content, steps, notes, allFlipped 
                     <OverlayContent>
                         <OrnamentContainer>
                             <TopLeftOrnament />
-                            <h2>{title}</h2>
+                            <h2>{wine.title}</h2>
                             <TopRightOrnament />
                         </OrnamentContainer>
-                        <StepsContainer>
-                            <h3>Steps</h3>
-                            {steps.map((step, index) => (
-                                <p key={index}>- {step}</p>
-                            ))}
-                            {notes && (
-                                <>
-                                    <h4>Notes</h4>
-                                    <p>{notes}</p>
-                                </>
-                            )}
-                        </StepsContainer>
+                        <WineDetails>
+                            <DetailItem>
+                                <Label>Price</Label>
+                                <Value>{wine.price}</Value>
+                            </DetailItem>
+                            <DetailItem>
+                                <Label>Origin</Label>
+                                <Value>{wine.origin}</Value>
+                            </DetailItem>
+                            <DetailItem>
+                                <Label>Serving Temp</Label>
+                                <Value>{wine.servingTemperature}</Value>
+                            </DetailItem>
+                            <DetailItem>
+                                <Label>Aging Potential</Label>
+                                <Value>{wine.agingPotential}</Value>
+                            </DetailItem>
+                            <DetailItem>
+                                <Label>Winery</Label>
+                                <Value>{wine.wineryInfo}</Value>
+                            </DetailItem>
+                            <DetailItem>
+                                <Label>Food Pairings</Label>
+                                <Value>{wine.foodPairings}</Value>
+                            </DetailItem>
+                        </WineDetails>
                         <OrnamentContainer>
                             <BottomLeftOrnament />
-                            <CloseButton onClick={handleCloseOverlay}>Close</CloseButton>
+                            <CloseButton onClick={() => setShowOverlay(false)}>Close</CloseButton>
                             <BottomRightOrnament />
                         </OrnamentContainer>
                     </OverlayContent>
@@ -235,16 +143,84 @@ const RecipeCard = React.forwardRef(({ title, content, steps, notes, allFlipped 
     );
 });
 
-const CardBack = ({ content, onMoreClick }) => (
-    <CardBackContainer>
-        {content.map((item, index) => (
-            <p key={index}>{item}</p>
-        ))}
-        <MoreButton onClick={onMoreClick}>More</MoreButton>
-    </CardBackContainer>
-);
 
 /* Styled Components */
+
+
+const TastingNotes = styled.div`
+    margin-bottom: 1.5rem;
+    h3 {
+        color: var(--primary);
+        font-size: 1.6rem;
+        margin-bottom: 0.5rem;
+    }
+    p {
+        font-size: 1.4rem;
+        line-height: 1.4;
+    }
+`;
+
+const CardFront = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    backface-visibility: hidden;
+    background: var(--black);
+
+    h2 {
+        font-family: var(--main-font);
+        font-size: 2.5rem;
+        color: var(--white);
+        width: 90%;
+    }
+`;
+
+const CardBack = styled.div`
+    background: var(--offwhite);
+    padding: 1.5rem;
+    text-align: left;
+    
+    p {
+        font-size: 1.4rem;
+        margin: 0.5rem 0;
+    }
+
+    strong {
+        color: var(--primary);
+    }
+`;
+
+const WineDetails = styled.div`
+    padding: 1rem;
+    text-align: left;
+    width: 90%;
+    margin: 0 auto;
+`;
+
+const DetailItem = styled.div`
+    margin: 1rem 0;
+`;
+
+const Label = styled.span`
+    font-family: var(--title-font);
+    font-size: 3rem;
+    font-weight: 800;
+    margin-right: 1rem;
+
+    @media (max-width: 600px) {
+        font-size: 1.5rem;
+    }
+`;
+
+const Value = styled.span`
+    font-size: 1.25rem;
+    font-weight: 600;
+`;
+
 const Container = styled.div`
     display: flex;
     flex-direction: column;
@@ -333,13 +309,6 @@ const ClearButton = styled.button`
     }
 `;
 
-const ButtonsContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-`;
-
 const FlipAllButton = styled.button`
     padding: 5px 10px;
     width: 80px;
@@ -357,68 +326,6 @@ const FlipAllButton = styled.button`
 
     &:active {
         transform: scale(0.95);
-    }
-`;
-
-const FilterButton = styled.button`
-    padding: 5px 10px;
-    font-family: var(--main-font);
-    font-size: 1.2rem;
-    background: ${(props) =>
-        props.isOpen ? 'var(--highlight3)' : 'var(--black)'};
-    color: var(--black);
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:hover {
-        background: var(--highlight3);
-    }
-
-    &:active {
-        transform: scale(0.95);
-    }
-
-    img {
-        width: 1.2rem;
-        height: auto;
-    }
-`;
-
-const FilterMenu = styled.div`
-    position: relative;
-    width: 100%;
-    height: auto;
-    background: var(--white);
-    color: var(--black);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
-    padding: 1rem;
-    z-index: 1000;
-`;
-
-const IngredientSearchInput = styled.input`
-    padding: 5px;
-    font-family: var(--main-font);
-    font-size: 1.5rem;
-    border: 1px solid var(--primary);
-    width: 250px;
-    margin-bottom: 1rem;
-`;
-
-const FilterOption = styled.div`
-    label {
-        font-size: 1.5rem;
-        display: inline-block;
-    }
-
-    input {
-        margin-right: 10px;
     }
 `;
 
@@ -479,30 +386,11 @@ const CardInner = styled.div`
     }
 `;
 
-const CardFront = styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    backface-visibility: hidden;
-    background: var(--black);
-
-    h2 {
-        font-family: var(--main-font);
-        font-size: 2.5rem;
-        color: var(--white);
-    }
-`;
-
 const CardBackContainer = styled(CardFront)`
     background: var(--offwhite);
     transform: rotateY(180deg);
     font-family: var(--main-font);
     font-size: 1.5rem;
-    padding: 1rem 0 1rem 0.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -520,7 +408,8 @@ const MoreButton = styled.button`
     position: absolute;
     bottom: 0.5rem;
     padding: 5px 10px;
-    font-size: 1.2rem;
+    margin-top: 1rem;
+    font-size: 1rem;
     font-family: var(--text-font);
     border: none;
     background: var(--white);
@@ -571,7 +460,7 @@ const OverlayContent = styled.div`
     overflow: hidden;
     background: var(--white);
     color: var(--black);
-    padding: 1rem;
+    padding: 0.5rem;
     
     text-align: center;
     opacity: 0;
@@ -617,22 +506,15 @@ const OverlayContent = styled.div`
     p {
         font-family: var(--main-font);
         font-size: 2rem;
-        margin-left: 0;
 
         @media (max-width: 600px) {
             font-size: 1.5rem;
-            margin-bottom: 0.5rem;
         }
     }
 
     button {
         align-self: center;
     }
-`;
-
-const StepsContainer = styled.div`
-    margin-bottom: 2rem;
-    padding: 0.5rem;
 `;
 
 const CloseButton = styled.button`
@@ -680,4 +562,4 @@ const OrnamentContainer = styled.div`
     width: 100%;
 `;
 
-export default RecipeCardDisplay;
+export default WineCardDisplay;
