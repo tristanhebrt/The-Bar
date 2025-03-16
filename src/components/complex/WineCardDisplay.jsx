@@ -107,29 +107,30 @@ const WineCard = React.forwardRef(({ wine, allFlipped }, ref) => {
                         </OrnamentContainer>
                         <WineDetails>
                             <DetailItem>
-                                <Label>Price</Label>
-                                <Value>{wine.price}</Value>
-                            </DetailItem>
-                            <DetailItem>
                                 <Label>Origin</Label>
                                 <Value>{wine.origin}</Value>
-                            </DetailItem>
-                            <DetailItem>
-                                <Label>Serving Temp</Label>
-                                <Value>{wine.servingTemperature}</Value>
-                            </DetailItem>
-                            <DetailItem>
-                                <Label>Aging Potential</Label>
-                                <Value>{wine.agingPotential}</Value>
-                            </DetailItem>
-                            <DetailItem>
-                                <Label>Winery</Label>
-                                <Value>{wine.wineryInfo}</Value>
                             </DetailItem>
                             <DetailItem>
                                 <Label>Food Pairings</Label>
                                 <Value>{wine.foodPairings}</Value>
                             </DetailItem>
+                            <TasteProfileSection>
+                                <Label>Taste Profile</Label>
+                                {Object.entries(wine.tasteProfile).map(([key, { scale, value }]) => {
+                                    const [leftLabel, rightLabel] = scale.split(" - ");
+                                    return (
+                                        <TasteItem key={key}>
+                                            <ScaleContainer>
+                                                <ScaleLabel>{leftLabel}</ScaleLabel>
+                                                <ScaleBar>
+                                                    <ScaleFill width={value} />
+                                                </ScaleBar>
+                                                <ScaleLabel>{rightLabel}</ScaleLabel>
+                                            </ScaleContainer>
+                                        </TasteItem>
+                                    );
+                                })}
+                            </TasteProfileSection>
                         </WineDetails>
                         <OrnamentContainer>
                             <BottomLeftOrnament />
@@ -146,6 +147,58 @@ const WineCard = React.forwardRef(({ wine, allFlipped }, ref) => {
 
 /* Styled Components */
 
+const TasteProfileSection = styled.div`
+    margin-top: 2rem;
+    width: 100%;
+`;
+
+const TasteItem = styled.div`
+    margin: 0;
+`;
+
+const ScaleContainer = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    margin: 1rem 0;
+`;
+
+const ScaleLabel = styled.span`
+    font-family: var(--main-font);
+    font-size: 1.2rem;
+    font-weight: 600;
+    width: 2.5rem;
+    white-space: nowrap;
+    color: var(--black);
+`;
+
+const ScaleBar = styled.div`
+    flex-grow: 1;
+    height: 0.5rem;
+    background: #eee;
+    position: relative;
+    overflow: hidden;
+`;
+
+const ScaleFill = styled.div`
+    height: 100%;
+    width: ${props => props.width}%;
+    background: #eee;
+    position: absolute;
+    left: 0;
+    transition: width 0.5s ease-out;
+    
+    &::after {
+        content: "";
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 1rem;
+        background: var(--primary);
+    }
+`;
 
 const TastingNotes = styled.div`
     margin-bottom: 1.5rem;
@@ -219,6 +272,8 @@ const Label = styled.span`
 const Value = styled.span`
     font-size: 1.25rem;
     font-weight: 600;
+    display: block; // Changed to block for better spacing
+    margin-top: 0.5rem;
 `;
 
 const Container = styled.div`
