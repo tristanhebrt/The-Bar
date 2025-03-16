@@ -1,5 +1,5 @@
 import React from "react";
-import RecipeCardDisplay from "../RecipeCardDisplay";
+import RecipeCardDisplay from "../../complex/RecipeCardDisplay";
 
 const classicCocktails = [
     {
