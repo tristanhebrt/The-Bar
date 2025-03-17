@@ -51,7 +51,7 @@ export const PREP_STEPS = [
         content: {
         Prebatch: [
             "Into the Fire (red-red)", "Margarita Mix (black-red-black)", "Boat Party (yellow-black-yellow)", 
-            "Sunset Chaser (yellow-yellow)", "Dreamer (blue-blue)", "Secret Rose (green-red)", "Bourbon Turnover(red-yellow)"
+            "Sunset Chaser (yellow-yellow)", "Dreamer (blue-blue)", "Secret Rose (green-red)", "Bourbon Turnover (red-yellow)"
         ]
         }
     },
