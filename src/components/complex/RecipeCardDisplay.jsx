@@ -240,7 +240,7 @@ const CardBack = ({ content, onMoreClick }) => (
         {content.map((item, index) => (
             <p key={index}>{item}</p>
         ))}
-        <MoreButton onClick={onMoreClick}>More</MoreButton>
+        <MoreButton onClick={onMoreClick}>Details</MoreButton>
     </CardBackContainer>
 );
 
@@ -494,11 +494,12 @@ const CardFront = styled.div`
         font-family: var(--main-font);
         font-size: 2.5rem;
         color: var(--white);
+        width: 90%;
     }
 `;
 
 const CardBackContainer = styled(CardFront)`
-    background: var(--offwhite);
+    background: var(--light-grey);
     transform: rotateY(180deg);
     font-family: var(--main-font);
     font-size: 1.5rem;
@@ -510,7 +511,7 @@ const CardBackContainer = styled(CardFront)`
     position: relative;
 
     p {
-        margin: 0.1rem 0;
+        margin: 0;
         align-self: flex-start;
         color: var(--black);
     }
@@ -520,7 +521,8 @@ const MoreButton = styled.button`
     position: absolute;
     bottom: 0.5rem;
     padding: 5px 10px;
-    font-size: 1.2rem;
+    margin-top: 1rem;
+    font-size: 1rem;
     font-family: var(--text-font);
     border: none;
     background: var(--white);
@@ -529,7 +531,7 @@ const MoreButton = styled.button`
     transition: background 0.3s ease;
 
     &:hover {
-        background: var(--secondary);
+        background: var(--light-grey);
     }
 `;
 

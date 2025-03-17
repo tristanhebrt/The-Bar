@@ -176,7 +176,7 @@ const ScaleLabel = styled.span`
 const ScaleBar = styled.div`
     flex-grow: 1;
     height: 0.5rem;
-    background: #eee;
+    background: var(--light-grey);
     position: relative;
     overflow: hidden;
 `;
@@ -184,7 +184,7 @@ const ScaleBar = styled.div`
 const ScaleFill = styled.div`
     height: 100%;
     width: ${props => props.width}%;
-    background: #eee;
+    background: var(--light-grey);
     position: absolute;
     left: 0;
     transition: width 0.5s ease-out;
@@ -233,7 +233,7 @@ const CardFront = styled.div`
 `;
 
 const CardBack = styled.div`
-    background: var(--offwhite);
+    background: var(--light-grey);
     padding: 1.5rem;
     text-align: left;
     
@@ -259,7 +259,7 @@ const DetailItem = styled.div`
 `;
 
 const Label = styled.span`
-    font-family: var(--title-font);
+    font-family: var(--text-font);
     font-size: 3rem;
     font-weight: 800;
     margin-right: 1rem;
@@ -272,7 +272,7 @@ const Label = styled.span`
 const Value = styled.span`
     font-size: 1.25rem;
     font-weight: 600;
-    display: block; // Changed to block for better spacing
+    display: block;
     margin-top: 0.5rem;
 `;
 
@@ -442,7 +442,7 @@ const CardInner = styled.div`
 `;
 
 const CardBackContainer = styled(CardFront)`
-    background: var(--offwhite);
+    background: var(--light-grey);
     transform: rotateY(180deg);
     font-family: var(--main-font);
     font-size: 1.5rem;
@@ -473,7 +473,7 @@ const MoreButton = styled.button`
     transition: background 0.3s ease;
 
     &:hover {
-        background: var(--secondary);
+        background: var(--light-grey);
     }
 `;
 
