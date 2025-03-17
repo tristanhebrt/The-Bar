@@ -33,13 +33,22 @@ const BarPrep = () => {
   const toggleItem = (stepIndex, category, itemIndex) => {
     const key = `${stepIndex}-${category}-${itemIndex}`;
     setCompletedItems(prev => {
-      const newCompleted = { ...prev, [key]: !prev[key] };
+      const newCompleted = { ...prev };
+      
+      if (prev[key]) {
+        delete newCompleted[key]; // Remove unchecked item from completedItems
+      } else {
+        newCompleted[key] = true;
+      }
+  
       const allCompleted = PREP_STEPS[stepIndex].content[category].every((_, idx) => newCompleted[`${stepIndex}-${category}-${idx}`]);
+  
       if (allCompleted) {
         newCompleted[`${stepIndex}-${category}-title`] = true;
       } else {
         delete newCompleted[`${stepIndex}-${category}-title`];
       }
+  
       return newCompleted;
     });
   };
@@ -48,13 +57,26 @@ const BarPrep = () => {
     const key = `${stepIndex}-${category}-title`;
     setCompletedItems(prev => {
       const isCompleted = !prev[key];
-      const newCompleted = { ...prev, [key]: isCompleted };
-      PREP_STEPS[stepIndex].content[category].forEach((_, idx) => {
-        newCompleted[`${stepIndex}-${category}-${idx}`] = isCompleted;
-      });
+      const newCompleted = { ...prev };
+  
+      if (isCompleted) {
+        // Mark all items in the category as completed
+        newCompleted[key] = true;
+        PREP_STEPS[stepIndex].content[category].forEach((_, idx) => {
+          newCompleted[`${stepIndex}-${category}-${idx}`] = true;
+        });
+      } else {
+        // Remove category title key and all its items to properly decrease progress
+        delete newCompleted[key];
+        PREP_STEPS[stepIndex].content[category].forEach((_, idx) => {
+          delete newCompleted[`${stepIndex}-${category}-${idx}`];
+        });
+      }
+  
       return newCompleted;
     });
   };
+  
 
   const clearChecklist = () => {
     setCompletedItems({});
