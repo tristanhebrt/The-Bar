@@ -1,7 +1,4 @@
-import React from "react";
-import CocktailCardDisplay from "./CocktailCardDisplay";
-
-const aloraCocktails = [
+export const ALORA_COCKTAILS = [
     {
         title: "Into the Fire",
         ingredients: {
@@ -277,11 +274,3 @@ const aloraCocktails = [
         flavor: "Light, Bubbly, Peach, Citrus"
     },
 ];
-
-const Alora = () => {
-    return (
-        <CocktailCardDisplay mainTitle="Alora Cocktails" recipes={aloraCocktails}></CocktailCardDisplay>
-    );
-};
-
-export default Alora;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
-const BeerCardDisplay = ({ mainTitle, recipes }) => {
+const BeerCardDisplay = ({ mainTitle, beerList }) => {
     const [allFlipped, setAllFlipped] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const cardRefs = useRef([]);
@@ -14,7 +14,7 @@ const BeerCardDisplay = ({ mainTitle, recipes }) => {
         setSearchQuery("");
     };
 
-    const filteredBeers = recipes
+    const filteredBeers = beerList
         .filter((beer) => {
             const searchLower = searchQuery.toLowerCase();
             return (

@@ -1,10 +1,4 @@
-import React from "react";
-import CocktailCardDisplay from "./CocktailCardDisplay";
-
-
 // Random cocktails
-
-
 const randomCocktails = [
     {
         title: "Barrel-aged Negroni",
@@ -1365,8 +1359,6 @@ const randomCocktails = [
 
 
 // Modern Cocktails
-
-
 const modernCocktails = [
     {
         title: "Paper Plane",
@@ -1443,8 +1435,6 @@ const modernCocktails = [
 
 
 // Alora Cocktails
-
-
 const aloraCocktails = [
     {
         title: "Into the Fire",
@@ -1724,8 +1714,6 @@ const aloraCocktails = [
 
 
 // Classic Cocktails
-
-
 const classicCocktails = [
     {
         title: "Aperol Spritz",
@@ -2351,14 +2339,4 @@ const classicCocktails = [
 ];
 
 // Combine all cocktail arrays into one
-const allCocktails = [...randomCocktails, ...modernCocktails, ...aloraCocktails, ...classicCocktails];
-
-const ModernClassics = () => {
-    return (
-        <>
-            <CocktailCardDisplay mainTitle="All Cocktails" recipes={allCocktails} />
-        </>
-    );
-};
-
-export default ModernClassics;
+export const MASTER_COCKTAILS = [...randomCocktails, ...modernCocktails, ...aloraCocktails, ...classicCocktails];

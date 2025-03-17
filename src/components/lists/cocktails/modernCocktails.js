@@ -1,7 +1,4 @@
-import React from "react";
-import CocktailCardDisplay from "./CocktailCardDisplay";
-
-const modernCocktails = [
+export const MODERN_COCKTAILS = [
     {
         title: "Paper Plane",
         ingredients: {
@@ -79,13 +76,3 @@ const modernCocktails = [
         flavor: "Tart, Sweet, Citrus"
     }
 ];
-
-const ModernCocktails = () => {
-    return (
-        <>
-            <CocktailCardDisplay mainTitle="Modern Cocktails" recipes={modernCocktails} />
-        </>
-    );
-};
-
-export default ModernCocktails;

@@ -1,9 +1,11 @@
 import React from "react";
-import AloraBeers from "../lists/beers/AloraBeers";
+import BeerCardDisplay from "../lists/beers/BeerCardDisplay";
+
+import { ALORA_BEERS } from "../lists/beers/aloraBeers";
 
 const BeerPage = () => {
     return<>
-        <AloraBeers />
+        <BeerCardDisplay mainTitle="Alora Beers" beerList={ALORA_BEERS}/>
     </>
 };
 

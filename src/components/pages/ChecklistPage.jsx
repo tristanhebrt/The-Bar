@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Checklist from "../lists/prep/Checklist";
-import { PREP_STEPS } from '../lists/prep/checklistData';
-import { CLOSE_STEPS } from '../lists/prep/closeChecklistData';
+
+import { PREP_STEPS } from "../lists/prep/prepGuide";
+import { CLOSE_STEPS } from "../lists/prep/closeGuide";
 
 const PrepPage = () => {
     const [expandedChecklist, setExpandedChecklist] = useState(null); // Track which one is open

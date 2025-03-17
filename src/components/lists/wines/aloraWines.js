@@ -1,7 +1,4 @@
-import React from "react";
-import WineCardDisplay from "./WineCardDisplay";
-
-const White = [
+export const WHITE_WINES = [
     {
         title: "Sauvignon Blanc - Crowded House",
         origin: "Marlborough, New Zealand",
@@ -132,7 +129,7 @@ const White = [
     }
 ];
 
-const Red = [
+export const RED_WINES = [
     {
         title: "Montepulciano d'Abruzzo - Masciarelli",
         origin: "Abruzzo, Italy",
@@ -375,7 +372,7 @@ const Red = [
     }
 ];
 
-const Bubbles = [
+export const BUBBLE_WINES = [
     {
         title: "Prosecco - Serenissima",
         origin: "Veneto, Italy",
@@ -458,18 +455,4 @@ const Bubbles = [
     }
 ];
 
-const allWines = [...White, ...Red, ...Bubbles];
-
-
-const AloraWines = () => {
-    return (
-        <>
-            <WineCardDisplay mainTitle="All Wines" recipes={allWines} />
-            <WineCardDisplay mainTitle="White Wines" recipes={White} />
-            <WineCardDisplay mainTitle="Red Wines" recipes={Red} />
-            <WineCardDisplay mainTitle="Sparkling Wines" recipes={Bubbles} />
-        </>
-    );
-};
-
-export default AloraWines;
+export const ALL_WINES = [...WHITE_WINES, ...RED_WINES, ...BUBBLE_WINES];

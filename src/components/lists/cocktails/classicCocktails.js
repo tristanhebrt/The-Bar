@@ -1,7 +1,4 @@
-import React from "react";
-import CocktailCardDisplay from "./CocktailCardDisplay";
-
-const classicCocktails = [
+export const CLASSIC_COCKTAILS = [
     {
         title: "Aperol Spritz",
         ingredients: {
@@ -624,14 +621,3 @@ const classicCocktails = [
         flavor: "Rich, Complex, Strong"
     }
 ];
-
-const ClassicCocktails = () => {
-    return (
-        <CocktailCardDisplay 
-            mainTitle="Classic Cocktails" 
-            recipes={classicCocktails} 
-        />
-    );
-};
-
-export default ClassicCocktails;

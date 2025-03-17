@@ -1,7 +1,4 @@
-import React from "react";
-import BeerCardDisplay from "./BeerCardDisplay";
-
-const beers = [
+export const ALORA_BEERS = [
     {
         title: "Alora Lager",
         type: "Light Lager",
@@ -63,14 +60,3 @@ const beers = [
         },
     },
 ];
-
-const AloraBeers = () => {
-    return (
-        <>
-            <BeerCardDisplay mainTitle="All Beers" recipes={beers} />
-
-        </>
-    );
-};
-
-export default AloraBeers;
