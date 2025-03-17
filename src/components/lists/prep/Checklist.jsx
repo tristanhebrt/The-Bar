@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-const Checklist = ({dataList, checklistTitle}) => {
+const Checklist = ({dataList, checklistTitle, isExpanded, setIsExpanded}) => {
   const [expandedSections, setExpandedSections] = useState({});
   const [completedItems, setCompletedItems] = useState({});
   const [progress, setProgress] = useState(0);
@@ -76,7 +76,6 @@ const Checklist = ({dataList, checklistTitle}) => {
     });
   };
   
-
   const clearChecklist = () => {
     setCompletedItems({});
   };
@@ -88,82 +87,94 @@ const Checklist = ({dataList, checklistTitle}) => {
 
   return (
     <Container>
-        <PrepGuide>
-            <TitleContainer>
-                <OrnamentContainer>
-                    <TopLeftOrnament />
-                    <h1>{checklistTitle}</h1>
-                    <TopRightOrnament />
-                </OrnamentContainer>
-                <BlackLine />
-            </TitleContainer>
-            
-            {dataList.map((step, stepIndex) => (
-                <StepContainer key={stepIndex}>
-                    <StepTitle>{step.title}</StepTitle>
-                    <div>
-                        {Object.entries(step.content).map(([category, items]) => (
-                        <div key={category}>
-                            <CategoryHeader 
-                            onClick={() => toggleSection(stepIndex, category)}
-                            $isOpen={expandedSections[stepIndex]?.[category]}
-                            >
-                                <CategoryTitle 
-                                    $isCompleted={completedItems[`${stepIndex}-${category}-title`]}
-                                    onClick={(e) => { e.stopPropagation(); toggleCategoryCompletion(stepIndex, category); }}
-                                >
-                                    {category === 'items' 
-                                    ? 'General Items' 
-                                    : category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()
-                                    }
-                                </CategoryTitle>
-                                <ToggleIcon $isOpen={expandedSections[stepIndex]?.[category]} />
-                            </CategoryHeader>
-                            
-                            {expandedSections[stepIndex]?.[category] && (
-                            <ItemList>
-                                {items.map((item, itemIndex) => {
-                                const key = `${stepIndex}-${category}-${itemIndex}`;
-                                const colors = getColorFromItem(item);
+      {!isExpanded ? (
+        <>
+          <ExpandButton onClick={() => setIsExpanded(checklistTitle)}> {/* Pass checklistTitle */}
+            {checklistTitle}
+          </ExpandButton>
+          <BlackLine />
+        </>
+      ) : (
+        <>
+          <PrepGuide>
+              <TitleContainer>
+                  <OrnamentContainer>
+                      <TopLeftOrnament />
+                      <h1>{checklistTitle}</h1>
+                      <TopRightOrnament />
+                  </OrnamentContainer>
+                  <BlackLine />
+              </TitleContainer>
+              
+              {dataList.map((step, stepIndex) => (
+                  <StepContainer key={stepIndex}>
+                      <StepTitle>{step.title}</StepTitle>
+                      <div>
+                          {Object.entries(step.content).map(([category, items]) => (
+                          <div key={category}>
+                              <CategoryHeader 
+                              onClick={() => toggleSection(stepIndex, category)}
+                              $isOpen={expandedSections[stepIndex]?.[category]}
+                              >
+                                  <CategoryTitle 
+                                      $isCompleted={completedItems[`${stepIndex}-${category}-title`]}
+                                      onClick={(e) => { e.stopPropagation(); toggleCategoryCompletion(stepIndex, category); }}
+                                  >
+                                      {category === 'items' 
+                                      ? 'General Items' 
+                                      : category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()
+                                      }
+                                  </CategoryTitle>
+                                  <ToggleIcon $isOpen={expandedSections[stepIndex]?.[category]} />
+                              </CategoryHeader>
+                              
+                              {expandedSections[stepIndex]?.[category] && (
+                              <ItemList>
+                                  {items.map((item, itemIndex) => {
+                                  const key = `${stepIndex}-${category}-${itemIndex}`;
+                                  const colors = getColorFromItem(item);
 
-                                return (
-                                    <ListItem 
-                                        key={itemIndex}
-                                        $isCompleted={completedItems[key]}
-                                        onClick={() => toggleItem(stepIndex, category, itemIndex)}
-                                    >
-                                        {item.replace(/\(.*?\)/, '')}
-                                        {colors.map((color, i) => (
-                                            <ColorBox key={i} color={color} />
-                                        ))}
-                                    </ListItem>
-                                );
-                                })}
-                            </ItemList>
-                            )}
-                        </div>
-                        ))}
-                    </div>
-                </StepContainer>
-            ))}
-            <OrnamentContainer>
-                <BottomLeftOrnament />
-                    <ButtonsContainer>
-                        <ClearButton onClick={clearChecklist}>Clear</ClearButton>
-                    </ButtonsContainer>
-                <BottomRightOrnament />
-            </OrnamentContainer>
-            <ProgressContainer>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--text-font)', color: 'var(--white)' }}>
-                <span>Preparation Progress:</span>
-                <span>{Math.round(progress)}%</span>
-            </div>
-            <ProgressBar>
-                <ProgressFill $percentage={progress} />
-            </ProgressBar>
-            </ProgressContainer>
-        </PrepGuide>
-        <BlackLine />
+                                  return (
+                                      <ListItem 
+                                          key={itemIndex}
+                                          $isCompleted={completedItems[key]}
+                                          onClick={() => toggleItem(stepIndex, category, itemIndex)}
+                                      >
+                                          {item.replace(/\(.*?\)/, '')}
+                                          {colors.map((color, i) => (
+                                              <ColorBox key={i} color={color} />
+                                          ))}
+                                      </ListItem>
+                                  );
+                                  })}
+                              </ItemList>
+                              )}
+                          </div>
+                          ))}
+                      </div>
+                  </StepContainer>
+              ))}
+              <OrnamentContainer>
+                  <BottomLeftOrnament />
+                      <ButtonsContainer>
+                          <ClearButton onClick={clearChecklist}>Clear</ClearButton>
+                          <CloseButton onClick={() => setIsExpanded(false)}>Close</CloseButton>
+                      </ButtonsContainer>
+                  <BottomRightOrnament />
+              </OrnamentContainer>
+              <ProgressContainer>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--text-font)', color: 'var(--white)' }}>
+                  <span>Preparation Progress:</span>
+                  <span>{Math.round(progress)}%</span>
+              </div>
+              <ProgressBar>
+                  <ProgressFill $percentage={progress} />
+              </ProgressBar>
+              </ProgressContainer>
+          </PrepGuide>
+          <BlackLine />
+        </>
+      )}
     </Container>
   );
 };
@@ -182,6 +193,21 @@ const Container = styled.div`
     @media (max-width: 600px) {
         padding-top: 3rem;
     }
+`;
+
+const ExpandButton = styled.button`
+  padding: 30px 20px;
+  width: 90%;
+  max-width: 600px;
+  font-size: 1.5rem;
+  font-family: var(--text-font);
+  background: var(--black);
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background: var(--highlight3);
+  }
 `;
 
 const PrepGuide = styled.div`
@@ -336,6 +362,10 @@ const ClearButton = styled.button`
     &:active {
         transform: scale(0.95);
     }
+`;
+
+const CloseButton = styled(ClearButton)`
+  background: var(--dark-red);
 `;
 
 const BlackLine = styled.div`
