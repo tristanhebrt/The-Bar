@@ -111,7 +111,7 @@ const BarPrep = () => {
       <BlackLine />
 
       <ProgressContainer>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--text-font)', color: 'var(--highlight1)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--text-font)', color: 'var(--white)' }}>
           <span>Preparation Progress:</span>
           <span>{Math.round(progress)}%</span>
         </div>
@@ -126,8 +126,8 @@ const BarPrep = () => {
 /* Styled Components */
 const PrepGuide = styled.div`
   max-width: 800px;
-  margin: 0 auto;
-  padding: 2rem;
+  margin: 3rem auto;
+  padding: 1rem;
   background: var(--white);
   min-height: 100vh;
 `;
@@ -135,7 +135,7 @@ const PrepGuide = styled.div`
 const StepContainer = styled.div`
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: var(--secondary);
+  background: var(--light-grey);
 `;
 
 const TitleContainer = styled.div`
@@ -172,7 +172,6 @@ const CategoryHeader = styled.div`
   background: var(--white);
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-bottom: 0.5rem;
 
   &:hover {
     background: var(--highlighted-box);
@@ -229,22 +228,20 @@ const ProgressContainer = styled.div`
   left: 0;
   right: 0;
   padding: 1rem;
-  background: var(--secondary);
+  background: var(--black);
   z-index: 1000;
 `;
 
 const ProgressBar = styled.div`
   height: 8px;
   background: var(--light-grey);
-  border-radius: 4px;
   margin-top: 0.5rem;
 `;
 
 const ProgressFill = styled.div`
   width: ${props => props.$percentage}%;
   height: 100%;
-  background: var(--highlight1);
-  border-radius: 4px;
+  background: var(--primary);
   transition: width 0.3s ease;
 `;
 
