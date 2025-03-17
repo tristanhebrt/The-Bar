@@ -1,5 +1,5 @@
 import React from "react";
-import BeerCardDisplay from "../../complex/BeerCardDisplay";
+import BeerCardDisplay from "./BeerCardDisplay";
 
 const beers = [
     {

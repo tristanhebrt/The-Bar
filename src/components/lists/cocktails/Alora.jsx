@@ -1,5 +1,5 @@
 import React from "react";
-import CocktailCardDisplay from "../../complex/CocktailCardDisplay";
+import CocktailCardDisplay from "./CocktailCardDisplay";
 
 const aloraCocktails = [
     {

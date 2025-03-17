@@ -1,5 +1,5 @@
 import React from "react";
-import WineCardDisplay from "../../complex/WineCardDisplay";
+import WineCardDisplay from "./WineCardDisplay";
 
 const White = [
     {
