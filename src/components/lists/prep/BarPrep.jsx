@@ -8,9 +8,15 @@ const BarPrep = () => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const totalItems = PREP_STEPS.reduce((acc, step) => 
-      acc + Object.values(step.content).flat().length, 0);
-    const completedCount = Object.values(completedItems).filter(Boolean).length;
+    const totalItems = PREP_STEPS.reduce((acc, step) => {
+      return acc + Object.entries(step.content).reduce((subAcc, [category, items]) => 
+        subAcc + items.length, 0);
+    }, 0);
+  
+    const completedCount = Object.keys(completedItems)
+      .filter(key => !key.includes('-title')) // Exclude category title keys
+      .length;
+  
     setProgress((completedCount / totalItems) * 100);
   }, [completedItems]);
 
@@ -48,6 +54,10 @@ const BarPrep = () => {
       });
       return newCompleted;
     });
+  };
+
+  const clearChecklist = () => {
+    setCompletedItems({});
   };
 
   return (
@@ -106,6 +116,7 @@ const BarPrep = () => {
         ))}
         <OrnamentContainer>
             <BottomLeftOrnament />
+                <ClearButton onClick={clearChecklist}>Clear Checklist</ClearButton>
             <BottomRightOrnament />
         </OrnamentContainer>
       <BlackLine />
@@ -243,6 +254,25 @@ const ProgressFill = styled.div`
   height: 100%;
   background: var(--primary);
   transition: width 0.3s ease;
+`;
+
+const ClearButton = styled.button`
+  padding: 5px 10px;
+  background: var(--highlight1);
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: var(--text-font);
+  transition: background 0.3s ease, transform 0.1s ease;
+
+    &:hover {
+        background: var(--highlight3);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
 `;
 
 const BlackLine = styled.div`
