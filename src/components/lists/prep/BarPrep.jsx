@@ -210,7 +210,7 @@ const ItemList = styled.ul`
 `;
 
 const ListItem = styled.li`
-  padding: 0.25rem 0;
+  padding: 0.75rem 0;
   color: var(--primary);
   font-family: var(--main-font);
   font-size: 1.25rem;
