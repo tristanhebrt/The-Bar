@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 const Nav = styled.nav`
+    position: sticky;
+    top: 0;  /* This is the crucial missing property */
+    z-index: 1000;  /* Ensures nav stays above other content */
     display: flex;
     justify-content: space-around;
     align-items: center;
