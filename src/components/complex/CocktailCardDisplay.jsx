@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import Quiz from "./Quiz";
 
-const RecipeCardDisplay = ({ mainTitle, recipes }) => {
+const CocktailCardDisplay = ({ mainTitle, recipes }) => {
     const [allFlipped, setAllFlipped] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [ingredientSearch, setIngredientSearch] = useState(""); // New state for ingredient search
@@ -199,7 +199,17 @@ const RecipeCard = React.forwardRef(({ title, content, steps, notes, allFlipped 
                     <CardFront>
                         <h2>{title}</h2>
                     </CardFront>
-                    <CardBack content={content} onMoreClick={handleMoreClick} />
+                    <CardBackContainer>
+                        <CardBack>
+                            {content.map((item, index) => (
+                                <p key={index}>{item}</p>
+                            ))}
+                            <MoreButton onClick={(e) => {
+                                e.stopPropagation();
+                                setShowOverlay(true);
+                            }}>Details</MoreButton> 
+                        </CardBack>                   
+                    </CardBackContainer>                
                 </CardInner>
             </Card>
 
@@ -234,15 +244,6 @@ const RecipeCard = React.forwardRef(({ title, content, steps, notes, allFlipped 
         </>
     );
 });
-
-const CardBack = ({ content, onMoreClick }) => (
-    <CardBackContainer>
-        {content.map((item, index) => (
-            <p key={index}>{item}</p>
-        ))}
-        <MoreButton onClick={onMoreClick}>Details</MoreButton>
-    </CardBackContainer>
-);
 
 /* Styled Components */
 const Container = styled.div`
@@ -498,12 +499,26 @@ const CardFront = styled.div`
     }
 `;
 
+const CardBack = styled.div`
+    background: var(--light-grey);
+    padding: 1.5rem;
+    text-align: left;
+    
+    p {
+        font-size: 1.4rem;
+        margin: 0.5rem 0;
+    }
+
+    strong {
+        color: var(--primary);
+    }
+`;
+
 const CardBackContainer = styled(CardFront)`
     background: var(--light-grey);
     transform: rotateY(180deg);
     font-family: var(--main-font);
     font-size: 1.5rem;
-    padding: 1rem 0 1rem 0.5rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -511,7 +526,7 @@ const CardBackContainer = styled(CardFront)`
     position: relative;
 
     p {
-        margin: 0;
+        margin: 0.1rem 0;
         align-self: flex-start;
         color: var(--black);
     }
@@ -573,7 +588,7 @@ const OverlayContent = styled.div`
     overflow: hidden;
     background: var(--white);
     color: var(--black);
-    padding: 1rem;
+    padding: 0.5rem;
     
     text-align: center;
     opacity: 0;
@@ -619,11 +634,9 @@ const OverlayContent = styled.div`
     p {
         font-family: var(--main-font);
         font-size: 2rem;
-        margin-left: 0;
 
         @media (max-width: 600px) {
             font-size: 1.5rem;
-            margin-bottom: 0.5rem;
         }
     }
 
@@ -682,4 +695,4 @@ const OrnamentContainer = styled.div`
     width: 100%;
 `;
 
-export default RecipeCardDisplay;
+export default CocktailCardDisplay;

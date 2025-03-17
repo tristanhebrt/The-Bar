@@ -1,5 +1,5 @@
 import React from "react";
-import RecipeCardDisplay from "../../complex/RecipeCardDisplay";
+import CocktailCardDisplay from "../../complex/CocktailCardDisplay";
 
 const aloraCocktails = [
     {
@@ -280,7 +280,7 @@ const aloraCocktails = [
 
 const Alora = () => {
     return (
-        <RecipeCardDisplay mainTitle="Alora Cocktails" recipes={aloraCocktails}></RecipeCardDisplay>
+        <CocktailCardDisplay mainTitle="Alora Cocktails" recipes={aloraCocktails}></CocktailCardDisplay>
     );
 };
 

@@ -1,5 +1,5 @@
 import React from "react";
-import RecipeCardDisplay from "../../complex/RecipeCardDisplay";
+import CocktailCardDisplay from "../../complex/CocktailCardDisplay";
 
 const classicCocktails = [
     {
@@ -627,7 +627,7 @@ const classicCocktails = [
 
 const ClassicCocktails = () => {
     return (
-        <RecipeCardDisplay 
+        <CocktailCardDisplay 
             mainTitle="Classic Cocktails" 
             recipes={classicCocktails} 
         />

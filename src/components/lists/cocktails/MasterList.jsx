@@ -1,5 +1,5 @@
 import React from "react";
-import RecipeCardDisplay from "../../complex/RecipeCardDisplay";
+import CocktailCardDisplay from "../../complex/CocktailCardDisplay";
 
 
 // Random cocktails
@@ -2356,7 +2356,7 @@ const allCocktails = [...randomCocktails, ...modernCocktails, ...aloraCocktails,
 const ModernClassics = () => {
     return (
         <>
-            <RecipeCardDisplay mainTitle="All Cocktails" recipes={allCocktails} />
+            <CocktailCardDisplay mainTitle="All Cocktails" recipes={allCocktails} />
         </>
     );
 };
