@@ -182,7 +182,7 @@ const CategoryTitle = styled.h3`
 `;
 
 const ToggleIcon = styled.span`
-  font-family: var(--text-font);
+  font-family: var(--fancy-font);
   font-size: 1.2rem;
   color: var(--highlight1);
 `;
