@@ -1,9 +1,11 @@
 import React from "react";
 import styled from "styled-components";
+import BarPrep from "../lists/prep/BarPrep";
 
 const PrepPage = () => {
     return<>
         <ComingSoon>Coming Soon</ComingSoon>
+        <BarPrep />
     </>
 };
 
