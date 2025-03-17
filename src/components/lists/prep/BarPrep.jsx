@@ -227,6 +227,7 @@ const ProgressContainer = styled.div`
   right: 0;
   padding: 1rem;
   background: var(--secondary);
+  z-index: 1000;
 `;
 
 const ProgressBar = styled.div`
