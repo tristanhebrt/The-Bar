@@ -83,86 +83,102 @@ const BarPrep = () => {
   };
 
   return (
-    <PrepGuide>
-      <TitleContainer>
-        <OrnamentContainer>
-            <TopLeftOrnament />
-            <h1>Bar Preparation Guide</h1>
-            <TopRightOrnament />
-        </OrnamentContainer>
-        <BlackLine />
-        </TitleContainer>
-        
-        {PREP_STEPS.map((step, stepIndex) => (
-            <StepContainer key={stepIndex}>
-                <StepTitle>{step.title}</StepTitle>
-                <div>
-                    {Object.entries(step.content).map(([category, items]) => (
-                    <div key={category}>
-                        <CategoryHeader 
-                        onClick={() => toggleSection(stepIndex, category)}
-                        $isOpen={expandedSections[stepIndex]?.[category]}
-                        >
-                            <CategoryTitle 
-                                $isCompleted={completedItems[`${stepIndex}-${category}-title`]}
-                                onClick={(e) => { e.stopPropagation(); toggleCategoryCompletion(stepIndex, category); }}
+    <Container>
+        <PrepGuide>
+            <TitleContainer>
+                <OrnamentContainer>
+                    <TopLeftOrnament />
+                    <h1>Bar Preparation Guide</h1>
+                    <TopRightOrnament />
+                </OrnamentContainer>
+                <BlackLine />
+            </TitleContainer>
+            
+            {PREP_STEPS.map((step, stepIndex) => (
+                <StepContainer key={stepIndex}>
+                    <StepTitle>{step.title}</StepTitle>
+                    <div>
+                        {Object.entries(step.content).map(([category, items]) => (
+                        <div key={category}>
+                            <CategoryHeader 
+                            onClick={() => toggleSection(stepIndex, category)}
+                            $isOpen={expandedSections[stepIndex]?.[category]}
                             >
-                                {category === 'items' 
-                                ? 'General Items' 
-                                : category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()
-                                }
-                            </CategoryTitle>
-                            <ToggleIcon $isOpen={expandedSections[stepIndex]?.[category]} />
-                        </CategoryHeader>
-                        
-                        {expandedSections[stepIndex]?.[category] && (
-                        <ItemList>
-                            {items.map((item, itemIndex) => {
-                            const key = `${stepIndex}-${category}-${itemIndex}`;
-                            return (
-                                <ListItem 
-                                    key={itemIndex}
-                                    $isCompleted={completedItems[key]}
-                                    onClick={() => toggleItem(stepIndex, category, itemIndex)}
+                                <CategoryTitle 
+                                    $isCompleted={completedItems[`${stepIndex}-${category}-title`]}
+                                    onClick={(e) => { e.stopPropagation(); toggleCategoryCompletion(stepIndex, category); }}
                                 >
-                                    {item}
-                                </ListItem>
-                            );
-                            })}
-                        </ItemList>
-                        )}
+                                    {category === 'items' 
+                                    ? 'General Items' 
+                                    : category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()
+                                    }
+                                </CategoryTitle>
+                                <ToggleIcon $isOpen={expandedSections[stepIndex]?.[category]} />
+                            </CategoryHeader>
+                            
+                            {expandedSections[stepIndex]?.[category] && (
+                            <ItemList>
+                                {items.map((item, itemIndex) => {
+                                const key = `${stepIndex}-${category}-${itemIndex}`;
+                                return (
+                                    <ListItem 
+                                        key={itemIndex}
+                                        $isCompleted={completedItems[key]}
+                                        onClick={() => toggleItem(stepIndex, category, itemIndex)}
+                                    >
+                                        {item}
+                                    </ListItem>
+                                );
+                                })}
+                            </ItemList>
+                            )}
+                        </div>
+                        ))}
                     </div>
-                    ))}
-                </div>
-            </StepContainer>
-        ))}
-        <OrnamentContainer>
-            <BottomLeftOrnament />
-                <ClearButton onClick={clearChecklist}>Clear Checklist</ClearButton>
-            <BottomRightOrnament />
-        </OrnamentContainer>
-      <BlackLine />
-
-      <ProgressContainer>
-        <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--text-font)', color: 'var(--white)' }}>
-          <span>Preparation Progress:</span>
-          <span>{Math.round(progress)}%</span>
-        </div>
-        <ProgressBar>
-          <ProgressFill $percentage={progress} />
-        </ProgressBar>
-      </ProgressContainer>
-    </PrepGuide>
+                </StepContainer>
+            ))}
+            <OrnamentContainer>
+                <BottomLeftOrnament />
+                    <ButtonsContainer>
+                        <ClearButton onClick={clearChecklist}>Clear</ClearButton>
+                    </ButtonsContainer>
+                <BottomRightOrnament />
+            </OrnamentContainer>
+            <ProgressContainer>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--text-font)', color: 'var(--white)' }}>
+                <span>Preparation Progress:</span>
+                <span>{Math.round(progress)}%</span>
+            </div>
+            <ProgressBar>
+                <ProgressFill $percentage={progress} />
+            </ProgressBar>
+            </ProgressContainer>
+        </PrepGuide>
+        <BlackLine />
+    </Container>
   );
 };
 
 /* Styled Components */
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: auto;
+    padding-top: 10rem;
+    background: var(--white);
+
+    @media (max-width: 600px) {
+        padding-top: 3rem;
+    }
+`;
+
 const PrepGuide = styled.div`
-  max-width: 800px;
-  margin: 3rem auto;
   padding: 1rem;
+  width: 100%;
   background: var(--white);
-  min-height: 100vh;
 `;
 
 const StepContainer = styled.div`
@@ -221,21 +237,21 @@ const CategoryTitle = styled.h3`
 `;
 
 const ToggleIcon = styled.span`
-  width: 16px;
-  height: 16px;
-  position: relative;
-  &::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: ${props => props.$isOpen ? 'rotate(90deg)' : 'rotate(0deg)'};
-    border-left: 12px solid var(--highlight1);
-    border-top: 8px solid transparent;
-    border-bottom: 8px solid transparent;
-    margin-top: -8px;
-    transition: transform 0.2s ease;
-  }
+    width: 16px;
+    height: 16px;
+    position: relative;
+    &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: ${props => props.$isOpen ? 'rotate(90deg)' : 'rotate(0deg)'};
+        border-left: 12px solid var(--highlight1);
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        margin-top: -8px;
+        transition: transform 0.2s ease;
+    }
 `;
 
 const ItemList = styled.ul`
@@ -278,15 +294,24 @@ const ProgressFill = styled.div`
   transition: width 0.3s ease;
 `;
 
+const ButtonsContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+`;
+
 const ClearButton = styled.button`
-  padding: 5px 10px;
-  background: var(--highlight1);
-  color: var(--white);
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  font-family: var(--text-font);
-  transition: background 0.3s ease, transform 0.1s ease;
+    padding: 5px 10px;
+    width: 80px;
+    font-family: var(--text-font);
+    font-size: 1.2rem;
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    align-self: flex-start;
 
     &:hover {
         background: var(--highlight3);
@@ -301,9 +326,8 @@ const BlackLine = styled.div`
   width: 60%;
   height: 3px;
   align-self: center;
-  justify-self: center;
-  margin-top: 2rem;
-  background: var(--black);
+  margin-top: 3rem;
+  background: var(--black);s
 `;
 
 const Ornament = styled.img`

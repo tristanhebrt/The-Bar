@@ -503,6 +503,7 @@ const CardBack = styled.div`
     background: var(--light-grey);
     padding: 1.5rem;
     text-align: left;
+    width: 100%;
     
     p {
         font-size: 1.4rem;
@@ -583,12 +584,12 @@ const OverlayContent = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     text-align: center;
     overflow: hidden;
     background: var(--white);
     color: var(--black);
-    padding: 0.5rem;
+    padding: 1rem;
     
     text-align: center;
     opacity: 0;
@@ -646,8 +647,16 @@ const OverlayContent = styled.div`
 `;
 
 const StepsContainer = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     margin-bottom: 2rem;
     padding: 0.5rem;
+
+    p{
+        margin: 0;
+    }
 `;
 
 const CloseButton = styled.button`

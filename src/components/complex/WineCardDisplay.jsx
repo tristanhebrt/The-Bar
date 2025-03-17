@@ -214,43 +214,8 @@ const TastingNotes = styled.div`
     }
 `;
 
-const CardFront = styled.div`
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: absolute;
-    backface-visibility: hidden;
-    background: var(--black);
-
-    h2 {
-        font-family: var(--main-font);
-        font-size: 2.5rem;
-        color: var(--white);
-        width: 90%;
-    }
-`;
-
-const CardBack = styled.div`
-    background: var(--light-grey);
-    padding: 1.5rem;
-    text-align: left;
-    
-    p {
-        font-size: 1.4rem;
-        margin: 0.5rem 0;
-    }
-
-    strong {
-        color: var(--primary);
-    }
-`;
-
 const WineDetails = styled.div`
     padding: 1rem;
-    text-align: left;
     width: 90%;
     margin: 0 auto;
 `;
@@ -442,6 +407,41 @@ const CardInner = styled.div`
     }
 `;
 
+const CardFront = styled.div`
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    backface-visibility: hidden;
+    background: var(--black);
+
+    h2 {
+        font-family: var(--main-font);
+        font-size: 2.5rem;
+        color: var(--white);
+        width: 90%;
+    }
+`;
+
+const CardBack = styled.div`
+    background: var(--light-grey);
+    padding: 1.5rem;
+    text-align: left;
+    width: 100%;
+    
+    p {
+        font-size: 1.4rem;
+        margin: 0.5rem 0;
+    }
+
+    strong {
+        color: var(--primary);
+    }
+`;
+
 const CardBackContainer = styled(CardFront)`
     background: var(--light-grey);
     transform: rotateY(180deg);
@@ -511,12 +511,12 @@ const OverlayContent = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     text-align: center;
     overflow: hidden;
     background: var(--white);
     color: var(--black);
-    padding: 0.5rem;
+    padding: 1rem;
     
     text-align: center;
     opacity: 0;

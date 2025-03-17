@@ -235,6 +235,7 @@ const CardBack = styled.div`
     background: var(--light-grey);
     padding: 1.5rem;
     text-align: left;
+    width: 100%;
     
     p {
         font-size: 1.4rem;
@@ -248,7 +249,6 @@ const CardBack = styled.div`
 
 const BeerDetails = styled.div`
     padding: 1rem;
-    text-align: left;
     width: 90%;
     margin: 0 auto;
 `;
@@ -509,12 +509,12 @@ const OverlayContent = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     text-align: center;
     overflow: hidden;
     background: var(--white);
     color: var(--black);
-    padding: 0.5rem;
+    padding: 1rem;
     
     text-align: center;
     opacity: 0;
