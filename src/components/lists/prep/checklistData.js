@@ -14,8 +14,7 @@ export const PREP_STEPS = [
         content: {
         soda: [
             "Still water", "Sparkling water", "Redbull", "Ginger beer",
-            "Cucumber tonic", "Rose lemonade", "Sunbrew Corona", "Club soda",
-            "Tonic soda", "Gingerale", "Sprite", "Coke", "Diet coke"
+            "Cucumber tonic", "Rose lemonade", "Sunbrew Corona", "Canned sodas"
         ],
         juice: [
             "Mango juice", "Pineapple juice", "Apple juice", "Cranberry juice",
@@ -35,7 +34,7 @@ export const PREP_STEPS = [
         content: {
         herbs: ["Basil", "Mint", "Thyme"],
         citrus: ["Lime wheels", "Lemon wheels", "Orange wheels"],
-        specialty: ["Flowers", "Espresso beans", "Love note", "Olives"]
+        specialty: ["Flowers", "Espresso beans", "Love note", "Banana chips", "Olives"]
         }
     },
     {

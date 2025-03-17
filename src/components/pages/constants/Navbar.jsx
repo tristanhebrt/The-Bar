@@ -29,7 +29,7 @@ const Navbar = () => {
             <NavLink to="/">Cocktails</NavLink>
             <NavLink to="/wines">Wines</NavLink>
             <NavLink to="/beers">Beers</NavLink>
-            <NavLink to="/prep">Prep</NavLink>
+            <NavLink to="/checklist">Checklists</NavLink>
         </Nav>
     );
 };

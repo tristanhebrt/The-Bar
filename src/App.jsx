@@ -7,7 +7,7 @@ import Navbar from "./components/pages/constants/Navbar";
 import CocktailPage from "./components/pages/CocktailPage";
 import WinePage from "./components/pages/WinePage";
 import BeerPage from "./components/pages/BeerPage";
-import PrepPage from "./components/pages/PrepPage";
+import ChecklistPage from "./components/pages/ChecklistPage";
 
 const App = () => {
   return (
@@ -18,7 +18,7 @@ const App = () => {
               <Route path="/" element={<CocktailPage />} />
               <Route path="/wines" element={<WinePage />} />
               <Route path="/beers" element={<BeerPage />} />
-              <Route path="/prep" element={<PrepPage />} />
+              <Route path="/checklist" element={<ChecklistPage />} />
           </Routes>
           <Footer />
       </Router>

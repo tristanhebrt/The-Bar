@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { PREP_STEPS } from './checklistData';
 
-const BarPrep = () => {
+const Checklist = ({dataList, checklistTitle}) => {
   const [expandedSections, setExpandedSections] = useState({});
   const [completedItems, setCompletedItems] = useState({});
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const totalItems = PREP_STEPS.reduce((acc, step) => {
+    const totalItems = dataList.reduce((acc, step) => {
       return acc + Object.entries(step.content).reduce((subAcc, [category, items]) => 
         subAcc + items.length, 0);
     }, 0);
@@ -41,7 +40,7 @@ const BarPrep = () => {
         newCompleted[key] = true;
       }
   
-      const allCompleted = PREP_STEPS[stepIndex].content[category].every((_, idx) => newCompleted[`${stepIndex}-${category}-${idx}`]);
+      const allCompleted = dataList[stepIndex].content[category].every((_, idx) => newCompleted[`${stepIndex}-${category}-${idx}`]);
   
       if (allCompleted) {
         newCompleted[`${stepIndex}-${category}-title`] = true;
@@ -62,13 +61,13 @@ const BarPrep = () => {
       if (isCompleted) {
         // Mark all items in the category as completed
         newCompleted[key] = true;
-        PREP_STEPS[stepIndex].content[category].forEach((_, idx) => {
+        dataList[stepIndex].content[category].forEach((_, idx) => {
           newCompleted[`${stepIndex}-${category}-${idx}`] = true;
         });
       } else {
         // Remove category title key and all its items to properly decrease progress
         delete newCompleted[key];
-        PREP_STEPS[stepIndex].content[category].forEach((_, idx) => {
+        dataList[stepIndex].content[category].forEach((_, idx) => {
           delete newCompleted[`${stepIndex}-${category}-${idx}`];
         });
       }
@@ -93,13 +92,13 @@ const BarPrep = () => {
             <TitleContainer>
                 <OrnamentContainer>
                     <TopLeftOrnament />
-                    <h1>Bar Preparation Guide</h1>
+                    <h1>{checklistTitle}</h1>
                     <TopRightOrnament />
                 </OrnamentContainer>
                 <BlackLine />
             </TitleContainer>
             
-            {PREP_STEPS.map((step, stepIndex) => (
+            {dataList.map((step, stepIndex) => (
                 <StepContainer key={stepIndex}>
                     <StepTitle>{step.title}</StepTitle>
                     <div>
@@ -377,4 +376,4 @@ const OrnamentContainer = styled.div`
     width: 100%;
 `;
 
-export default BarPrep;
+export default Checklist;
