@@ -35,11 +35,11 @@ export const PREP_STEPS = [
         content: {
         herbs: ["Basil", "Mint", "Thyme"],
         citrus: ["Lime wheels", "Lemon wheels", "Orange wheels"],
-        specialty: ["Flowers", "Espresso beans", "Love notes"]
+        specialty: ["Flowers", "Espresso beans", "Love note", "Olives"]
         }
     },
     {
-        title: "Restock Rim Salts",
+        title: "Top off Rim Salts",
         content: {
         rims: [
             "Caesar mix", "Spicy salt mix", "Salt", "Tajin"
@@ -60,7 +60,7 @@ export const PREP_STEPS = [
         content: {
         Syrups: [
             "Lemon", "Lime", "Espresso", "Simple", "Agave", "Demerara", "Strawberry", 
-            "Thyme", "Crush", "Banana", "Spice", "Cinnamon"
+            "Thyme", "Crush", "Banana", "Spice", "Cinnamon", "Earl Grey", "Olive brine"
         ]
         }
     },
