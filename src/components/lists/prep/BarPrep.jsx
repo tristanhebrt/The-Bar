@@ -4,20 +4,15 @@ import { PREP_STEPS } from './checklistData';
 
 const BarPrep = () => {
   const [expandedSections, setExpandedSections] = useState({});
-  const [completedItems, setCompletedItems] = useState(() => {
-    // Initialize all items as unchecked
-    const initialState = {};
-    PREP_STEPS.forEach((step, stepIndex) => {
-      Object.entries(step.content).forEach(([category, items]) => {
-        items.forEach((_, itemIndex) => {
-          const key = `${stepIndex}-${category}-${itemIndex}`;
-          initialState[key] = false;
-        });
-      });
-    });
-    return initialState;
-  });
+  const [completedItems, setCompletedItems] = useState({});
   const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    const totalItems = PREP_STEPS.reduce((acc, step) => 
+      acc + Object.values(step.content).flat().length, 0);
+    const completedCount = Object.values(completedItems).filter(Boolean).length;
+    setProgress((completedCount / totalItems) * 100);
+  }, [completedItems]);
 
   const toggleSection = (stepIndex, category) => {
     setExpandedSections(prev => ({
@@ -31,87 +26,76 @@ const BarPrep = () => {
 
   const toggleItem = (stepIndex, category, itemIndex) => {
     const key = `${stepIndex}-${category}-${itemIndex}`;
-    setCompletedItems(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
+    setCompletedItems(prev => {
+      const newCompleted = { ...prev, [key]: !prev[key] };
+      const allCompleted = PREP_STEPS[stepIndex].content[category].every((_, idx) => newCompleted[`${stepIndex}-${category}-${idx}`]);
+      if (allCompleted) {
+        newCompleted[`${stepIndex}-${category}-title`] = true;
+      } else {
+        delete newCompleted[`${stepIndex}-${category}-title`];
+      }
+      return newCompleted;
+    });
   };
 
-  useEffect(() => {
-    const totalItems = PREP_STEPS.reduce((acc, step) => 
-      acc + Object.values(step.content).flat().length, 0);
-    const completedCount = Object.values(completedItems).filter(Boolean).length;
-    setProgress((completedCount / totalItems) * 100);
-  }, [completedItems]);
-
   return (
-    <>
-        <PrepGuide>
-            <TitleContainer>
-                <h1>Bar Preparation Guide</h1>
-                <BlackLine />
-            </TitleContainer>
-            
-            {PREP_STEPS.map((step, stepIndex) => (
-            <StepContainer key={stepIndex}>
-                <StepTitle>{step.title}</StepTitle>
-                <div>
+    <PrepGuide>
+      <TitleContainer>
+        <h1>Bar Preparation Guide</h1>
+        <BlackLine />
+      </TitleContainer>
+      
+      {PREP_STEPS.map((step, stepIndex) => (
+        <StepContainer key={stepIndex}>
+            <StepTitle>{step.title}</StepTitle>
+            <div>
                 {Object.entries(step.content).map(([category, items]) => (
-                    <div key={category}>
+                <div key={category}>
                     <CategoryHeader 
-                        onClick={() => toggleSection(stepIndex, category)}
-                        $isOpen={expandedSections[stepIndex]?.[category]}
+                    onClick={() => toggleSection(stepIndex, category)}
+                    $isOpen={expandedSections[stepIndex]?.[category]}
                     >
-                        <CategoryTitle>
+                        <CategoryTitle $isCompleted={completedItems[`${stepIndex}-${category}-title`]}>
                             {category === 'items' 
-                                ? 'General Items' 
-                                : category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()
+                            ? 'General Items' 
+                            : category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()
                             }
                         </CategoryTitle>
                         <ToggleIcon $isOpen={expandedSections[stepIndex]?.[category]} />
                     </CategoryHeader>
                     
                     {expandedSections[stepIndex]?.[category] && (
-                        <ItemList>
+                    <ItemList>
                         {items.map((item, itemIndex) => {
-                            const key = `${stepIndex}-${category}-${itemIndex}`;
-                            return (
+                        const key = `${stepIndex}-${category}-${itemIndex}`;
+                        return (
                             <ListItem 
-                                key={itemIndex}
-                                $isCompleted={completedItems[key]}
+                            key={itemIndex}
+                            $isCompleted={completedItems[key]}
+                            onClick={() => toggleItem(stepIndex, category, itemIndex)}
                             >
-                                <Checkbox
-                                checked={completedItems[key]}
-                                onChange={() => toggleItem(stepIndex, category, itemIndex)}
-                                />
-                                {item}
+                            {item}
                             </ListItem>
-                            );
+                        );
                         })}
-                        </ItemList>
+                    </ItemList>
                     )}
-                    </div>
-                ))}
                 </div>
-            </StepContainer>
-        ))}
+                ))}
+            </div>
+        </StepContainer>
+      ))}
 
-        <ProgressContainer>
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'space-between',
-            fontFamily: 'var(--text-font)',
-            color: 'var(--highlight1)'
-          }}>
-            <span>Preparation Progress:</span>
-            <span>{Math.round(progress)}%</span>
-          </div>
-          <ProgressBar>
-            <ProgressFill $percentage={progress} />
-          </ProgressBar>
-        </ProgressContainer>
-      </PrepGuide>
-    </>
+      <ProgressContainer>
+        <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--text-font)', color: 'var(--highlight1)' }}>
+          <span>Preparation Progress:</span>
+          <span>{Math.round(progress)}%</span>
+        </div>
+        <ProgressBar>
+          <ProgressFill $percentage={progress} />
+        </ProgressBar>
+      </ProgressContainer>
+    </PrepGuide>
   );
 };
 
@@ -134,10 +118,9 @@ const TitleContainer = styled.div`
   display: flex;
   justify-content: center;
   flex-direction: column;
-  margin: 0 0 3rem 0;
-  
+  margin-bottom: 3rem;
 
-  h1{
+  h1 {
     color: var(--highlight1);
     font-family: var(--title-font);
     font-size: 2rem;
@@ -149,7 +132,6 @@ const TitleContainer = styled.div`
 
 const StepTitle = styled.h2`
   color: var(--highlight1);
-  margin: 0 0 1rem 0;
   font-family: var(--title-font);
   font-size: 1.5rem;
   font-weight: 600;
@@ -161,7 +143,7 @@ const CategoryHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1rem;
-  background: ${props => props.$isOpen ? `var(--highlighted-box)` : `var(--white)`};
+  background: var(--white);
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: 0.5rem;
@@ -177,16 +159,13 @@ const CategoryTitle = styled.h3`
   font-size: 1.5rem;
   font-weight: 500;
   color: var(--black);
+  text-decoration: ${props => props.$isCompleted ? 'line-through' : 'none'};
 `;
 
 const ToggleIcon = styled.span`
-  font-family: var(--fancy-font);
-  font-size: 1.2rem;
-  color: var(--highlight1);
   width: 16px;
   height: 16px;
   position: relative;
-
   &::before {
     content: "";
     position: absolute;
@@ -203,10 +182,8 @@ const ToggleIcon = styled.span`
 
 const ItemList = styled.ul`
   list-style: none;
-  padding: 0;
-  margin: 0.5rem 0 0 1rem;
-  border-left: 2px solid var(--highlight1);
   padding-left: 1rem;
+  border-left: 2px solid var(--highlight1);
 `;
 
 const ListItem = styled.li`
@@ -214,24 +191,10 @@ const ListItem = styled.li`
   color: var(--primary);
   font-family: var(--main-font);
   font-size: 1.25rem;
-  display: flex;
-  align-items: center;
+  cursor: pointer;
   text-decoration: ${props => props.$isCompleted ? 'line-through' : 'none'};
   opacity: ${props => props.$isCompleted ? 0.6 : 1};
   transition: all 0.2s ease;
-
-  &::before {
-    color: var(--highlight1);
-    margin-right: 0.75rem;
-    font-size: 1.2rem;
-  }
-`;
-
-const Checkbox = styled.input.attrs({ type: 'checkbox' })`
-  margin-right: 1rem;
-  accent-color: var(--highlight1);
-  transform: scale(1.2);
-  cursor: pointer;
 `;
 
 const ProgressContainer = styled.div`
@@ -241,7 +204,6 @@ const ProgressContainer = styled.div`
   right: 0;
   padding: 1rem;
   background: var(--secondary);
-  z-index: 1000;
 `;
 
 const ProgressBar = styled.div`
@@ -260,11 +222,11 @@ const ProgressFill = styled.div`
 `;
 
 const BlackLine = styled.div`
-    width: 60%;
-    height: 3px;
-    align-self: center;
-    margin-top: 2rem;
-    background: var(--black);
+  width: 60%;
+  height: 3px;
+  align-self: center;
+  margin-top: 2rem;
+  background: var(--black);
 `;
 
 export default BarPrep;
