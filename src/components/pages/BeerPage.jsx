@@ -1,9 +1,9 @@
 import React from "react";
+import AloraBeers from "../lists/beers/AloraBeers";
 
 const BeerPage = () => {
-    return 
-    <>
-    
+    return<>
+        <AloraBeers />
     </>
 };
 

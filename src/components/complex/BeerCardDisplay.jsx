@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 
-const WineCardDisplay = ({ mainTitle, recipes }) => {
+const BeerCardDisplay = ({ mainTitle, recipes }) => {
     const [allFlipped, setAllFlipped] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const cardRefs = useRef([]);
@@ -14,13 +14,12 @@ const WineCardDisplay = ({ mainTitle, recipes }) => {
         setSearchQuery("");
     };
 
-    const filteredWines = recipes
-        .filter((wine) => {
+    const filteredBeers = recipes
+        .filter((beer) => {
             const searchLower = searchQuery.toLowerCase();
             return (
-                wine.title.toLowerCase().includes(searchLower) ||
-                wine.tastingNotes.toLowerCase().includes(searchLower) ||
-                wine.foodPairings.toLowerCase().includes(searchLower)
+                beer.title.toLowerCase().includes(searchLower) ||
+                beer.tastingNotes.toLowerCase().includes(searchLower)
             );
         })
         .sort((a, b) => a.title.localeCompare(b.title));
@@ -35,7 +34,7 @@ const WineCardDisplay = ({ mainTitle, recipes }) => {
             <SearchContainer>
                 <SearchInput
                     type="text"
-                    placeholder="Find a wine..."
+                    placeholder="Find a beer..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                 />
@@ -43,13 +42,13 @@ const WineCardDisplay = ({ mainTitle, recipes }) => {
             </SearchContainer>
 
             <CardContainer>
-                {filteredWines.length === 0 ? (
-                    <p>No wines match your search.</p>
+                {filteredBeers.length === 0 ? (
+                    <p>No beers match your search.</p>
                 ) : (
-                    filteredWines.map((wine, index) => (
-                        <WineCard
+                    filteredBeers.map((beer, index) => (
+                        <BeerCard
                             key={index}
-                            wine={wine}
+                            beer={beer}
                             allFlipped={allFlipped}
                         />
                     ))
@@ -67,7 +66,7 @@ const WineCardDisplay = ({ mainTitle, recipes }) => {
     );
 };
 
-const WineCard = React.forwardRef(({ wine, allFlipped }, ref) => {
+const BeerCard = React.forwardRef(({ beer, allFlipped }, ref) => {
     const [flipped, setFlipped] = useState(false);
     const [showOverlay, setShowOverlay] = useState(false);
 
@@ -80,13 +79,13 @@ const WineCard = React.forwardRef(({ wine, allFlipped }, ref) => {
             <Card ref={ref} className={flipped ? "flipped" : ""} onClick={() => setFlipped(!flipped)}>
                 <CardInner className={flipped ? "flipped" : ""}>
                     <CardFront>
-                        <h2>{wine.title}</h2>
+                        <h2>{beer.title}</h2>
                     </CardFront>
                     <CardBackContainer>
                         <CardBack>
                             <TastingNotes>
                                 <h3>Tasting Notes</h3>
-                                <p>{wine.tastingNotes}</p>
+                                <p>{beer.tastingNotes}</p>
                             </TastingNotes>
                             <MoreButton onClick={(e) => {
                                 e.stopPropagation();
@@ -102,21 +101,17 @@ const WineCard = React.forwardRef(({ wine, allFlipped }, ref) => {
                     <OverlayContent>
                         <OrnamentContainer>
                             <TopLeftOrnament />
-                            <h2>{wine.title}</h2>
+                            <h2>{beer.title}</h2>
                             <TopRightOrnament />
                         </OrnamentContainer>
-                        <WineDetails>
+                        <BeerDetails>
                             <DetailItem>
                                 <Label>Origin</Label>
-                                <Value>{wine.origin}</Value>
-                            </DetailItem>
-                            <DetailItem>
-                                <Label>Food Pairings</Label>
-                                <Value>{wine.foodPairings}</Value>
+                                <Value>{beer.origin}</Value>
                             </DetailItem>
                             <TasteProfileSection>
                                 <Label>Taste Profile</Label>
-                                {Object.entries(wine.tasteProfile).map(([key, { scale, value }]) => {
+                                {Object.entries(beer.tasteProfile).map(([key, { scale, value }]) => {
                                     const [leftLabel, rightLabel] = scale.split(" - ");
                                     return (
                                         <TasteItem key={key}>
@@ -131,7 +126,7 @@ const WineCard = React.forwardRef(({ wine, allFlipped }, ref) => {
                                     );
                                 })}
                             </TasteProfileSection>
-                        </WineDetails>
+                        </BeerDetails>
                         <OrnamentContainer>
                             <BottomLeftOrnament />
                             <CloseButton onClick={() => setShowOverlay(false)}>Close</CloseButton>
@@ -148,7 +143,6 @@ const WineCard = React.forwardRef(({ wine, allFlipped }, ref) => {
 /* Styled Components */
 
 const TasteProfileSection = styled.div`
-    margin-top: 2rem;
     width: 100%;
 `;
 
@@ -169,7 +163,7 @@ const ScaleLabel = styled.span`
     font-family: var(--main-font);
     font-size: 1.2rem;
     font-weight: 600;
-    width: 3rem;
+    width: 5rem;
     white-space: nowrap;
     color: var(--black);
 `;
@@ -248,7 +242,7 @@ const CardBack = styled.div`
     }
 `;
 
-const WineDetails = styled.div`
+const BeerDetails = styled.div`
     padding: 1rem;
     text-align: left;
     width: 90%;
@@ -618,4 +612,4 @@ const OrnamentContainer = styled.div`
     width: 100%;
 `;
 
-export default WineCardDisplay;
+export default BeerCardDisplay;
