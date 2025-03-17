@@ -50,8 +50,8 @@ export const PREP_STEPS = [
         title: "Top off Prebatch",
         content: {
         Prebatch: [
-            "Into the Fire", "Margarita Mix", "Boat Party", "Sunset Chaser", "Dreamer", 
-            "Secret Rose", "Bourbon Turnover"
+            "Into the Fire (red-red)", "Margarita Mix (black-red-black)", "Boat Party (yellow-black-yellow)", 
+            "Sunset Chaser (yellow-yellow)", "Dreamer (blue-blue)", "Secret Rose (green-red)", "Bourbon Turnover(red-yellow)"
         ]
         }
     },
@@ -59,8 +59,9 @@ export const PREP_STEPS = [
         title: "Top off Syrups",
         content: {
         Syrups: [
-            "Lemon", "Lime", "Espresso", "Simple", "Agave", "Demerara", "Strawberry", 
-            "Thyme", "Crush", "Banana", "Spice", "Cinnamon", "Earl Grey", "Olive brine"
+            "Lemon (yellow-yellow)", "Lime (green-green)", "Espresso (white-white)", "Simple (white-white)", "Agave (white-white)", "Demerara (black-black)", 
+            "Strawberry (green-red)", "Thyme (black-green)", "Crush (red-red)", "Banana (yellow-black-yellow)", "Spice (yellow-yellow)", 
+            "Cinnamon (red-red)", "Earl Grey (white-white)", "Olive brine (yellow-green)"
         ]
         }
     },

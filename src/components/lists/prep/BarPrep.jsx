@@ -82,6 +82,11 @@ const BarPrep = () => {
     setCompletedItems({});
   };
 
+  const getColorFromItem = (item) => {
+    const match = item.match(/\((.*?)\)/); // Extracts text inside parentheses
+    return match ? match[1].split('-') : []; // Splits colors if multiple
+  };
+
   return (
     <Container>
         <PrepGuide>
@@ -120,13 +125,18 @@ const BarPrep = () => {
                             <ItemList>
                                 {items.map((item, itemIndex) => {
                                 const key = `${stepIndex}-${category}-${itemIndex}`;
+                                const colors = getColorFromItem(item);
+
                                 return (
                                     <ListItem 
                                         key={itemIndex}
                                         $isCompleted={completedItems[key]}
                                         onClick={() => toggleItem(stepIndex, category, itemIndex)}
                                     >
-                                        {item}
+                                        {item.replace(/\(.*?\)/, '')}
+                                        {colors.map((color, i) => (
+                                            <ColorBox key={i} color={color} />
+                                        ))}
                                     </ListItem>
                                 );
                                 })}
@@ -269,6 +279,13 @@ const ListItem = styled.li`
   text-decoration: ${props => props.$isCompleted ? 'line-through' : 'none'};
   opacity: ${props => props.$isCompleted ? 0.6 : 1};
   transition: all 0.2s ease;
+`;
+
+const ColorBox = styled.span`
+  display: inline-block;
+  width: 8px;
+  height: 12px;
+  background-color: ${props => props.color};
 `;
 
 const ProgressContainer = styled.div`
