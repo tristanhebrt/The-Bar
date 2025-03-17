@@ -109,6 +109,10 @@ const BeerCard = React.forwardRef(({ beer, allFlipped }, ref) => {
                                 <Label>Origin</Label>
                                 <Value>{beer.origin}</Value>
                             </DetailItem>
+                            <DetailItem>
+                                <Label>Type</Label>
+                                <Value>{beer.type}</Value>
+                            </DetailItem>
                             <TasteProfileSection>
                                 <Label>Taste Profile</Label>
                                 {Object.entries(beer.tasteProfile).map(([key, { scale, value }]) => {
