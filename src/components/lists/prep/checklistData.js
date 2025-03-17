@@ -47,6 +47,22 @@ export const PREP_STEPS = [
         }
     },
     {
+        title: "Top off Prebatch",
+        content: {
+        Prebatch: [
+            "Into the Fire", "Margarita Mix", "Boat Party", "Sunset Chaser", "Dreamer", "Secret Rose", "Bourbon Turnover"
+        ]
+        }
+    },
+    {
+        title: "Top off Syrups",
+        content: {
+        Syrups: [
+            "Lemon", "Lime", "Espresso", "Simple", "Agave", "Demerara", "Strawberry", "Thyme", "Crush", "Banana", "Spice", "Cinnamon"
+        ]
+        }
+    },
+    {
         title: "Final Checks",
         content: {
         items: [
