@@ -38,53 +38,77 @@ const BarPrep = () => {
     });
   };
 
+  const toggleCategoryCompletion = (stepIndex, category) => {
+    const key = `${stepIndex}-${category}-title`;
+    setCompletedItems(prev => {
+      const isCompleted = !prev[key];
+      const newCompleted = { ...prev, [key]: isCompleted };
+      PREP_STEPS[stepIndex].content[category].forEach((_, idx) => {
+        newCompleted[`${stepIndex}-${category}-${idx}`] = isCompleted;
+      });
+      return newCompleted;
+    });
+  };
+
   return (
     <PrepGuide>
       <TitleContainer>
-        <h1>Bar Preparation Guide</h1>
+        <OrnamentContainer>
+            <TopLeftOrnament />
+            <h1>Bar Preparation Guide</h1>
+            <TopRightOrnament />
+        </OrnamentContainer>
         <BlackLine />
-      </TitleContainer>
-      
-      {PREP_STEPS.map((step, stepIndex) => (
-        <StepContainer key={stepIndex}>
-            <StepTitle>{step.title}</StepTitle>
-            <div>
-                {Object.entries(step.content).map(([category, items]) => (
-                <div key={category}>
-                    <CategoryHeader 
-                    onClick={() => toggleSection(stepIndex, category)}
-                    $isOpen={expandedSections[stepIndex]?.[category]}
-                    >
-                        <CategoryTitle $isCompleted={completedItems[`${stepIndex}-${category}-title`]}>
-                            {category === 'items' 
-                            ? 'General Items' 
-                            : category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()
-                            }
-                        </CategoryTitle>
-                        <ToggleIcon $isOpen={expandedSections[stepIndex]?.[category]} />
-                    </CategoryHeader>
-                    
-                    {expandedSections[stepIndex]?.[category] && (
-                    <ItemList>
-                        {items.map((item, itemIndex) => {
-                        const key = `${stepIndex}-${category}-${itemIndex}`;
-                        return (
-                            <ListItem 
-                            key={itemIndex}
-                            $isCompleted={completedItems[key]}
-                            onClick={() => toggleItem(stepIndex, category, itemIndex)}
+        </TitleContainer>
+        
+        {PREP_STEPS.map((step, stepIndex) => (
+            <StepContainer key={stepIndex}>
+                <StepTitle>{step.title}</StepTitle>
+                <div>
+                    {Object.entries(step.content).map(([category, items]) => (
+                    <div key={category}>
+                        <CategoryHeader 
+                        onClick={() => toggleSection(stepIndex, category)}
+                        $isOpen={expandedSections[stepIndex]?.[category]}
+                        >
+                            <CategoryTitle 
+                                $isCompleted={completedItems[`${stepIndex}-${category}-title`]}
+                                onClick={(e) => { e.stopPropagation(); toggleCategoryCompletion(stepIndex, category); }}
                             >
-                            {item}
-                            </ListItem>
-                        );
-                        })}
-                    </ItemList>
-                    )}
+                                {category === 'items' 
+                                ? 'General Items' 
+                                : category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()
+                                }
+                            </CategoryTitle>
+                            <ToggleIcon $isOpen={expandedSections[stepIndex]?.[category]} />
+                        </CategoryHeader>
+                        
+                        {expandedSections[stepIndex]?.[category] && (
+                        <ItemList>
+                            {items.map((item, itemIndex) => {
+                            const key = `${stepIndex}-${category}-${itemIndex}`;
+                            return (
+                                <ListItem 
+                                    key={itemIndex}
+                                    $isCompleted={completedItems[key]}
+                                    onClick={() => toggleItem(stepIndex, category, itemIndex)}
+                                >
+                                    {item}
+                                </ListItem>
+                            );
+                            })}
+                        </ItemList>
+                        )}
+                    </div>
+                    ))}
                 </div>
-                ))}
-            </div>
-        </StepContainer>
-      ))}
+            </StepContainer>
+        ))}
+        <OrnamentContainer>
+            <BottomLeftOrnament />
+            <BottomRightOrnament />
+        </OrnamentContainer>
+      <BlackLine />
 
       <ProgressContainer>
         <div style={{ display: 'flex', justifyContent: 'space-between', fontFamily: 'var(--text-font)', color: 'var(--highlight1)' }}>
@@ -136,6 +160,8 @@ const StepTitle = styled.h2`
   font-size: 1.5rem;
   font-weight: 600;
   text-transform: uppercase;
+  margin: 0 0 1rem 0;
+  text-align: center;
 `;
 
 const CategoryHeader = styled.div`
@@ -225,8 +251,39 @@ const BlackLine = styled.div`
   width: 60%;
   height: 3px;
   align-self: center;
+  justify-self: center;
   margin-top: 2rem;
   background: var(--black);
+`;
+
+const Ornament = styled.img`
+    position: relative;
+    width: 100px;
+    height: 100px;
+    
+    @media (max-width: 600px) {
+        width: 50px;
+        height: 50px;
+    }
+
+    ${({ rotate }) => rotate && `rotate: ${rotate};`}
+`;
+
+const OrnamentComponent = ({ rotate, alt }) => (
+    <Ornament src="/assets/corner-ornament.png" alt={alt} rotate={rotate} />
+);
+
+const TopLeftOrnament = () => <OrnamentComponent rotate="90deg" alt="Top Left Ornament" />;
+const TopRightOrnament = () => <OrnamentComponent rotate="180deg" alt="Top Right Ornament" />;
+const BottomLeftOrnament = () => <OrnamentComponent alt="Bottom Left Ornament" />;
+const BottomRightOrnament = () => <OrnamentComponent rotate="270deg" alt="Bottom Right Ornament" />;
+
+const OrnamentContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    background: var(--white);
+    position: relative;
+    width: 100%;
 `;
 
 export default BarPrep;
