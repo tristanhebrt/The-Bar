@@ -68,9 +68,7 @@ const BarPrep = () => {
                                 : category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()
                             }
                         </CategoryTitle>
-                        <ToggleIcon>
-                            {expandedSections[stepIndex]?.[category] ? '▼' : '▶'}
-                        </ToggleIcon>
+                        <ToggleIcon $isOpen={expandedSections[stepIndex]?.[category]} />
                     </CategoryHeader>
                     
                     {expandedSections[stepIndex]?.[category] && (
@@ -185,6 +183,22 @@ const ToggleIcon = styled.span`
   font-family: var(--fancy-font);
   font-size: 1.2rem;
   color: var(--highlight1);
+  width: 16px;
+  height: 16px;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: ${props => props.$isOpen ? 'rotate(90deg)' : 'rotate(0deg)'};
+    border-left: 12px solid var(--highlight1);
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    margin-top: -8px;
+    transition: transform 0.2s ease;
+  }
 `;
 
 const ItemList = styled.ul`
