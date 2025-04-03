@@ -26,11 +26,11 @@ const NavLink = styled(Link)`
 const Navbar = () => {
     return (
         <Nav>
-            <NavLink to="/">Cocktails</NavLink>
-            <NavLink to="/wines">Wines</NavLink>
-            <NavLink to="/beers">Beers</NavLink>
+            <NavLink to="/">Cocktail</NavLink>
+            <NavLink to="/wines">Wine</NavLink>
+            <NavLink to="/beers">Beer</NavLink>
             <NavLink to="/foods">Food</NavLink>
-            <NavLink to="/checklist">Checklists</NavLink>
+            <NavLink to="/checklist">Checklist</NavLink>
         </Nav>
     );
 };

@@ -454,5 +454,3 @@ export const BUBBLE_WINES = [
         agingPotential: "20+ years."
     }
 ];
-
-export const ALL_WINES = [...WHITE_WINES, ...RED_WINES, ...BUBBLE_WINES];

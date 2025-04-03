@@ -96,7 +96,7 @@ export const CLASSIC_COCKTAILS = [
         title: "Cosmopolitan",
         ingredients: {
             booze: ["1.5 oz Vodka", "0.5 oz Cointreau"],
-            syrups: ["1 oz Cranberry Juice", "0.5 oz Lime Juice"],
+            syrups: ["1 oz Cranberry Juice", "0.5 oz Lime Juice", "0.5 oz Simple Syrup"],
             garnishes: ["Lime Wheel"]
         },
         steps: [

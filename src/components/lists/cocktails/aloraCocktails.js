@@ -15,6 +15,22 @@ export const ALORA_COCKTAILS = [
         flavor: "Spicy, Tangy, Refreshing"
     },
     {
+        title: "Alora OP Margarita",
+        ingredients: {
+            booze: ["1.5 oz Casamigos Blanco", "0.5 oz Grand Marnier"],
+            syrups: ["1 oz Lime Juice", "0.5 oz Agave Syrup"],
+            garnishes: ["Salt Rim", "Lime Wheel"]
+        },
+        steps: [
+            "Shake all ingredients with ice.",
+            "Strain into glass.",
+            "Rim glass with salt.",
+            "Garnish with a lime wheel."
+        ],
+        notes: "A classic margarita with a rich and smooth flavor.",
+        flavor: "Classic, Rich, Smooth"
+    },
+    {
         title: "Secret Rose",
         ingredients: {
             booze: ["2 oz Tequila", "0.5 oz Lillet"],
@@ -129,148 +145,5 @@ export const ALORA_COCKTAILS = [
         ],
         notes: "A light and floral cocktail with a citrusy finish.",
         flavor: "Bittersweet, Floral, Citrusy"
-    },
-    {
-        title: "Orchard Dream",
-        ingredients: {
-            booze: ["2 oz Gin"],
-            syrups: ["0.75 oz Lime Juice", "1 oz Green Apple Juice", "0.75 oz Fennel Syrup"],
-            others: ["Salt"],
-            garnishes: ["Fennel Leaf"]
-        },
-        steps: [
-            "Shake all ingredients with ice.",
-            "Strain into coupe glass.",
-            "Garnish with fennel leaf."
-        ],
-        notes: "A refreshing cocktail with a hint of fennel and green apple.",
-        flavor: "Refreshing, Fennel, Green Apple"
-    },
-    {
-        title: "The Joker",
-        ingredients: {
-            booze: ["2 oz Tequila (upcharge Mezcal)"],
-            syrups: ["1 oz Maca Syrup", "0.75 oz Lime Juice", "1 oz Coconut Water"],
-            others: ["Salt"],
-            garnishes: []
-        },
-        steps: [
-            "Shake all ingredients quickly with ice.",
-            "Strain into glass over pebble ice."
-        ],
-        notes: "A unique cocktail with a blend of maca and coconut flavors.",
-        flavor: "Unique, Maca, Coconut"
-    },
-    {
-        title: "Sundown Showdown",
-        ingredients: {
-            booze: ["1.5 oz Bourbon Whiskey"],
-            syrups: ["0.75 oz Pineapple Juice", "0.25 oz Ginger Syrup", "0.25 oz Cinnamon Syrup", "0.5 oz Lemon Juice"],
-            bitters: ["1 dash Angostura"],
-            others: ["IPA"],
-            garnishes: []
-        },
-        steps: [
-            "Shake all ingredients except the beer with ice.",
-            "Strain into a barrel glass.",
-            "Top with beer and ice, then top with crushed ice."
-        ],
-        notes: "A bold cocktail with a mix of pineapple, ginger, and cinnamon flavors.",
-        flavor: "Bold, Pineapple, Ginger, Cinnamon"
-    },
-    {
-        title: "Moonlight",
-        ingredients: {
-            booze: ["2 oz Flor de Cana 12"],
-            syrups: ["0.25 oz Spiced Syrup"],
-            bitters: ["2 dashes Angostura"],
-            garnishes: []
-        },
-        steps: [
-            "Stir all ingredients with ice.",
-            "Strain into glass."
-        ],
-        notes: "A refined cocktail with classic flavor pairings reimagined.",
-        flavor: "Refined, Classic, Spiced"
-    },
-    {
-        title: "Alora OF",
-        ingredients: {
-            booze: ["2 oz Bourbon Whiskey"],
-            syrups: ["0.25 oz Demerara Syrup"],
-            bitters: ["4 dashes Angostura"],
-            garnishes: []
-        },
-        steps: [
-            "Stir all ingredients with ice.",
-            "Strain into glass."
-        ],
-        notes: "A classic old fashioned with a rich and smooth flavor.",
-        flavor: "Classic, Rich, Smooth"
-    },
-    {
-        title: "Grapefruit Tequila Sour",
-        ingredients: {
-            booze: ["2 oz Tequila 1800"],
-            syrups: ["0.5 oz Grapefruit Juice", "0.75 oz Lemon Juice", "0.75 oz Simple Syrup"],
-            others: ["Egg White", "Angostura/Vanilla Mist"],
-            garnishes: []
-        },
-        steps: [
-            "Dry shake all ingredients without ice.",
-            "Add ice and shake again.",
-            "Strain into coupe glass.",
-            "Mist with Angostura/Vanilla."
-        ],
-        notes: "A tangy and smooth cocktail with a hint of vanilla.",
-        flavor: "Tangy, Smooth, Vanilla"
-    },
-    {
-        title: "Cucumber Collins",
-        ingredients: {
-            booze: ["1.5 oz Beefeater", "0.5 oz St Germaine"],
-            syrups: ["0.5 oz Simple Syrup", "1 oz Lemon Juice"],
-            others: ["2 slices Cucumber"],
-            garnishes: []
-        },
-        steps: [
-            "Muddle cucumber slices.",
-            "Shake all ingredients with ice.",
-            "Strain into collins glass."
-        ],
-        notes: "A refreshing cocktail with a crisp cucumber flavor.",
-        flavor: "Refreshing, Crisp, Cucumber"
-    },
-    {
-        title: "Off-White Negroni",
-        ingredients: {
-            booze: ["1.5 oz Botanist", "0.5 oz Lillet", "0.75 oz White Vermouth"],
-            bitters: ["1 full Botanical Citrus Bitters"],
-            garnishes: ["Lemon Twist"]
-        },
-        steps: [
-            "Stir all ingredients with ice.",
-            "Strain into glass over large rock.",
-            "Garnish with lemon twist."
-        ],
-        notes: "A sophisticated twist on the classic Negroni with citrus and tea notes.",
-        flavor: "Sophisticated, Citrus, Tea"
-    },
-    {
-        title: "Alora Spritz",
-        ingredients: {
-            booze: ["0.75 oz Aperol", "0.5 oz Peach Liquor"],
-            syrups: ["0.75 oz Lemon Juice", "0.75 oz Grapefruit Juice", "0.25 oz Simple Syrup"],
-            others: ["3 oz Prosecco"],
-            garnishes: ["Frozen Peaches"]
-        },
-        steps: [
-            "Shake all ingredients except prosecco with ice.",
-            "Strain into glass.",
-            "Top with prosecco.",
-            "Garnish with frozen peaches."
-        ],
-        notes: "A light and bubbly cocktail with peach and citrus flavors.",
-        flavor: "Light, Bubbly, Peach, Citrus"
     },
 ];

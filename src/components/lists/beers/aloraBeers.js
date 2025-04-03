@@ -1,30 +1,30 @@
 export const ALORA_BEERS = [
     {
         title: "Alora Lager",
-        type: "Light Lager",
-        origin: "House Beer",
-        tastingNotes: "Toasted malt character with a floral hop finish",
+        type: "Classic Lager",
+        origin: "Evergreen Craft Ales",
+        tastingNotes: "Easy to drink, light and crushable, with a crisp finish",
         tasteProfile: {
-            bitterness: { scale: "mild - bitter", value: 25 },  // ~20 IBU
-            maltiness: { scale: "subtle - robust", value: 70 },
-            hoppiness: { scale: "delicate - intense", value: 30 },
-            carbonation: { scale: "flat - effervescent", value: 60 },
-            alcohol: { scale: "sessionable - boozy", value: 35 },  // 5.2% ABV
-            mouthfeel: { scale: "thin - creamy", value: 55 },
-            finish: { scale: "clean - lingering", value: 75 }
+            bitterness: { scale: "mild - bitter", value: 20 },  
+            maltiness: { scale: "subtle - robust", value: 60 },
+            hoppiness: { scale: "delicate - intense", value: 25 },
+            carbonation: { scale: "flat - effervescent", value: 70 },
+            alcohol: { scale: "sessionable - boozy", value: 35 },  
+            mouthfeel: { scale: "thin - creamy", value: 50 },
+            finish: { scale: "clean - lingering", value: 80 }
         },
     },
     {
         title: "Corona Extra",
         type: "Pale Lager",
         origin: "Mexico City, Mexico",
-        tastingNotes: "Crisp grain notes with a light corn sweetness",
+        tastingNotes: "Light, refreshing taste with subtle malt and hop notes, and a crisp finish",
         tasteProfile: {
-            bitterness: { scale: "mild - bitter", value: 15 },  // ~10 IBU
+            bitterness: { scale: "mild - bitter", value: 15 },  
             maltiness: { scale: "subtle - robust", value: 40 },
             hoppiness: { scale: "delicate - intense", value: 20 },
             carbonation: { scale: "flat - effervescent", value: 75 },
-            alcohol: { scale: "sessionable - boozy", value: 30 },  // 4.6% ABV
+            alcohol: { scale: "sessionable - boozy", value: 30 },  
             mouthfeel: { scale: "thin - creamy", value: 40 },
             finish: { scale: "clean - lingering", value: 85 }
         },
@@ -32,31 +32,46 @@ export const ALORA_BEERS = [
     {
         title: "Recliner Red",
         type: "Irish Red Ale",
-        origin: "Dublin, Ireland",
-        tastingNotes: "Caramel malt sweetness with a nutty, biscuity finish",
+        origin: "Evergreen Craft Ales",
+        tastingNotes: "Slight malt blend, with low hops. Biscuit, toffee, and caramel flavors with a crisp finish",
         tasteProfile: {
-            bitterness: { scale: "mild - bitter", value: 35 },  // ~28 IBU
+            bitterness: { scale: "mild - bitter", value: 30 },  
             maltiness: { scale: "subtle - robust", value: 80 },
-            hoppiness: { scale: "delicate - intense", value: 25 },
+            hoppiness: { scale: "delicate - intense", value: 20 },
             carbonation: { scale: "flat - effervescent", value: 55 },
-            alcohol: { scale: "sessionable - boozy", value: 45 },  // 5.8% ABV
+            alcohol: { scale: "sessionable - boozy", value: 45 },  
             mouthfeel: { scale: "thin - creamy", value: 70 },
             finish: { scale: "clean - lingering", value: 65 }
         },
     },
     {
         title: "Sunsplit IPA",
-        type: "West Coast IPA",
-        origin: "San Diego, USA",
-        tastingNotes: "Resinous pine and grapefruit notes with a dry finish",
+        type: "Hazy IPA",
+        origin: "Dominion City",
+        tastingNotes: "Tropical hop flavor, balanced bitterness, expressive yeast character, and a rich malt body. Pours hazy with golden highlights",
         tasteProfile: {
-            bitterness: { scale: "mild - bitter", value: 80 },  // ~70 IBU
-            maltiness: { scale: "subtle - robust", value: 30 },
+            bitterness: { scale: "mild - bitter", value: 70 },  
+            maltiness: { scale: "subtle - robust", value: 40 },
             hoppiness: { scale: "delicate - intense", value: 90 },
             carbonation: { scale: "flat - effervescent", value: 65 },
-            alcohol: { scale: "sessionable - boozy", value: 70 },  // 7.2% ABV
-            mouthfeel: { scale: "thin - creamy", value: 60 },
+            alcohol: { scale: "sessionable - boozy", value: 70 },  
+            mouthfeel: { scale: "thin - creamy", value: 65 },
             finish: { scale: "clean - lingering", value: 75 }
+        },
+    },
+    {
+        title: "Glorious and Free IPA",
+        type: "Seasonal Hazy IPA",
+        origin: "Dominion City",
+        tastingNotes: "Hazy IPA with a pilsner base and added hops. Made using all Canadian ingredients in partnership with 35+ breweries to support Canadian nonprofits",
+        tasteProfile: {
+            bitterness: { scale: "mild - bitter", value: 60 },  
+            maltiness: { scale: "subtle - robust", value: 50 },
+            hoppiness: { scale: "delicate - intense", value: 85 },
+            carbonation: { scale: "flat - effervescent", value: 60 },
+            alcohol: { scale: "sessionable - boozy", value: 65 },  
+            mouthfeel: { scale: "thin - creamy", value: 70 },
+            finish: { scale: "clean - lingering", value: 80 }
         },
     },
 ];

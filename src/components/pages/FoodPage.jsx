@@ -3,9 +3,15 @@ import FoodCardDisplay from "../lists/foods/FoodCardDisplay";
 
 import { ALORA_APPETIZERS, ALORA_SUSHIS, ALORA_SALADS, ALORA_SHARING_BOARDS, ALORA_MAINS } from "../lists/foods/aloraFoods";
 
-
-const FoodPage = () => {
+const allFoods = [
+    ...ALORA_APPETIZERS,
+    ...ALORA_SUSHIS,
+    ...ALORA_SALADS,
+    ...ALORA_SHARING_BOARDS,
+    ...ALORA_MAINS
+  ];const FoodPage = () => {
     return <>
+        <FoodCardDisplay mainTitle="All Dishes" foodList={allFoods} />
         <FoodCardDisplay mainTitle="Appetizers" foodList={ALORA_APPETIZERS} />
         <FoodCardDisplay mainTitle="Sushi" foodList={ALORA_SUSHIS} />
         <FoodCardDisplay mainTitle="Salads" foodList={ALORA_SALADS} />

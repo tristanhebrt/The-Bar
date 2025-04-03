@@ -84,8 +84,8 @@ const BeerCard = React.forwardRef(({ beer, allFlipped }, ref) => {
                     <CardBackContainer>
                         <CardBack>
                             <TastingNotes>
-                                <h3>Tasting Notes</h3>
-                                <p>{beer.tastingNotes}</p>
+                                <h3>Type</h3>
+                                <p>{beer.type}</p>
                             </TastingNotes>
                             <MoreButton onClick={(e) => {
                                 e.stopPropagation();
@@ -110,8 +110,8 @@ const BeerCard = React.forwardRef(({ beer, allFlipped }, ref) => {
                                 <Value>{beer.origin}</Value>
                             </DetailItem>
                             <DetailItem>
-                                <Label>Type</Label>
-                                <Value>{beer.type}</Value>
+                                <Label>Description</Label>
+                                <Value>{beer.tastingNotes}</Value>
                             </DetailItem>
                             <TasteProfileSection>
                                 <Label>Taste Profile</Label>

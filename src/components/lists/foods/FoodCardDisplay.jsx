@@ -15,18 +15,20 @@ const FoodCardDisplay = ({ mainTitle, foodList }) => {
     };
 
     const filteredFoods = foodList
-        .filter((food) => {
-            const searchLower = searchQuery.toLowerCase();
-            return (
-                food.title.toLowerCase().includes(searchLower) ||
-                food.ingredients.toLowerCase().includes(searchLower) ||
-                food.description.toLowerCase().includes(searchLower) ||
-                food.options.toLowerCase().includes(searchLower) ||
-                food.winePairings.toLowerCase().includes(searchLower) ||
-                food.allergens.toLowerCase().includes(searchLower)
-            );
-        })
-        .sort((a, b) => a.title.localeCompare(b.title));
+    .filter((food) => {
+        const searchLower = searchQuery.toLowerCase();
+        return (
+        (food.title || "").toLowerCase().includes(searchLower) ||
+        (food.ingredients || "").toLowerCase().includes(searchLower) ||
+        (food.description || "").toLowerCase().includes(searchLower) ||
+        (food.options || "").toLowerCase().includes(searchLower) ||
+        (Array.isArray(food.winePairings)
+            ? food.winePairings.join(" ").toLowerCase()
+            : (food.winePairings || "").toLowerCase()
+        ).includes(searchLower)
+        );
+    })
+    .sort((a, b) => a.title.localeCompare(b.title));
 
     return (
         <Container>
@@ -74,6 +76,19 @@ const FoodCard = React.forwardRef(({ food, allFlipped }, ref) => {
     const [flipped, setFlipped] = useState(false);
     const [showOverlay, setShowOverlay] = useState(false);
     const [showWineOverlay, setShowWineOverlay] = useState(false);
+    
+    const formatAllergenLabel = (key) => {
+        const labels = {
+            vegan: "Vegan",
+            vegetarian: "Vegetarian",
+            dairy: "Dairy",
+            glutenCeliac: "Gluten/Celiac",
+            nut: "Nut",
+            halal: "Halal",
+            sesame: "Sesame"
+        };
+        return labels[key] || key;
+    };
 
     useEffect(() => {
         setFlipped(allFlipped);
@@ -130,8 +145,15 @@ const FoodCard = React.forwardRef(({ food, allFlipped }, ref) => {
                             )}
                             {food.allergens && (
                                 <DetailItem>
-                                    <Label>Allergies</Label>
-                                    <Value>{food.allergens}</Value>
+                                    <Label>Dietary & Allergens</Label>
+                                    <AllergenGrid>
+                                        {Object.entries(food.allergens).map(([key, value]) => (
+                                            <AllergenItem key={key}>
+                                                <AllergenLabel>{formatAllergenLabel(key)}:</AllergenLabel>
+                                                <AllergenValue>{value}</AllergenValue>
+                                            </AllergenItem>
+                                        ))}
+                                    </AllergenGrid>
                                 </DetailItem>
                             )}
                         </FoodDetails>
@@ -174,6 +196,37 @@ const FoodCard = React.forwardRef(({ food, allFlipped }, ref) => {
 
 
 /* Styled Components */
+
+const AllergenGrid = styled.div`
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.25rem;
+    width: 100%;
+    margin-top: 0.25rem;
+`;
+
+const AllergenItem = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.25rem 1rem 0.25rem 1rem;
+    background: var(--light-grey);
+`;
+
+const AllergenLabel = styled.span`
+    font-family: var(--text-font);
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--primary);
+`;
+
+const AllergenValue = styled.span`
+    font-family: var(--main-font);
+    font-size: 1rem;
+    color: var(--black);
+    text-align: right;
+    max-width: 100%;
+`;
 
 const Ingredients = styled.div`
     margin-bottom: 1.5rem;
@@ -224,13 +277,12 @@ const CardBack = styled.div`
 `;
 
 const FoodDetails = styled.div`
-    padding: 1rem;
+    padding: 0 1rem 1rem 1rem;
     width: 90%;
     margin: 0 auto;
 `;
 
 const DetailItem = styled.div`
-    margin: 1rem 0;
 `;
 
 const Label = styled.span`
