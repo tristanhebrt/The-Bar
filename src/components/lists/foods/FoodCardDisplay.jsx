@@ -439,7 +439,7 @@ const CardBackContainer = styled(CardFront)`
 const MoreButton = styled.button`
     position: absolute;
     bottom: 0.5rem;
-    left: 0.5rem;
+    left: 1.5rem;
     padding: 5px 10px;
     margin-top: 1rem;
     font-size: 1rem;
@@ -458,7 +458,7 @@ const MoreButton = styled.button`
 const WineButton = styled.button`
     position: absolute;
     bottom: 0.5rem;
-    right: 0.5rem;
+    right: 1.5rem;
     padding: 5px 10px;
     margin-top: 1rem;
     font-size: 1rem;
