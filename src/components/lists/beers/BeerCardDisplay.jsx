@@ -261,7 +261,6 @@ const Label = styled.span`
     font-family: var(--text-font);
     font-size: 3rem;
     font-weight: 800;
-    margin-right: 1rem;
 
     @media (max-width: 600px) {
         font-size: 1.5rem;
