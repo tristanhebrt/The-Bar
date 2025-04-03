@@ -88,10 +88,10 @@ const FoodCard = React.forwardRef(({ food, allFlipped }, ref) => {
                     </CardFront>
                     <CardBackContainer>
                         <CardBack>
-                            <TastingNotes>
+                            <Ingredients>
                                 <h3>Ingredients</h3>
                                 <p>{food.ingredients}</p>
-                            </TastingNotes>
+                            </Ingredients>
                             <MoreButton onClick={(e) => {
                                 e.stopPropagation();
                                 setShowOverlay(true);
@@ -152,13 +152,13 @@ const FoodCard = React.forwardRef(({ food, allFlipped }, ref) => {
                             <TopRightOrnament />
                         </OrnamentContainer>
                         <FoodDetails>
-                            <p>
-                            {food.winePairings && (
-                                <DetailItem>
-                                    <Value>{food.winePairings}</Value>
-                                </DetailItem>
-                            )}
-                            </p>
+                        {food.winePairings &&
+                            food.winePairings.map((pairing, idx) => (
+                            <DetailItem key={idx}>
+                                <Value>{pairing}</Value>
+                            </DetailItem>
+                            ))
+                        }
                         </FoodDetails>
                         <OrnamentContainer>
                             <BottomLeftOrnament />
@@ -175,60 +175,7 @@ const FoodCard = React.forwardRef(({ food, allFlipped }, ref) => {
 
 /* Styled Components */
 
-const TasteProfileSection = styled.div`
-    width: 100%;
-`;
-
-const TasteItem = styled.div`
-    margin: 0.25rem;
-`;
-
-const ScaleContainer = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    width: 100%;
-`;
-
-const ScaleLabel = styled.span`
-    text-align: center;
-    font-family: var(--main-font);
-    font-size: 1.2rem;
-    font-weight: 600;
-    width: 5rem;
-    white-space: nowrap;
-    color: var(--black);
-`;
-
-const ScaleBar = styled.div`
-    flex-grow: 1;
-    height: 0.5rem;
-    background: var(--light-grey);
-    position: relative;
-    overflow: hidden;
-`;
-
-const ScaleFill = styled.div`
-    height: 100%;
-    width: ${props => props.width}%;
-    background: var(--light-grey);
-    position: absolute;
-    left: 0;
-    transition: width 0.5s ease-out;
-    
-    &::after {
-        content: "";
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        width: 1rem;
-        background: var(--primary);
-    }
-`;
-
-const TastingNotes = styled.div`
+const Ingredients = styled.div`
     margin-bottom: 1.5rem;
     h3 {
         color: var(--primary);
@@ -290,7 +237,7 @@ const Label = styled.span`
     font-family: var(--text-font);
     font-size: 3rem;
     font-weight: 800;
-    margin-right: 1rem;
+    width: 100%;
 
     @media (max-width: 600px) {
         font-size: 1.5rem;
@@ -302,6 +249,8 @@ const Value = styled.span`
     font-weight: 600;
     display: block;
     margin-top: 0.5rem;
+    width: 100%;
+    text-align: center;
 `;
 
 const Container = styled.div`
