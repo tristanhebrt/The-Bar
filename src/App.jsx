@@ -7,6 +7,7 @@ import Navbar from "./components/pages/constants/Navbar";
 import CocktailPage from "./components/pages/CocktailPage";
 import WinePage from "./components/pages/WinePage";
 import BeerPage from "./components/pages/BeerPage";
+import FoodPage from "./components/pages/FoodPage";
 import ChecklistPage from "./components/pages/ChecklistPage";
 
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
               <Route path="/" element={<CocktailPage />} />
               <Route path="/wines" element={<WinePage />} />
               <Route path="/beers" element={<BeerPage />} />
+              <Route path="/foods" element={<FoodPage />} />
               <Route path="/checklist" element={<ChecklistPage />} />
           </Routes>
           <Footer />
