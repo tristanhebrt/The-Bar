@@ -22,6 +22,7 @@ const FoodCardDisplay = ({ mainTitle, foodList }) => {
                 food.ingredients.toLowerCase().includes(searchLower) ||
                 food.description.toLowerCase().includes(searchLower) ||
                 food.options.toLowerCase().includes(searchLower) ||
+                food.winePairings.toLowerCase().includes(searchLower) ||
                 food.allergens.toLowerCase().includes(searchLower)
             );
         })
@@ -72,6 +73,7 @@ const FoodCardDisplay = ({ mainTitle, foodList }) => {
 const FoodCard = React.forwardRef(({ food, allFlipped }, ref) => {
     const [flipped, setFlipped] = useState(false);
     const [showOverlay, setShowOverlay] = useState(false);
+    const [showWineOverlay, setShowWineOverlay] = useState(false);
 
     useEffect(() => {
         setFlipped(allFlipped);
@@ -94,6 +96,12 @@ const FoodCard = React.forwardRef(({ food, allFlipped }, ref) => {
                                 e.stopPropagation();
                                 setShowOverlay(true);
                             }}>Details</MoreButton>
+                            {food.winePairings && (
+                                <WineButton onClick={(e) => {
+                                    e.stopPropagation();
+                                    setShowWineOverlay(true);
+                                }}>Wine Pairings</WineButton>
+                            )}
                         </CardBack>
                     </CardBackContainer>
                 </CardInner>
@@ -130,6 +138,31 @@ const FoodCard = React.forwardRef(({ food, allFlipped }, ref) => {
                         <OrnamentContainer>
                             <BottomLeftOrnament />
                             <CloseButton onClick={() => setShowOverlay(false)}>Close</CloseButton>
+                            <BottomRightOrnament />
+                        </OrnamentContainer>
+                    </OverlayContent>
+                </Overlay>
+            )}
+            {showWineOverlay && (
+                <Overlay>
+                    <OverlayContent>
+                        <OrnamentContainer>
+                            <TopLeftOrnament />
+                            <h2>Wine Pairings</h2>
+                            <TopRightOrnament />
+                        </OrnamentContainer>
+                        <FoodDetails>
+                            <p>
+                            {food.winePairings && (
+                                <DetailItem>
+                                    <Value>{food.winePairings}</Value>
+                                </DetailItem>
+                            )}
+                            </p>
+                        </FoodDetails>
+                        <OrnamentContainer>
+                            <BottomLeftOrnament />
+                            <CloseButton onClick={() => setShowWineOverlay(false)}>Close</CloseButton>
                             <BottomRightOrnament />
                         </OrnamentContainer>
                     </OverlayContent>
@@ -457,6 +490,26 @@ const CardBackContainer = styled(CardFront)`
 const MoreButton = styled.button`
     position: absolute;
     bottom: 0.5rem;
+    left: 0.5rem;
+    padding: 5px 10px;
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-family: var(--text-font);
+    border: none;
+    background: var(--white);
+    color: var(--black);
+    cursor: pointer;
+    transition: background 0.3s ease;
+
+    &:hover {
+        background: var(--light-grey);
+    }
+`;
+
+const WineButton = styled.button`
+    position: absolute;
+    bottom: 0.5rem;
+    right: 0.5rem;
     padding: 5px 10px;
     margin-top: 1rem;
     font-size: 1rem;
