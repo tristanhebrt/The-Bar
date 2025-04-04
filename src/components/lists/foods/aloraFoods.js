@@ -350,9 +350,9 @@ export const ALORA_APPETIZERS = [
         vegetarian: "N/P",       // Chicken
         dairy: "Sub Goat Cheese", 
         glutenCeliac: "Good",    // Gluten-free
-        nut: "Sub No Walnuts",   
+        nut: "Sub Walnuts",   
         halal: "Good",           // No bacon
-        sesame: "Sub No Sesame"  
+        sesame: "Sub Sesame"  
       },
       winePairings: [
         "Pinot Grigio, Tiefenbrunner",
