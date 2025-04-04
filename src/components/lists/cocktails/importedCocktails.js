@@ -1,5 +1,5 @@
-export const ALORA_COCKTAILS = {
-    listName: "Alora Cocktails",
+export const IMPORTED_COCKTAILS = {
+    listName: "Imported Cocktails",
     listType: "cocktails",
     items: [
     {

@@ -3,6 +3,7 @@ import { auth, db } from "../../firebase";
 import { signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import styled from "styled-components";
+import ProfileDropdown from "./ProfileDropdown"; // Import the ProfileDropdown
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);
@@ -30,12 +31,8 @@ const UserProfile = () => {
 
   return user ? (
     <ProfileCard>
-      <ProfileImage
-        src={userData?.profilePic || "https://placekitten.com/80/80"}
-        alt="User"
-      />
+      <ProfileDropdown userData={userData} />
       <UserName>Logged-in as {getFirstName(userData?.name)}</UserName>
-      <LogoutButton onClick={() => signOut(auth)}>Logout</LogoutButton>
     </ProfileCard>
   ) : (
     <p style={{ textAlign: "center", marginTop: "20px", color: "gray" }}>
@@ -57,41 +54,7 @@ const ProfileCard = styled.div`
   width: 100vw;
 `;
 
-const ProfileImage = styled.img`
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 3px solid #ccc;
-`;
-
 const UserName = styled.h2`
   font-size: 1.25rem;
   color: var(--black);
-`;
-
-const LogoutButton = styled.button`
-  width: auto;
-  position: absolute;
-  right: 1rem;
-  padding: 10px 20px;
-  font-family: var(--text-font);
-  font-size: 1.2rem;
-  padding: 0.5rem 1rem 0.5rem 1rem;
-  background: rgba(0, 0, 0, 0.8);
-  color: var(--white);
-  border: none;
-  cursor: pointer;
-  transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &:hover {
-    background: var(--highlight3);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  }
-
-  &:active {
-    transform: scale(0.95);
-  }
 `;
