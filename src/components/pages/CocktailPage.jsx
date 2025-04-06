@@ -1,44 +1,59 @@
-// CocktailPage.jsx
 import React, { useState, useEffect } from "react";
 import CocktailCardDisplay from "../lists/cocktails/CocktailCardDisplay";
 import { CLASSIC_COCKTAILS } from "../lists/cocktails/classicCocktails";
 import { MODERN_COCKTAILS } from "../lists/cocktails/modernCocktails";
 import { ALORA_COCKTAILS } from "../lists/cocktails/aloraCocktails";
 import { RANDOM_COCKTAILS } from "../lists/cocktails/randomCocktails";
-import { db } from "../../firebase";
-import { collection, getDocs } from "firebase/firestore";
+import DeleteList from "../utils/DeleteList";
+
+// Import Firestore instance and functions for the modular API
+import { firestore, deleteCocktailList } from "../../firebase";
+import { collection, onSnapshot } from "firebase/firestore";
 
 const CocktailPage = () => {
   const [importedCocktails, setImportedCocktails] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchImportedCocktails = async () => {
+  // Real-time listener for cocktailLists collection
+  useEffect(() => {
+    const colRef = collection(firestore, "cocktailLists");
+    const unsubscribe = onSnapshot(
+      colRef,
+      (snapshot) => {
+        const cocktailsList = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setImportedCocktails(cocktailsList);
+        setLoading(false);
+      },
+      (err) => {
+        setError("Error fetching lists");
+        setLoading(false);
+      }
+    );
+    return () => unsubscribe();
+  }, []);
+
+  // Handle deleting a cocktail list
+  const handleDelete = async (listId) => {
     try {
-      const querySnapshot = await getDocs(collection(db, "cocktailLists"));
-      const cocktailsList = [];
-      querySnapshot.forEach((doc) => {
-        cocktailsList.push({ id: doc.id, ...doc.data() });
-      });
-      setImportedCocktails(cocktailsList);
+      await deleteCocktailList(listId); // Delete the cocktail list from Firebase
+      setImportedCocktails((prevCocktails) =>
+        prevCocktails.filter((list) => list.id !== listId)
+      );
     } catch (err) {
-      setError("Error fetching lists");
-    } finally {
-      setLoading(false);
+      console.error("Error deleting cocktail list:", err);
     }
   };
 
-  useEffect(() => {
-    fetchImportedCocktails();
-  }, []);
-
-  // Updated allCocktails combination
   const allCocktails = [
     ...RANDOM_COCKTAILS,
     ...CLASSIC_COCKTAILS,
     ...MODERN_COCKTAILS,
     ...ALORA_COCKTAILS.items,
-    ...importedCocktails.flatMap(list => list.items)
+    ...importedCocktails.flatMap((list) => list.items || [])
   ];
 
   return (
@@ -46,18 +61,26 @@ const CocktailPage = () => {
       {loading && <p>Loading cocktails...</p>}
       {error && <p>{error}</p>}
 
+      {/* Render all cocktails from static lists and imported lists */}
       <CocktailCardDisplay mainTitle="All Cocktails" recipes={allCocktails} />
 
-      {/* Separate display for each imported list */}
-      {importedCocktails.map((list) => (
-        <CocktailCardDisplay 
-          key={list.id}
-          mainTitle={list.listName} 
-          recipes={list.items} 
-        />
-      ))}
+      {/* Render imported cocktails if they exist */}
+      {importedCocktails.length > 0 &&
+        importedCocktails.map((list) => (
+          <div key={list.id} style={{ position: "relative" }}>
+            <CocktailCardDisplay 
+              mainTitle={list.listName} 
+              recipes={list.items} 
+            />
+            {/* Delete button for each imported list */}
+            <DeleteList 
+              listId={list.id}
+              onDelete={() => handleDelete(list.id)}
+            />
+          </div>
+        ))}
 
-      {/* Predefined categories */}
+      {/* Render static cocktail lists */}
       <CocktailCardDisplay mainTitle="Classic Cocktails" recipes={CLASSIC_COCKTAILS} />
       <CocktailCardDisplay mainTitle="Modern Cocktails" recipes={MODERN_COCKTAILS} />
       <CocktailCardDisplay 

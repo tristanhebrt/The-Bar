@@ -2,14 +2,22 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 const Checklist = ({dataList, checklistTitle, isExpanded, setIsExpanded}) => {
+  if (!dataList || dataList.length === 0) {
+    return <div>Loading...</div>; // Loading UI while data is fetching or empty
+  }
+  
   const [expandedSections, setExpandedSections] = useState({});
   const [completedItems, setCompletedItems] = useState({});
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
+    if (!dataList || dataList.length === 0) {
+      return; // Exit early if dataList is empty or undefined
+    }
+  
     const totalItems = dataList.reduce((acc, step) => {
-      return acc + Object.entries(step.content).reduce((subAcc, [category, items]) => 
-        subAcc + items.length, 0);
+      return acc + (step.content ? Object.entries(step.content).reduce((subAcc, [category, items]) => 
+        subAcc + (Array.isArray(items) ? items.length : 0), 0) : 0);
     }, 0);
   
     const completedCount = Object.keys(completedItems)
@@ -17,7 +25,8 @@ const Checklist = ({dataList, checklistTitle, isExpanded, setIsExpanded}) => {
       .length;
   
     setProgress((completedCount / totalItems) * 100);
-  }, [completedItems]);
+  }, [completedItems, dataList]);
+  
 
   const toggleSection = (stepIndex, category) => {
     setExpandedSections(prev => ({

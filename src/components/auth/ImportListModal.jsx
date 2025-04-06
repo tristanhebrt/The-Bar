@@ -1,7 +1,13 @@
 // ImportListModal.jsx
 import React, { useState } from "react";
 import styled from "styled-components";
-import { saveCocktailList } from "../../firebase";
+import { 
+  saveCocktailList, 
+  saveFoodList, 
+  saveWineList, 
+  saveBeerList, 
+  saveChecklist 
+} from "../../firebase";
 
 const ImportListModal = ({ onClose, onImportSuccess }) => {
   const [file, setFile] = useState(null);
@@ -28,22 +34,42 @@ const ImportListModal = ({ onClose, onImportSuccess }) => {
   
         const wrappedCode = `(function() { ${modifiedContent}\n return __importedList__; })()`;
         const importedObject = new Function("return " + wrappedCode)();
-
-        // Validate and save the full object
+  
+        // Determine the correct function to call based on list type
         if (
           importedObject &&
-          importedObject.listType === "cocktails" &&
+          importedObject.listType &&
           importedObject.listName &&
           Array.isArray(importedObject.items)
         ) {
-          saveCocktailList(importedObject); // Save full object
+          switch (importedObject.listType) {
+            case "cocktails":
+              saveCocktailList(importedObject);
+              break;
+            case "food":
+              saveFoodList(importedObject);
+              break;
+            case "wine":
+              saveWineList(importedObject);
+              break;
+            case "beer":
+              saveBeerList(importedObject);
+              break;
+            case "checklist":
+              saveChecklist(importedObject);
+              break;
+            default:
+              alert("Unknown list type. Please ensure the file contains a valid list.");
+              return;
+          }
+  
           if (typeof onImportSuccess === "function") {
             onImportSuccess(); // Trigger refresh
           }
           alert("List imported successfully!");
           onClose();
         } else {
-          alert("Invalid list format. Please ensure the file contains a valid cocktail list.");
+          alert("Invalid list format. Please ensure the file contains a valid list.");
         }
       } catch (error) {
         console.error("Import error:", error);
@@ -57,6 +83,7 @@ const ImportListModal = ({ onClose, onImportSuccess }) => {
   
     reader.readAsText(file);
   };
+  
 
   return (
     <ModalOverlay>

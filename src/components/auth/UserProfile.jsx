@@ -24,7 +24,7 @@ const UserProfile = () => {
   }, []);
 
   const getFirstName = (fullName) => {
-    if (!fullName) return "User Name";
+    if (!fullName) return "User";
     const nameParts = fullName.split(" ");
     return nameParts[0]; // Return only the first part of the name (first name)
   };

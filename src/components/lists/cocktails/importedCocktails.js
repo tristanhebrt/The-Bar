@@ -1,5 +1,5 @@
 export const IMPORTED_COCKTAILS = {
-    listName: "Imported Cocktails",
+    listName: "Oh yeah",
     listType: "cocktails",
     items: [
     {

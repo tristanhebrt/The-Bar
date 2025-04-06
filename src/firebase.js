@@ -1,11 +1,7 @@
+// firebase.js
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  serverTimestamp
-} from "firebase/firestore";
+import { getFirestore, collection, addDoc, doc, deleteDoc, serverTimestamp } from "firebase/firestore";  // Import doc and deleteDoc here
 import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
@@ -24,7 +20,7 @@ const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 const db = getFirestore(app);
 
-// Updated cocktail list saving with proper structure
+// Save lists to Firestore
 export const saveCocktailList = async (listData) => {
   try {
     const user = auth.currentUser;
@@ -43,32 +39,135 @@ export const saveCocktailList = async (listData) => {
   }
 };
 
-// Wine list saving (unchanged)
-export const saveWineList = async (wineList) => {
+export const saveFoodList = async (listData) => {
   try {
-    const winesRef = collection(db, "wines");
-    for (const wine of wineList) {
-      await addDoc(winesRef, wine);
-    }
-    console.log("Wine list saved successfully.");
+    const user = auth.currentUser;
+    if (!user) throw new Error("No user signed in");
+
+    const listRef = collection(db, "foodLists");
+    await addDoc(listRef, {
+      ...listData,
+      userId: user.uid,
+      createdAt: serverTimestamp()
+    });
+    console.log("Food list saved successfully");
+  } catch (error) {
+    console.error("Error saving food list:", error);
+    throw error;
+  }
+};
+
+export const saveWineList = async (listData) => {
+  try {
+    const user = auth.currentUser;
+    if (!user) throw new Error("No user signed in");
+
+    const listRef = collection(db, "wineLists");
+    await addDoc(listRef, {
+      ...listData,
+      userId: user.uid,
+      createdAt: serverTimestamp()
+    });
+    console.log("Wine list saved successfully");
   } catch (error) {
     console.error("Error saving wine list:", error);
     throw error;
   }
 };
 
-// Food list saving (unchanged)
-export const saveFoodList = async (foodList) => {
+export const saveBeerList = async (listData) => {
   try {
-    const foodRef = collection(db, "foods");
-    for (const food of foodList) {
-      await addDoc(foodRef, food);
-    }
-    console.log("Food list saved successfully.");
+    const user = auth.currentUser;
+    if (!user) throw new Error("No user signed in");
+
+    const listRef = collection(db, "beerLists");
+    await addDoc(listRef, {
+      ...listData,
+      userId: user.uid,
+      createdAt: serverTimestamp()
+    });
+    console.log("Beer list saved successfully");
   } catch (error) {
-    console.error("Error saving food list:", error);
+    console.error("Error saving beer list:", error);
     throw error;
   }
 };
+
+export const saveChecklist = async (listData) => {
+  try {
+    const user = auth.currentUser;
+    if (!user) throw new Error("No user signed in");
+
+    const listRef = collection(db, "checklists");
+    await addDoc(listRef, {
+      ...listData,
+      userId: user.uid,
+      createdAt: serverTimestamp()
+    });
+    console.log("Checklist saved successfully");
+  } catch (error) {
+    console.error("Error saving checklist:", error);
+    throw error;
+  }
+};
+
+// Delete lists to Firestore
+export const deleteFoodList = async (listId) => {
+  try {
+    const listRef = doc(db, "foodLists", listId);
+    await deleteDoc(listRef);
+    console.log("Food list deleted successfully");
+  } catch (error) {
+    console.error("Error deleting food list:", error);
+    throw error;
+  }
+};
+
+export const deleteWineList = async (listId) => {
+  try {
+    const listRef = doc(db, "wineLists", listId);
+    await deleteDoc(listRef);
+    console.log("Wine list deleted successfully");
+  } catch (error) {
+    console.error("Error deleting wine list:", error);
+    throw error;
+  }
+};
+
+export const deleteBeerList = async (listId) => {
+  try {
+    const listRef = doc(db, "beerLists", listId);
+    await deleteDoc(listRef);
+    console.log("Beer list deleted successfully");
+  } catch (error) {
+    console.error("Error deleting beer list:", error);
+    throw error;
+  }
+};
+
+export const deleteChecklist = async (listId) => {
+  try {
+    const listRef = doc(db, "checklists", listId);
+    await deleteDoc(listRef);
+    console.log("Checklist deleted successfully");
+  } catch (error) {
+    console.error("Error deleting checklist:", error);
+    throw error;
+  }
+};
+
+export const deleteCocktailList = async (listId) => {
+  try {
+    const listRef = doc(db, "cocktailLists", listId);
+    await deleteDoc(listRef);
+    console.log("Cocktail list deleted successfully");
+  } catch (error) {
+    console.error("Error deleting cocktail list:", error);
+    throw error;
+  }
+};
+
+const firestore = getFirestore(app);
+export { firestore };
 
 export { auth, provider, db, analytics };

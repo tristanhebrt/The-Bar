@@ -1,6 +1,5 @@
-// ProfileDropdown.jsx
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
 import ImportListModal from "./ImportListModal.jsx"; // We'll create this component next
@@ -8,6 +7,7 @@ import ImportListModal from "./ImportListModal.jsx"; // We'll create this compon
 const ProfileDropdown = ({ userData }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Track image loading
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -26,10 +26,15 @@ const ProfileDropdown = ({ userData }) => {
   return (
     <>
       <ProfileContainer onClick={toggleDropdown}>
+        {isLoading && <Spinner />} {/* Show loading animation */}
         <ProfileImage
-          src={userData?.profilePic || "https://via.placeholder.com/80"}
+          src={userData?.profilePic || "/images/default-profile.png"}
           alt="User Profile"
+          onLoad={() => setIsLoading(false)}
+          onError={() => setIsLoading(false)}
+          $isLoading={isLoading} // Use $ prefix
         />
+
         {isDropdownOpen && (
           <DropdownMenu>
             <DropdownItem onClick={handleImportClick}>Import List</DropdownItem>
@@ -51,6 +56,26 @@ export default ProfileDropdown;
 const ProfileContainer = styled.div`
   position: relative;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+`;
+
+const spinAnimation = keyframes`
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+`;
+
+const Spinner = styled.div`
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-top: 4px solid #fff;
+  border-radius: 50%;
+  animation: ${spinAnimation} 1s linear infinite;
+  position: absolute;
 `;
 
 const ProfileImage = styled.img`
@@ -58,6 +83,7 @@ const ProfileImage = styled.img`
   height: 50px;
   border-radius: 50%;
   border: 3px solid #ccc;
+  display: ${(props) => (props.$isLoading ? "none" : "block")}; // Use transient prop ($)
 `;
 
 const DropdownMenu = styled.div`
