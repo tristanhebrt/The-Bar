@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import BeerCardDisplay from "../lists/beers/BeerCardDisplay";
 import { ALORA_BEERS } from "../lists/beers/aloraBeers";
+import DeleteList from "../utils/DeleteList";
 
 // Firebase imports
-import { firestore } from "../../firebase";
+import { firestore, deleteBeerList } from "../../firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 
 const BeerPage = () => {
@@ -34,6 +35,17 @@ const BeerPage = () => {
         return () => unsubscribe(); // Cleanup on unmount
     }, []);
 
+    const handleDelete = async (listId) => {
+        try {
+          await deleteBeerList(listId);
+          setImportedBeers((prevFoods) =>
+            prevFoods.filter((list) => list.id !== listId)
+          );
+        } catch (err) {
+          console.error("Error deleting food list:", err);
+        }
+      };
+
     const allBeers = [
         ...ALORA_BEERS,
         ...importedBeers.flatMap((list) => list.items || [])
@@ -48,8 +60,11 @@ const BeerPage = () => {
             <BeerCardDisplay mainTitle="Alora Beers" beerList={ALORA_BEERS} />
             
             {importedBeers.map((list) => (
-                <BeerCardDisplay key={list.id} mainTitle={list.listName} beerList={list.items || []} />
-            ))}
+            <div key={list.id} style={{ position: "relative" }}>
+                <BeerCardDisplay mainTitle={list.listName} beerList={list.items || []} />
+                <DeleteList listId={list.id} onDelete={() => handleDelete(list.id)} />
+            </div>
+))}
         </>
     );
 };
