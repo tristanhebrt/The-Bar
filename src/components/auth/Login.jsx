@@ -1,12 +1,34 @@
 import React from "react";
-import { auth, provider } from "../../firebase";
+import { auth, provider, db } from "../../firebase";
 import { signInWithPopup } from "firebase/auth";
+import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 import styled from "styled-components";
 
 const Login = () => {
   const handleLogin = async () => {
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      
+      // Check if user document exists
+      const userRef = doc(db, "users", user.uid);
+      const userDoc = await getDoc(userRef);
+
+      if (!userDoc.exists()) {
+        // Create new user document
+        await setDoc(userRef, {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          photoURL: user.photoURL,
+          isAdmin: false,
+          approved: false,
+          allowedLists: [],
+          createdAt: serverTimestamp(),
+          updatedAt: serverTimestamp()
+        });
+        console.log("New user document created for:", user.uid);
+      }
     } catch (error) {
       console.error("Login Error:", error);
     }
