@@ -6,6 +6,7 @@ import {
   collection, 
   addDoc, 
   doc, 
+  getDoc,
   setDoc, 
   serverTimestamp, 
   query, 
@@ -112,6 +113,19 @@ export const getUserData = async (userId) => {
     }
   } catch (error) {
     console.error("Error fetching user data:", error);
+    throw error;
+  }
+};
+
+export const updateUserPermissions = async (userId, newAllowedLists) => {
+  try {
+    const userRef = doc(db, "users", userId);
+    await setDoc(userRef, {
+      allowedLists: newAllowedLists
+    }, { merge: true });
+    return true;
+  } catch (error) {
+    console.error("Error updating permissions:", error);
     throw error;
   }
 };

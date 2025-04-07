@@ -4,11 +4,13 @@ import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
 import ImportListModal from "./ImportListModal.jsx"; // Modal to import lists
 import AdminAddListModal from "../utils/AdminAddListModal.jsx"; // Modal for admins to add lists
+import AdminPermissionManagerModal from "../utils/AdminPermissionManager.jsx"; // Add this import
 
 const ProfileDropdown = ({ userData }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isAdminAddModalOpen, setIsAdminAddModalOpen] = useState(false);
+  const [isPermissionManagerOpen, setIsPermissionManagerOpen] = useState(false); // New state
   const [isLoading, setIsLoading] = useState(true); // Track image loading
 
   const toggleDropdown = () => {
@@ -30,6 +32,11 @@ const ProfileDropdown = ({ userData }) => {
     setIsDropdownOpen(false);
   };
 
+  const handlePermissionManagerClick = () => {
+    setIsPermissionManagerOpen(true);
+    setIsDropdownOpen(false);
+  };
+
   return (
     <>
       <ProfileContainer onClick={toggleDropdown}>
@@ -46,7 +53,14 @@ const ProfileDropdown = ({ userData }) => {
           <DropdownMenu>
             <DropdownItem onClick={handleImportClick}>Import List</DropdownItem>
             {userData?.isAdmin && (
-              <DropdownItem onClick={handleAdminAddListClick}>Add List (Admin)</DropdownItem>
+              <>
+                <DropdownItem onClick={handleAdminAddListClick}>
+                  Add List (Admin)
+                </DropdownItem>
+                <DropdownItem onClick={handlePermissionManagerClick}>
+                  Manage Permissions (Admin)
+                </DropdownItem>
+              </>
             )}
             <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
           </DropdownMenu>
@@ -59,6 +73,13 @@ const ProfileDropdown = ({ userData }) => {
       
       {isAdminAddModalOpen && (
         <AdminAddListModal onClose={() => setIsAdminAddModalOpen(false)} />
+      )}
+
+      {isPermissionManagerOpen && (
+        <AdminPermissionManagerModal 
+          isOpen={isPermissionManagerOpen}
+          onClose={() => setIsPermissionManagerOpen(false)}
+        />
       )}
     </>
   );
@@ -103,6 +124,7 @@ const ProfileImage = styled.img`
 const DropdownMenu = styled.div`
   position: absolute;
   top: 60px;
+  left: 0px;
   background: rgba(0, 0, 0, 0.8);
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.8);
   padding: 0.25rem;
