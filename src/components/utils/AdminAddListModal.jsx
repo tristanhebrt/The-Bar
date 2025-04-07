@@ -4,105 +4,84 @@ import { firestore, saveListFromImportedData, auth  } from "../../firebase"; // 
 import { setDoc, doc } from "firebase/firestore";
 
 const AdminAddListModal = ({ onClose }) => {
-  const [file, setFile] = useState(null); // To store the uploaded file
-  const [error, setError] = useState(null);
-
-  // Handle file change (i.e. file selection)
-  const handleFileChange = (e) => {
-    const selectedFile = e.target.files[0];
-    if (selectedFile) {
-      const fileExtension = selectedFile.name.split('.').pop();
-      const fileMimeType = selectedFile.type;
-
-      // Check if the file extension is '.js' and if the MIME type is correct
-      if (fileExtension === "js" || fileMimeType === "application/javascript") {
-        setFile(selectedFile);
-        setError(null); // Clear error if valid file is selected
-      } else {
-        setError("Please select a valid JavaScript file (.js).");
-        setFile(null); // Clear file if invalid
-      }
-    }
-  };
-
-  // Function to parse the JS content and extract all export const statements
-  const parseJavaScript = (content) => {
-    // This regex captures export const CONSTANT_NAME = { ... };
-    const regex = /export\s+const\s+(\w+)\s*=\s*({[\s\S]*?});/g;
-    let match;
-    const parsedData = [];
+    const [file, setFile] = useState(null);
+    const [parsedData, setParsedData] = useState([]);
+    const [error, setError] = useState(null);
   
-    while ((match = regex.exec(content)) !== null) {
-      const [fullMatch, constName, constValue] = match;
-      let parsedValue = null;
-      try {
-        // Use a function constructor to evaluate the object literal.
-        parsedValue = new Function('return ' + constValue)();
-      } catch (err) {
-        console.warn(`Parsing failed for ${constName} using eval:`, err);
-        parsedValue = null;
-      }
-      parsedData.push({
-        name: constName,
-        value: parsedValue,
-      });
-    }
-    console.log("parseJavaScript result:", parsedData);
-    return parsedData;
-  };
-  
-
-  // Handle list creation when the file is uploaded
-  const handleAddList = async () => {
-    console.log("handleAddList triggered");
-    if (!file) {
-      setError("Please upload a JavaScript file.");
-      return;
-    }
-  
-    try {
-      const reader = new FileReader();
-  
-      reader.onload = async () => {
-        const fileContents = reader.result;
-        console.log("File Contents loaded:", fileContents);
-      
-        // Parse the JS content to extract export const values
-        const parsedData = parseJavaScript(fileContents);
-        console.log("Parsed Data:", parsedData);
-      
-        // Loop over each parsed constant and check for required fields
-        for (const constant of parsedData) {
-          const data = constant.value;
-          if (
-            data &&
-            data.listName &&
-            data.listType &&
-            data.listCode &&
-            data.items
-          ) {
-            console.log("Saving constant:", constant.name, data);
-            await saveListFromImportedData(auth.currentUser, data);
-          } else {
-            console.warn(`Constant ${constant.name} is missing required fields.`);
-          }
+    // Move parseJavaScript to the top
+    const parseJavaScript = (content) => {
+      const regex = /export\s+const\s+(\w+)\s*=\s*({[\s\S]*?});/g;
+      let match;
+      const parsedData = [];
+    
+      while ((match = regex.exec(content)) !== null) {
+        const [fullMatch, constName, constValue] = match;
+        try {
+          const parsedValue = new Function('return ' + constValue)();
+          parsedData.push({
+            name: constName,
+            value: parsedValue,
+          });
+        } catch (err) {
+          console.error(`Failed to parse ${constName}:`, err);
         }
-      
-        alert("Lists added successfully!");
-        onClose();
-      };
+      }
+      return parsedData;
+    };
   
-      reader.onerror = (error) => {
-        console.error("Error reading file:", error);
-        setError("Error reading file: " + error.message);
-      };
+    const handleFileChange = (e) => {
+      const selectedFile = e.target.files[0];
+      if (selectedFile) {
+        const fileExtension = selectedFile.name.split('.').pop();
+        const fileMimeType = selectedFile.type;
   
-      reader.readAsText(file);
-    } catch (err) {
-      console.error("Error in handleAddList:", err);
-      setError("Error adding list: " + err.message);
-    }
-  };
+        if (fileExtension === "js" || fileMimeType === "application/javascript") {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            try {
+              const contents = e.target.result;
+              const parsed = parseJavaScript(contents);
+              setParsedData(parsed);
+              setFile(selectedFile);
+              setError(null);
+            } catch (err) {
+              setError("Error parsing file contents");
+              console.error("File parsing error:", err);
+            }
+          };
+          reader.readAsText(selectedFile);
+        } else {
+          setError("Please select a valid JavaScript file (.js).");
+          setFile(null);
+        }
+      }
+    };
+  
+    const handleAddList = async () => {
+      try {
+        if (!parsedData || parsedData.length === 0) {
+          throw new Error("No lists found in uploaded file");
+        }
+  
+        for (const listExport of parsedData) {
+          // Access the data correctly from the parsed structure
+          const listData = listExport.value;
+          
+          if (!listData?.listCode || !listData?.listType) {
+            console.error('Invalid list structure:', listData);
+            continue;
+          }
+  
+          await saveListFromImportedData(listData);
+        }
+        
+        console.log('All lists saved successfully!');
+        onClose(); // Close modal after successful save
+      } catch (error) {
+        console.error('Error saving lists:', error);
+        setError(error.message);
+      }
+    };
   
   
 
