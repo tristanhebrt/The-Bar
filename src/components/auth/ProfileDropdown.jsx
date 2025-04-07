@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
-import ImportListModal from "./ImportListModal.jsx"; // We'll create this component next
+import ImportListModal from "./ImportListModal.jsx"; // Modal to import lists
+import AdminAddListModal from "../utils/AdminAddListModal.jsx"; // Modal for admins to add lists
 
 const ProfileDropdown = ({ userData }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [isAdminAddModalOpen, setIsAdminAddModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true); // Track image loading
 
   const toggleDropdown = () => {
@@ -20,6 +22,11 @@ const ProfileDropdown = ({ userData }) => {
 
   const handleImportClick = () => {
     setIsImportModalOpen(true);
+    setIsDropdownOpen(false);
+  };
+
+  const handleAdminAddListClick = () => {
+    setIsAdminAddModalOpen(true);
     setIsDropdownOpen(false);
   };
 
@@ -38,6 +45,9 @@ const ProfileDropdown = ({ userData }) => {
         {isDropdownOpen && (
           <DropdownMenu>
             <DropdownItem onClick={handleImportClick}>Import List</DropdownItem>
+            {userData?.isAdmin && (
+              <DropdownItem onClick={handleAdminAddListClick}>Add List (Admin)</DropdownItem>
+            )}
             <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
           </DropdownMenu>
         )}
@@ -45,6 +55,10 @@ const ProfileDropdown = ({ userData }) => {
 
       {isImportModalOpen && (
         <ImportListModal onClose={() => setIsImportModalOpen(false)} />
+      )}
+      
+      {isAdminAddModalOpen && (
+        <AdminAddListModal onClose={() => setIsAdminAddModalOpen(false)} />
       )}
     </>
   );
@@ -92,7 +106,7 @@ const DropdownMenu = styled.div`
   background: rgba(0, 0, 0, 0.8);
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.8);
   padding: 0.25rem;
-  width: 110px;
+  width: auto; /* Adjusted width for admin option */
   z-index: 100;
   font-family: var(--text-font);
 `;

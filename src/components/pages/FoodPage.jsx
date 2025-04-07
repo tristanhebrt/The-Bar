@@ -7,10 +7,9 @@ import {
   ALORA_SHARING_BOARDS, 
   ALORA_MAINS 
 } from "../lists/foods/aloraFoods";
-import DeleteList from "../utils/DeleteList";
 
-// Import Firestore and the modular functions
-import { firestore, deleteFoodList } from "../../firebase";
+// Import Firestore
+import { firestore } from "../../firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 
 const FoodPage = () => {
@@ -18,7 +17,7 @@ const FoodPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Real-time listener for foodLists collection using modular API
+  // Real-time listener for foodLists collection
   useEffect(() => {
     const colRef = collection(firestore, "foodLists");
     const unsubscribe = onSnapshot(
@@ -39,17 +38,6 @@ const FoodPage = () => {
 
     return () => unsubscribe();
   }, []);
-
-  const handleDelete = async (listId) => {
-    try {
-      await deleteFoodList(listId);
-      setImportedFoods((prevFoods) =>
-        prevFoods.filter((list) => list.id !== listId)
-      );
-    } catch (err) {
-      console.error("Error deleting food list:", err);
-    }
-  };
 
   const allFoods = [
     ...ALORA_APPETIZERS,
@@ -74,9 +62,8 @@ const FoodPage = () => {
 
       {importedFoods.length > 0 &&
         importedFoods.map((list) => (
-          <div key={list.id} style={{ position: "relative" }}>
+          <div key={list.id}>
             <FoodCardDisplay mainTitle={list.listName} foodList={list.items || []} />
-            <DeleteList listId={list.id} onDelete={() => handleDelete(list.id)} />
           </div>
         ))}
     </>

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Checklist from "../lists/prep/Checklist";
-import DeleteList from "../utils/DeleteList";
 import { PREP_STEPS } from "../lists/prep/prepGuide";
 import { CLOSE_STEPS } from "../lists/prep/closeGuide";
 
 // Firebase imports
-import { firestore, deleteChecklist } from "../../firebase";
+import { firestore } from "../../firebase";
 import { collection, onSnapshot } from "firebase/firestore";
 
 const ChecklistPage = () => {
@@ -37,15 +36,6 @@ const ChecklistPage = () => {
     return () => unsubscribe(); // Cleanup on unmount
   }, []);
 
-  const handleDelete = async (listId) => {
-    try {
-      await deleteChecklist(listId); // Deletes from Firestore
-      // No need to manually update state—Firestore listener updates it automatically
-    } catch (err) {
-      console.error("Error deleting checklist:", err);
-    }
-  };
-
   const renderChecklist = (dataList, checklistTitle) => (
     <Checklist
       key={checklistTitle}
@@ -65,15 +55,13 @@ const ChecklistPage = () => {
       {renderChecklist(CLOSE_STEPS, "Bar Closing Guide")}
 
       {importedChecklists.map((list) => (
-        <div key={list.id} style={{ position: "relative" }}>
-          <Checklist
-            dataList={list.items || []}
-            checklistTitle={list.listName}
-            isExpanded={expandedChecklist === list.listName}
-            setIsExpanded={setExpandedChecklist}
-          />
-          <DeleteList listId={list.id} onDelete={() => handleDelete(list.id)} />
-        </div>
+        <Checklist
+          key={list.id}
+          dataList={list.items || []}
+          checklistTitle={list.listName}
+          isExpanded={expandedChecklist === list.listName}
+          setIsExpanded={setExpandedChecklist}
+        />
       ))}
     </>
   );

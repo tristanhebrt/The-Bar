@@ -1,97 +1,94 @@
-// ImportListModal.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { 
-  saveCocktailList, 
-  saveFoodList, 
-  saveWineList, 
-  saveBeerList, 
-  saveChecklist 
-} from "../../firebase";
+import { getFirestore, collection, getDocs } from "firebase/firestore";  // Modular SDK imports
+import { getUserData, saveListFromImportedData, auth } from "../../firebase"; // Adjust the import
 
 const ImportListModal = ({ onClose, onImportSuccess }) => {
-  const [file, setFile] = useState(null);
+  const [availableLists, setAvailableLists] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [userAllowedLists, setUserAllowedLists] = useState([]);
 
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
-  };
+  const db = getFirestore(); // Get Firestore instance
 
-  const handleImport = () => {
-    if (!file) {
-      alert("Please select a file to import.");
-      return;
-    }
-  
-    const reader = new FileReader();
-  
-    reader.onload = function (e) {
+  // Fetch available lists and user's allowed lists from Firestore
+  useEffect(() => {
+    const fetchAvailableLists = async () => {
       try {
-        const fileContent = e.target.result;
-        const modifiedContent = fileContent.replace(
-          /^\s*export\s+const\s+(\w+)\s*=\s*/m,
-          "const __importedList__ = "
-        ).trim();
-  
-        const wrappedCode = `(function() { ${modifiedContent}\n return __importedList__; })()`;
-        const importedObject = new Function("return " + wrappedCode)();
-  
-        // Determine the correct function to call based on list type
-        if (
-          importedObject &&
-          importedObject.listType &&
-          importedObject.listName &&
-          Array.isArray(importedObject.items)
-        ) {
-          switch (importedObject.listType) {
-            case "cocktails":
-              saveCocktailList(importedObject);
-              break;
-            case "food":
-              saveFoodList(importedObject);
-              break;
-            case "wine":
-              saveWineList(importedObject);
-              break;
-            case "beer":
-              saveBeerList(importedObject);
-              break;
-            case "checklist":
-              saveChecklist(importedObject);
-              break;
-            default:
-              alert("Unknown list type. Please ensure the file contains a valid list.");
-              return;
-          }
-  
-          if (typeof onImportSuccess === "function") {
-            onImportSuccess(); // Trigger refresh
-          }
-          alert("List imported successfully!");
-          onClose();
-        } else {
-          alert("Invalid list format. Please ensure the file contains a valid list.");
+        const user = auth.currentUser;
+        if (!user) throw new Error("No user signed in");
+
+        // Fetch user data to get the allowed list codes
+        const userData = await getUserData(user.uid);
+        if (userData) {
+          setUserAllowedLists(userData.allowedLists || []); // allowedLists now contain listCodes
+          console.log("User Allowed Lists: ", userData.allowedLists); // Log the allowed lists
         }
+
+        // Fetch available lists from Firestore
+        const listsSnapshot = await getDocs(collection(db, "lists"));  // Using modular SDK
+        const listsData = listsSnapshot.docs.map(doc => ({
+          listCode: doc.id,        // Assuming each document's ID is the listCode
+          listName: doc.data().name, // Assuming 'name' field is the name of the list
+        }));
+
+        setAvailableLists(listsData);
+        setLoading(false);
       } catch (error) {
-        console.error("Import error:", error);
-        alert("Error importing list. Please ensure the file is valid.");
+        setError("Error fetching available lists: " + error.message);
+        setLoading(false);
       }
     };
+
+    fetchAvailableLists();
+  }, [db]);
+
+  // Handle import action when the user clicks 'Import'
+  const handleImport = async (listData) => {
+    const user = auth.currentUser;
+    if (!user) {
+      alert("You must be logged in to import lists.");
+      return;
+    }
+
+    // Ensure listData contains the required fields
+    const { listCode, listType, items, listName } = listData;
+
+    // Import the list
+    try {
+      const success = await saveListFromImportedData(user, { listCode, listType, items, listName });
   
-    reader.onerror = function () {
-      alert("File read error");
-    };
-  
-    reader.readAsText(file);
+      if (success) {
+        onImportSuccess();  // Trigger any action on successful import (e.g., refresh)
+        onClose();  // Close the modal after successful import
+      } else {
+        alert("Error importing the list.");
+      }
+    } catch (error) {
+      alert("Error importing the list: " + error.message);
+    }
   };
-  
 
   return (
     <ModalOverlay>
       <ModalContainer>
-        <h2>Import Cocktail List</h2>
-        <FileInput type="file" onChange={handleFileChange} accept=".js" />
+        <h2>Import a List</h2>
+        {loading && <p>Loading available lists...</p>}
+        {error && <p>{error}</p>}
+        <ListContainer>
+          {availableLists.map((list) => (
+            <ListItem key={list.listCode}>
+              <span>{list.listName}</span>
+              <Button
+                onClick={() => handleImport(list)}
+                disabled={!userAllowedLists.includes(list.listCode)} // Disable button if listCode is not allowed
+              >
+                Import
+              </Button>
+            </ListItem>
+          ))}
+        </ListContainer>
         <ButtonsContainer>
-          <Button onClick={handleImport}>Import</Button>
           <Button onClick={onClose}>Cancel</Button>
         </ButtonsContainer>
       </ModalContainer>
@@ -123,9 +120,14 @@ const ModalContainer = styled.div`
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
 `;
 
-const FileInput = styled.input`
-  width: 100%;
+const ListContainer = styled.div`
   margin-bottom: 20px;
+`;
+
+const ListItem = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
 `;
 
 const ButtonsContainer = styled.div`
@@ -146,11 +148,8 @@ const Button = styled.button`
     background-color: #0056b3;
   }
 
-  &:nth-child(2) {
+  &:disabled {
     background-color: #ccc;
-
-    &:hover {
-      background-color: #888;
-    }
+    cursor: not-allowed;
   }
 `;
