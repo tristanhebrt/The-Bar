@@ -58,30 +58,40 @@ const AdminAddListModal = ({ onClose }) => {
     };
   
     const handleAddList = async () => {
-      try {
-        if (!parsedData || parsedData.length === 0) {
-          throw new Error("No lists found in uploaded file");
-        }
-  
-        for (const listExport of parsedData) {
-          // Access the data correctly from the parsed structure
-          const listData = listExport.value;
-          
-          if (!listData?.listCode || !listData?.listType) {
-            console.error('Invalid list structure:', listData);
-            continue;
+        try {
+          if (!parsedData?.length) throw new Error("No valid data found");
+      
+          for (const listExport of parsedData) {
+            const listData = listExport.value;
+            
+            // Validate required fields
+            if (!listData?.listCode || !listData?.listType || !listData?.listName) {
+              console.error('Invalid list structure:', listData);
+              continue;
+            }
+      
+            // Validate items array
+            if (!Array.isArray(listData.items) || listData.items.length === 0) {
+              console.error('List contains no items:', listData.listName);
+              continue;
+            }
+      
+            // Validate listType values
+            if (!['beer', 'wine'].includes(listData.listType)) {
+              console.error('Invalid list type:', listData.listType);
+              continue;
+            }
+      
+            await saveListFromImportedData(listData);
           }
-  
-          await saveListFromImportedData(listData);
+          
+          console.log('All lists saved successfully!');
+          onClose();
+        } catch (error) {
+          console.error('Error saving lists:', error);
+          setError(error.message);
         }
-        
-        console.log('All lists saved successfully!');
-        onClose(); // Close modal after successful save
-      } catch (error) {
-        console.error('Error saving lists:', error);
-        setError(error.message);
-      }
-    };
+      };
   
   
 

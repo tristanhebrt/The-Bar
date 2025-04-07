@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 import { 
   getFirestore, 
+  writeBatch,
   collection, 
   addDoc, 
   doc, 
@@ -32,39 +33,52 @@ const firestore = getFirestore(app);
 // Function to save a list after extracting data from an imported file
 export const saveListFromImportedData = async (listData) => {
   try {
-    // Validate required fields
-    if (!listData?.listCode || !listData?.listType) {
-      throw new Error('Missing required listCode or listType');
-    }
+    const { listCode, listType, listName, items } = listData;
 
-    const { listCode, listType, items, listName } = listData;
-    console.log('Saving list with code:', listCode); // Debug log
-
-    // Check for existing list
+    // 1. Create or update list document with listCode as ID
     const listsRef = collection(db, 'lists');
-    const q = query(listsRef, where('listCode', '==', listCode));
-    const snapshot = await getDocs(q);
+    const listRef = doc(listsRef, listCode);
+    
+    await setDoc(listRef, {
+      listCode,
+      ownerId: auth.currentUser.uid,
+      createdAt: serverTimestamp()
+    }, { merge: true });
 
-    // Get or create parent document
-    const parentDocRef = snapshot.empty 
-      ? await addDoc(listsRef, { listCode, createdAt: serverTimestamp() })
-      : snapshot.docs[0].ref;
-
-    // Update type subcollection
-    const typeRef = doc(collection(parentDocRef, 'types'), listType);
-    await setDoc(typeRef, {
-      listName,
-      listType,
-      items,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp()
+    // 2. Create type collection and listName collection
+    const typeRef = doc(collection(listRef, 'types'), listType);
+    const listNameCollectionRef = collection(typeRef, listName);
+    
+    // 3. Add items using batch
+    const batch = writeBatch(db);
+    
+    items.forEach(item => {
+      const itemId = sanitizeId(item.title);
+      const itemRef = doc(listNameCollectionRef, itemId);
+      batch.set(itemRef, {
+        ...item,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      });
     });
 
+    await batch.commit();
     return true;
+
   } catch (error) {
-    console.error('Error saving list:', error);
+    console.error("Error saving list:", error);
     throw error;
   }
+};
+
+// Helper function to create valid Firestore IDs
+const sanitizeId = (title) => {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9 -]/g, '') // Remove invalid chars
+    .replace(/\s+/g, '_')        // Replace spaces with underscores
+    .replace(/-+/g, '_')         // Replace dashes with underscores
+    .substring(0, 1500);         // Truncate to Firestore's max ID length
 };
 
 // Updated file processing function
