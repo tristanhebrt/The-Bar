@@ -24,6 +24,7 @@ const Login = () => {
           isAdmin: false,
           approved: true,
           allowedLists: [],
+          openedLists: [],
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()
         });

@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, onAuthStateChanged, GoogleAuthProvider } from "firebase/auth";
 import { 
   getFirestore, 
   writeBatch,
@@ -47,12 +47,14 @@ export const saveListFromImportedData = async (listData) => {
       createdAt: serverTimestamp()  // Timestamp for the list itself
     }, { merge: true });
 
-    // 2. Create the 'types' collection and add the listName document under it
+    // 2. Create the 'types' collection and add a new document with a generated ID
     const typesRef = collection(listRef, 'types');
-    const listNameDocRef = doc(typesRef, listName);
     
+    // Generate a unique document ID for the 'types' document
+    const newTypeDocRef = doc(typesRef); // This will automatically generate a unique ID
+
     // 3. Save the listName document with items field containing an array (without timestamps)
-    await setDoc(listNameDocRef, {
+    await setDoc(newTypeDocRef, {
       listType,
       listName,
       createdAt: serverTimestamp(),  // Timestamp for the listName document
@@ -98,19 +100,20 @@ export const saveListsFromFile = async (importedFile) => {
 
 export const getUserData = async (userId) => {
   try {
-    const userRef = doc(db, "users", userId);
+    const userRef = doc(firestore, "users", userId);
     const userDoc = await getDoc(userRef);
     if (userDoc.exists()) {
       return userDoc.data();
     } else {
       console.log("No user data found");
-      return null;
+      return null;  // If the user doesn't exist, return null
     }
   } catch (error) {
     console.error("Error fetching user data:", error);
     throw error;
   }
 };
+
 
 export const updateUserPermissions = async (userId, newAllowedLists) => {
   try {

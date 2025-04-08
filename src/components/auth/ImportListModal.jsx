@@ -4,7 +4,7 @@ import { db, getUserData, auth } from "../../firebase";
 import { collection, getDocs } from "firebase/firestore";
 import { onImportSuccess } from "../utils/onImportSuccess";
 
-const ImportListModal = ({ onClose, onImportSuccess }) => {
+const ImportListModal = ({ onClose }) => {
   const [availableLists, setAvailableLists] = useState([]);
   const [filteredLists, setFilteredLists] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -32,6 +32,7 @@ const ImportListModal = ({ onClose, onImportSuccess }) => {
           lists.push({
             listCode,
             listName: listData.listName || listCode,
+            listType: listData.listType, // Ensure this is included in the list data
             ownerId: listData.ownerId,
             hasAccess: allowedListCodes.includes(listCode) || 
                       listData.ownerId === user.uid ||
@@ -61,20 +62,34 @@ const ImportListModal = ({ onClose, onImportSuccess }) => {
 
   const handleImport = async (listCode) => {
     try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("Authentication required");
+  
       if (!userAllowedLists.includes(listCode)) {
         throw new Error("You don't have permission to import this list");
       }
-      // Create your imported list object; here we assume you retrieve listData somewhere:
+  
       const importedList = availableLists.find(list => list.listCode === listCode);
-      
-      // Call the onImportSuccess function with the imported list data.
-      onImportSuccess(importedList);
-      
-      onClose();
+  
+      if (importedList) {
+        console.log("Imported List:", importedList);
+  
+        await onImportSuccess(importedList, user.uid); 
+  
+        onClose(); 
+  
+        // 🔄 Instead of full refresh, re-fetch the lists
+        fetchData();
+      } else {
+        throw new Error("List not found");
+      }
     } catch (error) {
       setError(error.message);
     }
   };
+  
+  
+  
 
   return (
     <ModalOverlay>

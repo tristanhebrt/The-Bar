@@ -1,5 +1,5 @@
 export const ALORA_BEERS = {
-    listName: "Aloa Beers",
+    listName: "Alora Beers",
     listType: "beer",
     listCode: "aloraDataList",
     items:[
