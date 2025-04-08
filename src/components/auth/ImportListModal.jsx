@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { db, getUserData, auth } from "../../firebase";
-import { collection, doc, getDocs } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
+import { onImportSuccess } from "../utils/onImportSuccess";
 
 const ImportListModal = ({ onClose, onImportSuccess }) => {
   const [availableLists, setAvailableLists] = useState([]);
+  const [filteredLists, setFilteredLists] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userAllowedLists, setUserAllowedLists] = useState([]);
@@ -15,12 +18,10 @@ const ImportListModal = ({ onClose, onImportSuccess }) => {
         const user = auth.currentUser;
         if (!user) throw new Error("Authentication required");
 
-        // Get fresh user permissions
         const userData = await getUserData(user.uid);
         const allowedListCodes = userData?.allowedLists || [];
         setUserAllowedLists(allowedListCodes);
 
-        // Fetch all lists
         const lists = [];
         const listsSnapshot = await getDocs(collection(db, "lists"));
         
@@ -39,6 +40,7 @@ const ImportListModal = ({ onClose, onImportSuccess }) => {
         }
 
         setAvailableLists(lists);
+        setFilteredLists(lists);
         setLoading(false);
       } catch (error) {
         setError(error.message);
@@ -49,14 +51,25 @@ const ImportListModal = ({ onClose, onImportSuccess }) => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const filtered = availableLists.filter((list) =>
+      list.listCode.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      list.listName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    setFilteredLists(filtered);
+  }, [searchQuery, availableLists]);
+
   const handleImport = async (listCode) => {
     try {
       if (!userAllowedLists.includes(listCode)) {
         throw new Error("You don't have permission to import this list");
       }
+      // Create your imported list object; here we assume you retrieve listData somewhere:
+      const importedList = availableLists.find(list => list.listCode === listCode);
       
-      // Your import logic here
-      onImportSuccess();
+      // Call the onImportSuccess function with the imported list data.
+      onImportSuccess(importedList);
+      
       onClose();
     } catch (error) {
       setError(error.message);
@@ -67,18 +80,20 @@ const ImportListModal = ({ onClose, onImportSuccess }) => {
     <ModalOverlay>
       <ModalContainer>
         <h2>Available Lists</h2>
+        <SearchInput
+          type="text"
+          placeholder="Search by code or name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
         {loading && <LoadingText>Loading lists...</LoadingText>}
         {error && <ErrorText>{error}</ErrorText>}
-
+        
         <ListContainer>
-          {availableLists.map((list) => (
+          {filteredLists.map((list) => (
             <ListItem key={list.listCode}>
               <ListInfo>
                 <ListName>{list.listName}</ListName>
-                <ListMeta>
-                  Owner: {list.ownerId?.substring(0, 8)}... • 
-                  Code: {list.listCode}
-                </ListMeta>
               </ListInfo>
               <ImportButton
                 onClick={() => handleImport(list.listCode)}
@@ -98,6 +113,8 @@ const ImportListModal = ({ onClose, onImportSuccess }) => {
     </ModalOverlay>
   );
 };
+export default ImportListModal;
+
 // Styled Components
 const ModalOverlay = styled.div`
   position: fixed;
@@ -113,27 +130,42 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContainer = styled.div`
-  background: white;
+  background: var(--white);
   padding: 2rem;
   border-radius: 8px;
   width: 90%;
   max-width: 600px;
   max-height: 80vh;
   overflow-y: auto;
+  color: var(--highlight1);
+  font-family: var(--text-font);
+`;
+
+const LoadingText = styled.p`
+  color: var(--highlight3);
+  text-align: center;
+  margin: 2rem 0;
+`;
+
+const ErrorText = styled.p`
+  color: var(--dark-red);
+  padding: 1rem;
+  background-color: #f8d7da;
+  border-radius: 4px;
+  margin: 1rem 0;
 `;
 
 const ListContainer = styled.div`
-  margin: 1.5rem 0;
+  margin: 1rem 0;
+  gap: 1rem;
 `;
 
 const ListItem = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  background: #f8f9fa;
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--light-grey);
 `;
 
 const ListInfo = styled.div`
@@ -142,25 +174,20 @@ const ListInfo = styled.div`
 
 const ListName = styled.div`
   font-weight: 500;
-  margin-bottom: 0.25rem;
-`;
-
-const ListMeta = styled.div`
-  font-size: 0.875rem;
-  color: #6c757d;
 `;
 
 const ImportButton = styled.button`
   padding: 0.5rem 1rem;
-  background-color: ${props => props.disabled ? "#cccccc" : "#007bff"};
-  color: white;
+  background-color: ${({ disabled }) => (disabled ? "var(--highlight3)" : "var(--highlight1)")};
+  color: var(--white);
+  font-family: var(--text-font);
   border: none;
-  border-radius: 4px;
-  cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
+  
+  cursor: ${({ disabled }) => (disabled ? "not-allowed" : "pointer")};
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: ${props => props.disabled ? "#cccccc" : "#0056b3"};
+    background-color: ${({ disabled }) => (disabled ? "var(--highlight3)" : "var(--highlight2)")};
   }
 `;
 
@@ -172,30 +199,28 @@ const ButtonContainer = styled.div`
 
 const ActionButton = styled.button`
   padding: 0.5rem 1rem;
-  background-color: #6c757d;
-  color: white;
+  background-color: var(--black);
+  color: var(--white);
+  font-family: var(--text-font);
   border: none;
-  border-radius: 4px;
+
   cursor: pointer;
   transition: background-color 0.2s;
 
   &:hover {
-    background-color: #5a6268;
+    background-color: var(--highlight1);
   }
 `;
+const SearchInput = styled.input`
+width: 100%;
+  padding: 5px 10px;
+  font-family: var(--text-font);
+  font-size: 1rem;
+  background: var(--black);
+  border: 1px solid var(--primary);
 
-const LoadingText = styled.p`
-  color: #6c757d;
-  text-align: center;
-  margin: 2rem 0;
+  &:focus {
+    outline: none;
+    border-color: var(--highlight2);
+  }
 `;
-
-const ErrorText = styled.p`
-  color: #dc3545;
-  padding: 1rem;
-  background-color: #f8d7da;
-  border-radius: 4px;
-  margin: 1rem 0;
-`;
-
-export default ImportListModal;

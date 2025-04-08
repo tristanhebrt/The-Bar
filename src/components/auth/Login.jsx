@@ -22,7 +22,7 @@ const Login = () => {
           displayName: user.displayName,
           photoURL: user.photoURL,
           isAdmin: false,
-          approved: false,
+          approved: true,
           allowedLists: [],
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp()

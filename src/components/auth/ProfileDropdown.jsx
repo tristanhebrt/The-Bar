@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import styled, { keyframes } from "styled-components";
 import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
-import ImportListModal from "./ImportListModal.jsx"; // Modal to import lists
-import AdminAddListModal from "../utils/AdminAddListModal.jsx"; // Modal for admins to add lists
-import AdminPermissionManagerModal from "../utils/AdminPermissionManager.jsx"; // Add this import
+import ImportListModal from "./ImportListModal.jsx";
+import AdminAddListModal from "../utils/AdminAddListModal.jsx";
+import AdminPermissionManagerModal from "../utils/AdminPermissionManager.jsx";
+import { onImportSuccess } from "../utils/onImportSuccess";
 
 const ProfileDropdown = ({ userData }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [isAdminAddModalOpen, setIsAdminAddModalOpen] = useState(false);
-  const [isPermissionManagerOpen, setIsPermissionManagerOpen] = useState(false); // New state
-  const [isLoading, setIsLoading] = useState(true); // Track image loading
+  const [isPermissionManagerOpen, setIsPermissionManagerOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -40,13 +41,13 @@ const ProfileDropdown = ({ userData }) => {
   return (
     <>
       <ProfileContainer onClick={toggleDropdown}>
-        {isLoading && <Spinner />} {/* Show loading animation */}
+        {isLoading && <Spinner />}
         <ProfileImage
-          src={userData?.profilePic || "/images/default-profile.png"}
+          src={userData?.photoURL || "/assets/default-profile.png"}
           alt="User Profile"
           onLoad={() => setIsLoading(false)}
           onError={() => setIsLoading(false)}
-          $isLoading={isLoading} // Use $ prefix
+          $isLoading={isLoading}
         />
 
         {isDropdownOpen && (
@@ -68,7 +69,10 @@ const ProfileDropdown = ({ userData }) => {
       </ProfileContainer>
 
       {isImportModalOpen && (
-        <ImportListModal onClose={() => setIsImportModalOpen(false)} />
+        <ImportListModal
+          onClose={() => setIsImportModalOpen(false)}
+          onImportSuccess={onImportSuccess} // Pass the imported success function here
+        />
       )}
       
       {isAdminAddModalOpen && (

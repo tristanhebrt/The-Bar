@@ -32,7 +32,7 @@ const UserProfile = () => {
   return user ? (
     <ProfileCard>
       <ProfileDropdown userData={userData} />
-      <UserName>Logged-in as {getFirstName(userData?.name)}</UserName>
+      <UserName>Logged-in as {getFirstName(userData?.displayName)}</UserName>
     </ProfileCard>
   ) : (
     <p style={{ textAlign: "center", marginTop: "20px", color: "gray" }}>

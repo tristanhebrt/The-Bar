@@ -1,98 +1,166 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { getUserData, updateUserPermissions } from "../../firebase";
+import { db, updateUserPermissions } from "../../firebase";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 const AdminPermissionManagerModal = ({ isOpen, onClose }) => {
-  const [userId, setUserId] = useState("");
-  const [listCode, setListCode] = useState("");
-  const [currentLists, setCurrentLists] = useState([]);
+  const [userSearchTerm, setUserSearchTerm] = useState("");
+  const [listSearchTerm, setListSearchTerm] = useState("");
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedList, setSelectedList] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [lists, setLists] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const loadUserPermissions = async () => {
-    try {
+  // Fetch all users and lists
+  useEffect(() => {
+    const fetchData = async () => {
       setLoading(true);
-      setError(null);
-      const userData = await getUserData(userId);
-      setCurrentLists(userData?.allowedLists || []);
-    } catch (error) {
-      setError("Error loading permissions: " + error.message);
-    } finally {
+      try {
+        // Fetch users with email validation
+        const usersQuery = query(
+          collection(db, "users"),
+          where("email", ">=", "")
+        );
+        const usersSnapshot = await getDocs(usersQuery);
+        const usersData = usersSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setUsers(usersData);
+
+        // Fetch lists
+        const listsSnapshot = await getDocs(collection(db, "lists"));
+        const listsData = listsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setLists(listsData);
+      } catch (error) {
+        setError("Failed to load data: " + error.message);
+      }
       setLoading(false);
-    }
-  };
+    };
+
+    if (isOpen) fetchData();
+  }, [isOpen]);
 
   const handleAddPermission = async () => {
     try {
-      if (!userId || !listCode) {
-        throw new Error("User ID and List Code are required");
+      if (!selectedUser || !selectedList) {
+        throw new Error("Please select both a user and a list");
       }
+  
+      // Create updated allowed lists array
+      const updatedLists = Array.from(
+        new Set([...selectedUser.allowedLists, selectedList.id])
+      );
+  
+      // Update permissions in Firestore
+      await updateUserPermissions(selectedUser.id, updatedLists);
       
-      const newLists = [...new Set([...currentLists, listCode])];
-      await updateUserPermissions(userId, newLists);
-      await loadUserPermissions();
-      setListCode(""); // Clear input after success
+      // Update local state
+      setUsers(users.map(user => 
+        user.id === selectedUser.id 
+          ? { ...user, allowedLists: updatedLists }
+          : user
+      ));
+      
+      setError(null);
     } catch (error) {
-      setError("Error updating permissions: " + error.message);
+      setError(error.message);
     }
   };
-
-  if (!isOpen) return null;
 
   return (
     <ModalOverlay>
       <ModalContainer>
         <ModalHeader>
-          <h2>Manage User Permissions</h2>
+          <h2>Manage Permissions</h2>
           <CloseButton onClick={onClose}>&times;</CloseButton>
         </ModalHeader>
 
         <ContentContainer>
-          <InputGroup>
-            <Label>User ID:</Label>
-            <Input
-              type="text"
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
-              placeholder="Enter user ID"
+
+
+          {/* User Search Section */}
+          <Section>
+            <SectionTitle>Search Users by Email</SectionTitle>
+            <SearchInput
+              placeholder="Type to search users..."
+              value={userSearchTerm}
+              onChange={(e) => setUserSearchTerm(e.target.value)}
             />
-            <ActionButton onClick={loadUserPermissions} disabled={!userId}>
-              {loading ? "Loading..." : "Load Permissions"}
-            </ActionButton>
-          </InputGroup>
-
-          <InputGroup>
-            <Label>List Code:</Label>
-            <Input
-              type="text"
-              value={listCode}
-              onChange={(e) => setListCode(e.target.value)}
-              placeholder="Enter list code"
-            />
-            <ActionButton onClick={handleAddPermission} disabled={!listCode}>
-              Add Permission
-            </ActionButton>
-          </InputGroup>
-
-          {error && <ErrorText>{error}</ErrorText>}
-
-          <PermissionsList>
-            <h3>Current Permissions:</h3>
-            {currentLists.length > 0 ? (
-              <List>
-                {currentLists.map((code) => (
-                  <ListItem key={code}>{code}</ListItem>
+            <UserList show={userSearchTerm.length > 0}>
+                {users
+                    .filter(user => user.email.toLowerCase().includes(userSearchTerm.toLowerCase()))
+                    .map(user => (
+                    <UserItem 
+                        key={user.id}
+                        onClick={() => setSelectedUser(user)}
+                        $selected={selectedUser?.id === user.id}
+                    >
+                        <UserEmail>{user.email}</UserEmail>
+                        <UserInfo>
+                        <div>Access: {user.allowedLists?.length || 0} lists</div>
+                        </UserInfo>
+                    </UserItem>
                 ))}
-              </List>
-            ) : (
-              <EmptyState>No permissions assigned yet</EmptyState>
-            )}
-          </PermissionsList>
+            </UserList>
+          </Section>
+
+          {/* List Search Section */}
+          <Section>
+            <SectionTitle>Search Lists by Code</SectionTitle>
+            <SearchInput
+              placeholder="Type to search lists..."
+              value={listSearchTerm}
+              onChange={(e) => setListSearchTerm(e.target.value)}
+            />
+            <ListGrid show={listSearchTerm.length > 0}>
+                {lists
+                    .filter(list => list.id.toLowerCase().includes(listSearchTerm.toLowerCase()))
+                    .map(list => (
+                    <ListCode 
+                        key={list.id}
+                        onClick={() => setSelectedList(list)}
+                        $selected={selectedList?.id === list.id}
+                    >
+                        {list.id}
+                    </ListCode>
+                ))}
+            </ListGrid>
+          </Section>
+
+          {/* Selected Items Display */}
+          <SelectionSummary>
+            <SelectedItem>
+              <Label>Selected User:</Label>
+              <Value>{selectedUser?.email || "None"}</Value>
+            </SelectedItem>
+            <SelectedItem>
+              <Label>Selected List:</Label>
+              <Value>{selectedList?.id || "None"}</Value>
+            </SelectedItem>
+          </SelectionSummary>
+
+          {/* Action Section */}
+          <ActionSection>
+            {error && <ErrorText>{error}</ErrorText>}
+            <ConfirmButton 
+              onClick={handleAddPermission}
+              disabled={!selectedUser || !selectedList}
+            >
+              Confirm Permission
+            </ConfirmButton>
+          </ActionSection>
         </ContentContainer>
       </ModalContainer>
     </ModalOverlay>
   );
 };
+export default AdminPermissionManagerModal;
 
 // Styled Components
 const ModalOverlay = styled.div`
@@ -109,12 +177,14 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContainer = styled.div`
-  background: white;
+  background: var(--white);
   border-radius: 8px;
   width: 90%;
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
+  color: var(--highlight1);
+  font-family: var(--text-font);
 `;
 
 const ModalHeader = styled.div`
@@ -122,7 +192,8 @@ const ModalHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--light-grey);
+  font-family: var(--title-font);
 `;
 
 const CloseButton = styled.button`
@@ -131,10 +202,10 @@ const CloseButton = styled.button`
   font-size: 1.5rem;
   cursor: pointer;
   padding: 0 0.5rem;
-  color: #666;
+  color: var(--highlight3);
 
   &:hover {
-    color: #333;
+    color: var(--highlight2);
   }
 `;
 
@@ -142,83 +213,127 @@ const ContentContainer = styled.div`
   padding: 1.5rem;
 `;
 
-const InputGroup = styled.div`
-  margin-bottom: 1.5rem;
+const Section = styled.div`
+  margin-bottom: 2rem;
 `;
 
-const Label = styled.label`
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-`;
-
-const Input = styled.input`
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+const SectionTitle = styled.h3`
+  color: var(--primary);
   margin-bottom: 1rem;
-  font-size: 1rem;
-
-  &:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-  }
+  font-family: var(--title-font);
 `;
 
-const ActionButton = styled.button`
-  width: 100%;
-  padding: 0.75rem;
-  background-color: ${props => props.disabled ? "#cccccc" : "#007bff"};
-  color: white;
-  border: none;
+const SearchInput = styled.input`
+  padding: 5px;
+    font-family: var(--title-font);
+    font-size: 1.25rem;
+    border: 1px solid var(--primary);
+    width: 250px;
+    margin-bottom: 1rem;
+`;
+
+const UserList = styled.div`
+  display: ${({ show }) => (show ? "block" : "none")};
+  max-height: 300px;
+  overflow-y: auto;
+`;
+
+const UserItem = styled.div`
+  padding: 1rem;
+  border: 1px solid ${props => props.$selected ? "var(--highlight1)" : "var(--light-grey)"};
+  margin-bottom: 0.5rem;
   border-radius: 4px;
-  cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
-  font-size: 1rem;
-  transition: background-color 0.2s;
+  cursor: pointer;
+  background-color: ${props => props.$selected ? "var(--highlighted-box)" : "var(--white)"};
+  transition: all 0.2s;
 
   &:hover {
-    background-color: ${props => props.disabled ? "#cccccc" : "#0056b3"};
+    background-color: ${props => props.$selected ? "var(--highlighted-box)" : "var(--secondary)"};
   }
 `;
 
-const PermissionsList = styled.div`
-  margin-top: 1.5rem;
+const UserEmail = styled.span`
+  font-family: var(--text-font);
+  color: var(--highlight2);
 `;
 
-const List = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  border: 1px solid #eee;
-  border-radius: 4px;
+const UserInfo = styled.div`
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--highlight3);
 `;
 
-const ListItem = styled.li`
-  padding: 0.75rem;
-  border-bottom: 1px solid #eee;
-  font-family: monospace;
-
-  &:last-child {
-    border-bottom: none;
-  }
+const ListGrid = styled.div`
+  display: ${({ show }) => (show ? "grid" : "none")};
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  max-height: 300px;
+  overflow-y: auto;
 `;
 
-const EmptyState = styled.div`
+const ListCode = styled.div`
   padding: 1rem;
-  text-align: center;
-  color: #666;
-  border: 1px dashed #ddd;
+  border: 1px solid ${props => props.$selected ? "var(--highlight1)" : "var(--light-grey)"};
   border-radius: 4px;
+  cursor: pointer;
+  background-color: ${props => props.$selected ? "var(--highlighted-box)" : "var(--white)"};
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: ${props => props.$selected ? "var(--highlighted-box)" : "var(--secondary)"};
+  }
+`;
+
+const SelectionSummary = styled.div`
+  display: flex;
+  flex-direction: column;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 2rem;
+`;
+
+const SelectedItem = styled.div`
+  padding: 1rem;
+  background: var(--secondary);
+  border-radius: 4px;
+`;
+
+const Label = styled.div`
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--highlight2);
+`;
+
+const Value = styled.div`
+  font-family: var(--text-font);
+  font-size: 1.1rem;
+`;
+
+const ActionSection = styled.div`
+  margin-top: 2rem;
+  text-align: center;
 `;
 
 const ErrorText = styled.div`
-  color: #dc3545;
+  color: var(--dark-red);
   padding: 1rem;
   margin: 1rem 0;
   background-color: #f8d7da;
   border-radius: 4px;
+  font-family: var(--text-font);
 `;
 
-export default AdminPermissionManagerModal;
+const ConfirmButton = styled.button`
+  padding: 5px 10px;
+  font-family: var(--text-font);
+  font-size: 1.2rem;
+  background-color: ${props => props.disabled ? "var(--light-grey)" : "var(--highlight1)"};
+  color: var(--white);
+  border: none;
+  cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: ${props => props.disabled ? "var(--light-grey)" : "var(--highlight2)"};
+  }
+`;

@@ -135,11 +135,22 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContainer = styled.div`
-  background-color: white;
+  background-color: var(--white);
   padding: 20px;
   border-radius: 8px;
   width: 400px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  color: var(--highlight1);
+  font-family: var(--text-font);
+`;
+
+const ErrorText = styled.p`
+  color: var(--dark-red);
+  font-size: 14px;
+  margin-bottom: 10px;
+  background-color: #f8d7da;
+  padding: 10px;
+  border-radius: 4px;
 `;
 
 const InputContainer = styled.div`
@@ -147,10 +158,13 @@ const InputContainer = styled.div`
 `;
 
 const FileInput = styled.input`
+  width: 100%;
   padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--highlight3);
   border-radius: 4px;
+  font-size: 1rem;
+  background: var(--secondary);
+  color: var(--highlight1);
 `;
 
 const ButtonContainer = styled.div`
@@ -159,20 +173,20 @@ const ButtonContainer = styled.div`
 `;
 
 const Button = styled.button`
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  padding: 5px 10px;
+    font-family: var(--text-font);
+    font-size: 1.2rem;
+    background: var(--black);
+    color: var(--white);
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.1s ease;
 
-  &:hover {
-    background-color: #0056b3;
-  }
-`;
+    &:hover {
+        background: var(--highlight3);
+    }
 
-const ErrorText = styled.p`
-  color: red;
-  font-size: 14px;
-  margin-bottom: 10px;
+    &:active {
+        transform: scale(0.95);
+    }
 `;

@@ -12,7 +12,8 @@ import {
   query, 
   where, 
   getDocs 
-} from "firebase/firestore";import { getAnalytics } from "firebase/analytics";
+} from "firebase/firestore";
+import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDcpk1mhutCfMQrvW6vBKG_7Tr53T9vnDU",
@@ -43,27 +44,21 @@ export const saveListFromImportedData = async (listData) => {
     await setDoc(listRef, {
       listCode,
       ownerId: auth.currentUser.uid,
-      createdAt: serverTimestamp()
+      createdAt: serverTimestamp()  // Timestamp for the list itself
     }, { merge: true });
 
-    // 2. Create type collection and listName collection
-    const typeRef = doc(collection(listRef, 'types'), listType);
-    const listNameCollectionRef = collection(typeRef, listName);
+    // 2. Create the 'types' collection and add the listName document under it
+    const typesRef = collection(listRef, 'types');
+    const listNameDocRef = doc(typesRef, listName);
     
-    // 3. Add items using batch
-    const batch = writeBatch(db);
-    
-    items.forEach(item => {
-      const itemId = sanitizeId(item.title);
-      const itemRef = doc(listNameCollectionRef, itemId);
-      batch.set(itemRef, {
-        ...item,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp()
-      });
-    });
+    // 3. Save the listName document with items field containing an array (without timestamps)
+    await setDoc(listNameDocRef, {
+      listType,
+      listName,
+      createdAt: serverTimestamp(),  // Timestamp for the listName document
+      items: items // Store items array directly (without timestamps)
+    }, { merge: true });
 
-    await batch.commit();
     return true;
 
   } catch (error) {
