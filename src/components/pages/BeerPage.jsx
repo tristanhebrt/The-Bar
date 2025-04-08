@@ -3,6 +3,7 @@ import { firestore, auth } from "../../firebase"; // Assuming you're using Fires
 import { collection, getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
 import BeerCardDisplay from "../lists/beers/BeerCardDisplay.jsx"; // Assuming this component is for displaying each beer list
 import { onAuthStateChanged } from "firebase/auth";
+import styled from 'styled-components';
 
 const BeerPage = () => {
   const [beerLists, setBeerLists] = useState([]);
@@ -138,11 +139,17 @@ const BeerPage = () => {
     }
   };
   
+  const allBeers = [
+    ...beerLists.flatMap((list) => list.items || []),
+  ];
 
   return (
     <div>
       {error && <p>{error}</p>}
-      {beerLists.length === 0 && <p>No beer lists found.</p>}
+      {beerLists.length === 0 && <ImportAList>Import a list to get started</ImportAList>}
+
+      {/* Display all beers */}
+      <BeerCardDisplay mainTitle="All Beers" beerList={allBeers} />
 
       {beerLists.map((list) => (
         <div key={list.typeId}>
@@ -150,12 +157,13 @@ const BeerPage = () => {
             mainTitle={list.listName}
             beerList={list.items}
           />
-          <button
-            onClick={() => handleRemove(list.listCode, list.typeId)}
-            style={{ color: "red", backgroundColor: "transparent", border: "none", cursor: "pointer" }}
-          >
-            Remove
-          </button>
+          <RemoveButtonContainer>
+            <RemoveButton
+              onClick={() => handleRemove(list.listCode, list.typeId)}
+            >
+              Remove
+            </RemoveButton>
+          </RemoveButtonContainer>
         </div>
       ))}
     </div>
@@ -163,3 +171,42 @@ const BeerPage = () => {
 };
 
 export default BeerPage;
+
+// Styled Button Component
+const RemoveButton = styled.button`
+  padding: 5px 10px;
+  width: auto;
+  font-family: var(--text-font);
+  font-size: 1.2rem;
+  background: var(--dark-red);
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+      background: var(--highlight3);
+  }
+
+  &:active {
+      transform: scale(0.95);
+  }
+`;
+
+const RemoveButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+`;
+
+const ImportAList = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--dark-red);
+  font-size: 1.5rem;
+  font-family: var(--text-font);
+  font-weight: bold;
+  margin-top: 2rem;
+`;

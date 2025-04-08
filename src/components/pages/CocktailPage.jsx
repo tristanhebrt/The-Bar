@@ -6,99 +6,191 @@ import { ALORA_COCKTAILS } from "../lists/cocktails/aloraCocktails";
 import { RANDOM_COCKTAILS } from "../lists/cocktails/randomCocktails";
 
 // Firebase imports
-import { firestore } from "../../firebase";
-import { collection, onSnapshot, doc, getDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import { firestore, auth } from "../../firebase";
+import { collection, getDocs, doc, getDoc, updateDoc } from "firebase/firestore";
+import { onAuthStateChanged } from "firebase/auth";
+import styled from 'styled-components';
 
 const CocktailPage = () => {
-  const [importedCocktails, setImportedCocktails] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [userAllowedLists, setUserAllowedLists] = useState([]);
-  const [user, setUser] = useState(null);
+  const [cocktailLists, setCocktailLists] = useState([]);  // State for cocktail lists
+  const [userData, setUserData] = useState(null);           // State for user data
+  const [error, setError] = useState(null);                 // State for errors
 
-  // Fetch current user data
+  // Effect for authentication state change
   useEffect(() => {
-    const currentUser = getAuth().currentUser;
-    if (currentUser) {
-      setUser(currentUser);
-      fetchUserAllowedLists(currentUser.uid);
-    }
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const userRef = doc(firestore, "users", user.uid);
+          const userDoc = await getDoc(userRef);
+
+          if (userDoc.exists()) {
+            setUserData(userDoc.data());
+          } else {
+            setError("User data not found.");
+          }
+        } catch (err) {
+          setError("Error fetching user data: " + err.message);
+        }
+      } else {
+        setError("User not authenticated.");
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup the auth listener
   }, []);
 
-  // Fetch allowed cocktail lists for the user
-  const fetchUserAllowedLists = async (userId) => {
-    try {
-      const userDocRef = doc(firestore, "users", userId);
-      const userDoc = await getDoc(userDocRef);
-      if (userDoc.exists()) {
-        const allowedLists = userDoc.data().allowedLists || [];
-        setUserAllowedLists(allowedLists);
+  // Effect to fetch cocktail lists based on user data
+  useEffect(() => {
+    if (!userData) return;
+
+    const fetchCocktailLists = async () => {
+      try {
+        const cocktailListData = [];
+
+        for (const allowedList of userData.allowedLists) {
+          const listCode = typeof allowedList === "string" ? allowedList : allowedList.listCode;
+
+          if (!listCode) {
+            console.error("Invalid listCode:", allowedList);
+            continue;
+          }
+
+          const cocktailRef = collection(firestore, `lists/${listCode}/types`);
+          const cocktailSnapshot = await getDocs(cocktailRef);
+
+          cocktailSnapshot.forEach((cocktailDoc) => {
+            const cocktailData = cocktailDoc.data();
+            const typeId = cocktailDoc.id;
+
+            const isOpened = userData.openedLists.includes(typeId) ||
+                             userData.openedLists.some(opened => opened.typeId === typeId);
+            
+            if (!isOpened) {
+              return; // Skip if the list is not opened
+            }
+
+            if (cocktailData.listType === "cocktail") {
+              cocktailListData.push({
+                listName: cocktailData.listName,
+                listCode: listCode,
+                typeId: typeId,
+                items: cocktailData.items || [],
+              });
+            }
+          });
+        }
+
+        setCocktailLists(cocktailListData);
+      } catch (error) {
+        console.error("Error fetching cocktail lists:", error);
+        setError("Error fetching cocktail lists.");
       }
-    } catch (err) {
-      setError("Error fetching user allowed lists");
-      console.error(err);
+    };
+
+    fetchCocktailLists();
+  }, [userData]);
+
+  // Handle the removal of a cocktail list
+  const handleRemove = async (listCode, typeId) => {
+    try {
+      if (!userData) {
+        throw new Error("User not authenticated.");
+      }
+
+      // Remove the typeId from openedLists
+      const updatedOpenedLists = userData.openedLists.filter(opened => opened !== typeId);
+
+      // Update Firestore
+      const userRef = doc(firestore, "users", userData.uid);
+      await updateDoc(userRef, {
+        openedLists: updatedOpenedLists,
+      });
+
+      // Update local state for UI feedback
+      setUserData(prevUserData => ({
+        ...prevUserData,
+        openedLists: updatedOpenedLists
+      }));
+
+      // Remove from the local cocktail lists
+      setCocktailLists(prevLists => prevLists.filter(list => list.typeId !== typeId));
+
+      alert("Cocktail list removed successfully!");
+    } catch (error) {
+      console.error("Error removing list:", error);
+      setError("Error removing the cocktail list.");
     }
   };
 
-  useEffect(() => {
-    if (!user) return;
-
-    const colRef = collection(firestore, "cocktailLists");
-
-    // Real-time listener for cocktailLists collection
-    const unsubscribe = onSnapshot(
-      colRef,
-      (snapshot) => {
-        const lists = snapshot.docs
-          .map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-          .filter((list) => userAllowedLists.includes(list.id)); // Filter lists the user is allowed to see
-
-        setImportedCocktails(lists);
-        setLoading(false);
-      },
-      (err) => {
-        setError("Error fetching cocktail lists");
-        setLoading(false);
-      }
-    );
-
-    return () => unsubscribe(); // Cleanup on unmount
-  }, [user, userAllowedLists]); // Re-run when user or allowed lists change
-
+  // Combine static and imported cocktail lists
   const allCocktails = [
-    ...RANDOM_COCKTAILS,
-    ...CLASSIC_COCKTAILS,
-    ...MODERN_COCKTAILS,
-    ...ALORA_COCKTAILS.items,
-    ...importedCocktails.flatMap((list) => list.items || []),
+    ...cocktailLists.flatMap((list) => list.items || []),
   ];
 
   return (
-    <>
-      {loading && <p>Loading cocktails...</p>}
+    <div>
       {error && <p>{error}</p>}
+      {cocktailLists.length === 0 && <ImportAList>Import a list to get started</ImportAList>}
 
-      {/* Render all cocktails */}
+      {/* Display all cocktails */}
       <CocktailCardDisplay mainTitle="All Cocktails" recipes={allCocktails} />
 
-      {/* Render imported cocktails if they exist */}
-      {importedCocktails.length > 0 &&
-        importedCocktails.map((list) => (
-          <div key={list.id}>
+      {/* Render imported cocktail lists */}
+      {cocktailLists.length > 0 &&
+        cocktailLists.map((list) => (
+          <div key={list.typeId}>
             <CocktailCardDisplay mainTitle={list.listName} recipes={list.items || []} />
+            <RemoveButtonContainer>
+            <RemoveButton
+              onClick={() => handleRemove(list.listCode, list.typeId)}
+            >
+              Remove
+            </RemoveButton>
+          </RemoveButtonContainer>
           </div>
         ))}
-
-      {/* Render static cocktail lists */}
-      <CocktailCardDisplay mainTitle="Classic Cocktails" recipes={CLASSIC_COCKTAILS} />
-      <CocktailCardDisplay mainTitle="Modern Cocktails" recipes={MODERN_COCKTAILS} />
-      <CocktailCardDisplay mainTitle={ALORA_COCKTAILS.listName} recipes={ALORA_COCKTAILS.items} />
-    </>
+    </div>
   );
 };
 
 export default CocktailPage;
+
+// Styled Button Component
+const RemoveButton = styled.button`
+  padding: 5px 10px;
+  width: auto;
+  font-family: var(--text-font);
+  font-size: 1.2rem;
+  background: var(--dark-red);
+  color: var(--white);
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+      background: var(--highlight3);
+  }
+
+  &:active {
+      transform: scale(0.95);
+  }
+`;
+
+const RemoveButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 1rem;
+`;
+
+const ImportAList = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--dark-red);
+  font-size: 1.5rem;
+  font-family: var(--text-font);
+  font-weight: bold;
+  margin-top: 2rem;
+`;

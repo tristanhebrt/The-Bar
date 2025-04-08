@@ -77,7 +77,7 @@ const AdminAddListModal = ({ onClose }) => {
             }
       
             // Validate listType values
-            if (!['beer', 'wine'].includes(listData.listType)) {
+            if (!['beer', 'wine', 'cocktail', 'checklist', 'food'].includes(listData.listType)) {
               console.error('Invalid list type:', listData.listType);
               continue;
             }
